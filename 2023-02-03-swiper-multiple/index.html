@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper 같은 클래스로 여러개 사용하기 (반응형) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper 같은 클래스로 여러개 사용하기 (반응형) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="swiper.js"></script>
+
+<style>
+* {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Noto Sans KR', sans-serif;}
+ul, li {list-style: none;}
+
+.slider {overflow: hidden;position: relative;max-width: 1180px;margin: 50px auto 0;}
+.slider .inner {overflow: hidden;margin: 0 50px;}
+.slide_list > li {width: 20%;height: 150px;background: #8ab4f8;font-size: 20px;line-height: 150px;text-align: center;}
+.slider .btn {position: absolute;top: 50%;width: 35px;height: 35px;background:url('images/arrow.png') center center no-repeat;background-size: cover;text-indent: -999em;cursor: pointer;}
+.slider .btn.btn_prev {left: 0;transform: rotateY(180deg) translate(0,-50%);}
+.slider .btn.btn_next {right:0;transform: translate(0,-50%);}
+</style>
+</head>
+<body>
+
+<!-- 첫번째 슬라이드 -->
+<div class="slider">
+    <div class="inner">
+        <ul class="swiper-wrapper slide_list">
+            <li class="swiper-slide">slider1</li>
+            <li class="swiper-slide">slider2</li>
+            <li class="swiper-slide">slider3</li>
+            <li class="swiper-slide">slider4</li>
+            <li class="swiper-slide">slider5</li>
+            <li class="swiper-slide">slider6</li>
+        </ul>
+    </div>
+    <span class="btn btn_prev">이전</span>
+    <span class="btn btn_next">다음</span>
+</div>
+
+<!-- 두번째 슬라이드 -->
+<div class="slider">
+    <div class="inner">
+        <ul class="swiper-wrapper slide_list">
+            <li class="swiper-slide">slider1</li>
+            <li class="swiper-slide">slider2</li>
+        </ul>
+    </div>
+    <span class="btn btn_prev">이전</span>
+    <span class="btn btn_next">다음</span>
+</div>
+
+
+<!-- 세번째 슬라이드 -->
+<div class="slider">
+    <div class="inner">
+        <ul class="swiper-wrapper slide_list">
+            <li class="swiper-slide">slider1</li>
+            <li class="swiper-slide">slider2</li>
+            <li class="swiper-slide">slider3</li>
+            <li class="swiper-slide">slider4</li>
+        </ul>
+    </div>
+    <span class="btn btn_prev">이전</span>
+    <span class="btn btn_next">다음</span>
+</div>
+
+
+<script>
+$(window).on('load', function () {
+    slider();  
+})
+
+function slider(){
+    $(".slider").each(function(index){
+        let $this = $(this);
+        let swiper = undefined;
+        let slideNum =  $this.find('.swiper-slide').length //슬라이드 총 개수
+        let slideInx = 0; //현재 슬라이드 index
+        
+        //디바이스 체크
+        let oldWChk = window.innerWidth > 768 ? 'pc' : 'mo';
+        sliderAct();
+        $(window).on('resize', function () {
+            let newWChk = window.innerWidth > 768 ? 'pc' : 'mo';
+            if(newWChk != oldWChk){
+                oldWChk = newWChk;
+                sliderAct();
+            }
+        })
+
+        function sliderAct(){
+            //슬라이드 인덱스 클래스 추가
+            $this.addClass(`slider${index}`);
+
+            //슬라이드 초기화 
+            if (swiper != undefined){ 
+                swiper.destroy();
+                swiper = undefined;
+            }
+
+            //slidesPerView 옵션 설정
+            let viewNum = oldWChk == 'pc' ? 5 : 2;
+            //loop 옵션 체크
+            let loopChk = slideNum > viewNum;
+
+            swiper = new Swiper(`.slider${index} .inner`, {
+                slidesPerView: viewNum,
+                initialSlide :slideInx,
+                spaceBetween: 10,
+                slidesPerGroup: 1,
+                loop: loopChk,
+                navigation: {
+                    prevEl: $(`.slider${index} .btn_prev`),
+                    nextEl: $(`.slider${index} .btn_next`),
+                },
+                on: {
+                    activeIndexChange: function () {
+                        slideInx = this.realIndex; //현재 슬라이드 index 갱신
+                    }
+                },
+            });
+        }
+    });
+}
+</script>
+</body>
+</html>
