@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - iOS 모바일 가로 세로 모드 전환 구분하는 방법 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - iOS 모바일 가로 세로 모드 전환 구분하는 방법 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<div></div>
+
+<script>
+    const ios = navigator.userAgent.match(/(iPod|iPhone|iPad)/)
+    if (ios) {
+        $(window).on("orientationchange", function(event) {
+            $(window).one('resize', function() {
+                if (window.innerWidth > window.innerHeight) {
+                    $('div').text('가로 모드 전환')
+                } else {
+                    $('div').text('세로 모드 전환')
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>
