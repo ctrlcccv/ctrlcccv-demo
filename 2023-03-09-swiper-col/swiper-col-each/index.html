@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper multi row (다중 행) 정렬 문제 해결 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper multi row (다중 행) 정렬 문제 해결 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<script src="swiper.js"></script>
+
+<style>
+* {margin: 0;padding: 0;box-sizing: border-box;}
+ul, li {list-style: none;}
+
+.slider {position: relative;max-width: 1180px;margin: 20px auto 0;padding: 0 50px;}
+.slider .inner {overflow: hidden;margin-right: -1.333%;}
+.slider .swiper-slide {display:flex;flex-wrap:wrap;}
+.slider .list {width: 32%;height: 150px;margin: 1% 1.333% 1% 0;background: #8ab4f8;font-size: 20px;line-height: 150px;text-align: center;}
+.slider .swiper-prev, .slider .swiper-next {position: absolute;top: 50%;width: 35px;height: 35px;background:url('images/arrow.png') center center no-repeat;background-size: cover;text-indent: -999em;cursor: pointer;font-size: 0;}
+.slider .swiper-prev {left: 0;transform: rotateY(180deg) translate(0,-50%);}
+.slider .swiper-next {right:0;transform: translate(0,-50%);}
+
+@media (max-width: 768px) {
+    .slider .inner {margin-right: -2%;}
+    .slider .list{width: 48%;margin-right: 2%;}
+}
+</style>
+</head>
+<body>
+<!-- swiper-slide -->
+<div class="slider">
+    <div class="inner">
+        <div class="swiper-wrapper">
+            <div class="list">slider1</div>
+            <div class="list">slider2</div>
+            <div class="list">slider3</div>
+            <div class="list">slider4</div>
+            <div class="list">slider5</div>
+            <div class="list">slider6</div>
+            <div class="list">slider7</div>
+            <div class="list">slider8</div>
+            <div class="list">slider9</div>
+            <div class="list">slider10</div>
+            <div class="list">slider11</div>
+            <div class="list">slider12</div>
+        </div>
+    </div>
+    <div class="swiper-prev">이전</div>
+    <div class="swiper-next">다음</div>
+</div>
+
+<div class="slider">
+    <div class="inner">
+        <div class="swiper-wrapper">
+            <div class="list">slider1</div>
+            <div class="list">slider2</div>
+            <div class="list">slider3</div>
+            <div class="list">slider4</div>
+            <div class="list">slider5</div>
+            <div class="list">slider6</div>
+            <div class="list">slider7</div>
+            <div class="list">slider8</div>
+            <div class="list">slider9</div>
+            <div class="list">slider10</div>
+            <div class="list">slider11</div>
+            <div class="list">slider12</div>
+        </div>
+    </div>
+    <div class="swiper-prev">이전</div>
+    <div class="swiper-next">다음</div>
+</div>
+
+
+<script>
+$(document).ready(function () {
+    slideAct();
+})
+
+function slideAct(){
+    var view = 0; //보이는 슬라이드 개수
+    var realInx = [] //현재 페이지
+    var swiperArr = [] //슬라이드 배열
+
+    //슬라이드 배열 생성
+    $(".slider").each(function(index){
+        realInx.push(0);
+        swiperArr.push(undefined);
+    })
+
+    //디바이스 체크
+    var winWChk = ''
+    $(window).on('load resize', function (){
+        var winW = window.innerWidth;
+        if(winWChk != 'mo' && winW <= 768){ //모바일 버전으로 전환할 때
+            slideList()
+            winWChk = 'mo';
+        }
+        if(winWChk != 'pc' && winW >= 769){ //PC 버전으로 전환할 때
+            slideList()
+            winWChk = 'pc';
+        }
+    }) 
+
+    function slideList(){
+        //리스트 초기화
+        if ($('.slider .list').parent().hasClass('swiper-slide')){
+            $('.slider .swiper-slide-duplicate').remove();
+            $('.slider .list').unwrap('swiper-slide');
+        }
+        
+        //보이는 슬라이드 개수 설정
+        $(".slider").each(function(index){
+            if (window.innerWidth > 768){ //PC 버전
+                view = 6;
+            }else{ //mobile 버전
+                view = 2;
+            }
+
+            //리스트 그룹 생성 (swiper-slide element 추가)
+            var num = 0;
+            $(this).addClass("slider-" + index);
+            $(".slider-" + index).find('.list').each(function(i) {
+                $(this).addClass("list"+(Math.floor((i+view)/view)));
+                num = Math.floor((i+view)/view)
+            }).promise().done(function(){
+                for (var i = 1; i < num+1; i++) {
+                    $(".slider-" + index).find('.list'+i+'').wrapAll('<div class="swiper-slide"></div>');
+                    $(".slider-" + index).find('.list'+i+'').removeClass('list'+i+'')
+                }
+            });
+        }).promise().done(function(){
+            sliderStart()
+        });
+    }
+    
+    function sliderStart(){
+        $(".slider").each(function(index){
+            //슬라이드 초기화
+            if(swiperArr[index] != undefined) {
+                swiperArr[index].destroy();
+                swiperArr[index] == undefined;
+            }
+
+            //슬라이드 실행
+            swiperArr[index] = new Swiper('.slider-' + index + ' .inner', {
+                slidesPerView: 1,
+                initialSlide :Math.floor(realInx[index]/view),
+                resistanceRatio : 0,
+                loop:true,
+                navigation: {
+                    nextEl: $('.slider-' + index).find('.swiper-next'),
+                    prevEl: $('.slider-' + index).find('.swiper-prev'),
+                },
+                on: {
+                    slideChange: function () {
+                        realInx[index] = this.realIndex*view
+                    }
+                },
+            });
+
+            //슬라이드 배열 값 추가
+            if(swiperArr[index] == undefined) {
+                swiperArr[index] = swiper;
+            }
+        }); 
+    }
+}
+</script>
+</body>
+</html>
