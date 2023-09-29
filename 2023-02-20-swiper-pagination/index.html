@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper slider 페이징(pagination) 번호 커스텀 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper slider 페이징(pagination) 번호 커스텀 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="swiper.js"></script>
+
+<style>
+* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;}
+ul, li {list-style: none;}
+
+/* 슬라이드 */
+.slider {overflow: hidden;position: relative;max-width: 1180px;margin: 50px auto 0;}
+.slider .inner {overflow: hidden;margin: 0 50px;}
+.slider .list > li {width: 20%;height: 150px;background: #8ab4f8;font-size: 20px;line-height: 150px;text-align: center;}
+
+/* 페이징 */
+.paging_wrap {margin-top:10px;font-size: 0;text-align: center;}
+.paging_wrap .num {overflow: hidden;display: inline-block;width: 140px;margin: 0 5px;}
+.paging_wrap .page_btn {display: inline-block;width: 24px;height: 24px;margin:0 2px;border: 1px solid #eee;font-size: 11px;line-height: 22px;text-align: center;vertical-align: top;cursor: pointer;}
+.paging_wrap .page_btn:hover {border-color: #8ab4f8;color: #8ab4f8;}
+.paging_list {display:flex;}
+.paging_list > li {width: 24px;height: 24px;margin:0 2px;background: none;border: 1px solid #eee;border-radius: 0;font-size: 13px;line-height: 22px;flex-shrink:0;opacity: 1;}
+.paging_list > li.swiper-pagination-bullet-active {border-color: #8ab4f8;color: #8ab4f8;}
+</style>
+</head>
+<body>
+
+<div class="slider">
+    <!-- 슬라이드 -->
+    <div class="inner">
+        <ul class="swiper-wrapper list">
+            <li class="swiper-slide">slider1</li>
+            <li class="swiper-slide">slider2</li>
+            <li class="swiper-slide">slider3</li>
+            <li class="swiper-slide">slider4</li>
+            <li class="swiper-slide">slider5</li>
+            <li class="swiper-slide">slider6</li>
+            <li class="swiper-slide">slider7</li>
+            <li class="swiper-slide">slider8</li>
+            <li class="swiper-slide">slider9</li>
+            <li class="swiper-slide">slider10</li>
+            <li class="swiper-slide">slider11</li>
+            <li class="swiper-slide">slider12</li>
+            <li class="swiper-slide">slider13</li>
+            <li class="swiper-slide">slider14</li>
+            <li class="swiper-slide">slider15</li>
+        </ul>
+    </div>
+    
+    <!-- 페이징 -->
+    <div class="paging_wrap">
+        <span class="page_btn paging_first">&lt;&lt;</span>
+        <span class="page_btn paging_prev">&lt;</span>
+        <div class="num">
+            <ul class="paging_list">
+            </ul>
+        </div>
+        <span class="page_btn paging_next">&gt;</span>
+        <span class="page_btn paging_last">&gt;&gt;</span>
+    </div>
+</div>
+
+
+<script>
+    $(window).on('load', function () {
+        slider();
+    })
+
+    function slider(){
+        let swiper = undefined;
+        let viewNum = ''; //슬라이드 개수 (옵션)
+        let slideInx = 0; //현재 슬라이드 index
+
+        //디바이스 체크
+        let oldWChk = window.innerWidth > 768 ? 'pc' : 'mo';
+        sliderAct();
+        $(window).on('resize', function () {
+            let newWChk = window.innerWidth > 768 ? 'pc' : 'mo';
+            if (newWChk != oldWChk) {
+                oldWChk = newWChk;
+                sliderAct();
+            }
+        })
+        
+        function sliderAct(){
+            //슬라이드 초기화 
+            if (swiper != undefined){ 
+                swiper.destroy();
+                swiper = undefined;
+            }
+
+            //slidesPerView 옵션 설정
+            viewNum = oldWChk == 'pc' ? 2 : 1;
+            
+            swiper = new Swiper('.slider .inner', {
+                slidesPerView: viewNum,
+                slidesPerGroup: viewNum,
+                initialSlide: slideInx,
+                spaceBetween: 4,
+                observer: true,  
+                observeParents: true,
+                navigation: {
+                    prevEl: $('.slider .paging_prev'),
+                    nextEl: $('.slider .paging_next'),
+                },
+                pagination: {
+                    el: $('.slider .paging_list'),
+                    clickable: true,
+                    renderBullet: function (index, className) {
+                        return `<li class="${className}"><span>${index+1}</span></li>`;
+                    }
+                },
+                on: {
+                    init: function(){
+                        let btnFirst = $('.slider .paging_first');
+                        let btnLast = $('.slider .paging_last');
+                        let lastIndex = $('.slider .list li').last().index();
+         
+                        //첫 페이지 이동
+                        btnFirst.on('click',function(){
+                            swiper.slideTo(0);
+                        })
+                        //마지막 페이지 이동
+                        btnLast.on('click',function(){
+                            swiper.slideTo(lastIndex);
+                        })
+                    },
+                    activeIndexChange: function () {
+                        slideInx = this.realIndex; //현재 슬라이드 index
+                        pagingAct();
+                    }
+                },
+            });
+            pagingAct()
+        }
+        
+        //페이징 위치
+        function pagingAct(){
+            const pageTotal = $('.slider .paging_list li').length; //총 페이지 수
+            const pageWidth = $('.slider .paging_wrap .num').width(); //페이지 가로 크기
+            const numWidth = $('.slider .paging_list li').eq(0).outerWidth(true); //페이지 번호 가로 크기
+            const listWidth = numWidth*pageTotal //모든 페이지 리스트 가로 크기
+            const pageActive = Math.ceil(slideInx/viewNum) + 1 //현재 페이지 번호
+
+            if (pageWidth > listWidth){//총 4페이지 이하일 때
+                $('.slider .paging_list').css({'justify-content':'center','transform':'translate(0,0)'})
+            }else{
+                if (pageActive <= 3){ //현재 페이지가 1,2,3페이지
+                    $('.slider .paging_list').css({'justify-content':'flex-start','transform':'translate(0,0)'})
+                }else if (pageActive > pageTotal - 3){ //현재 페이지가 마지막 구간에 도달할 때
+                    $('.slider .paging_list').css({'justify-content':'flex-start','transform':`translate(-${numWidth*(pageTotal - 5)}px,0)`})
+                }else if (pageActive > 3){ //현재 페이지가 4페이지 이상일 때
+                    $('.slider .paging_list').css({'justify-content':'flex-start','transform':`translate(-${numWidth*(pageActive - 3)}px,0)`})
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>
