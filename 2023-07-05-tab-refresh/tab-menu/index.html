@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 탭메뉴 새로고침 후 현재 탭 유지 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 탭메뉴 새로고침 후 현재 탭 유지 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+    
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;}
+ul, li {list-style: none;}
+.tab_wrap {max-width: 800px;margin: 50px auto;padding: 0 15px;}
+.tab_wrap .tit_list {position: relative;font-size: 0;}
+.tab_wrap .tit_list:before {content:'';position: absolute;bottom: 0;left: 0;width: 100%;height: 1px;background: #ddd;z-index: 1;}
+.tab_wrap .tit_list > li {display: inline-block;vertical-align: top;margin-right: 3px;}
+.tab_wrap .tit_list > li a {display: inline-block;padding: 10px 15px;border: 1px solid #fff;border-radius:4px 4px 0 0;font-size: 14px;color: #000;text-decoration: none;}
+.tab_wrap .tit_list > li a:hover {background: #efefef;border-color: #efefef;}
+.tab_wrap .tit_list > li.active a {position: relative;border-color: #ddd;border-bottom: 1px solid #fff;background: #fff;color: #8ab4f8;z-index: 2;}
+.tab_wrap .tab_con {border: 1px solid #ddd;border-top: none;}
+.tab_wrap .tab_con .tab_list {display: none;height: 200px;padding: 15px;}
+</style>
+</head>
+
+<body>
+<div class="tab_wrap">
+    <!-- 탭메뉴 제목 -->
+    <ul class="tit_list">
+        <li><a href="#con01">1번째 탭</a></li>
+        <li><a href="#con02">2번째 탭</a></li>
+        <li><a href="#con03">3번째 탭</a></li>
+    </ul>
+    <!-- 탭메뉴 컨텐츠 -->
+    <div class="tab_con">
+        <div id="con01" class="tab_list">
+            1번째 컨텐츠
+        </div>
+            
+        <div id="con02" class="tab_list">
+            2번째 컨텐츠
+        </div>
+
+        <div id="con03" class="tab_list">
+            3번째 컨텐츠
+        </div>
+    </div>
+</div>
+<script>
+    
+$(window).on('load', function(){
+    tab();
+})
+
+function tab(){
+    //탭 구분 파라미터 이름
+    const paramName = 'tabName';
+
+    //탭메뉴 실행 함수
+    function activateTab(tabId, updateUrlParam){
+        //tabId 값이 first 일 때 첫번째 탭 선택
+        tabId = tabId === 'first' ? $('.tab_wrap .tit_list > li:first-child a').attr('href') : tabId;
+
+        //초기화
+        $(".tab_wrap .tit_list > li").removeClass("active");
+        $(".tab_wrap .tab_list").hide(); 
+
+        //실행
+        $(`.tab_wrap .tit_list > li a[href*="${tabId}"]`).parent().addClass("active");
+        $(tabId).show();
+
+        //탭메뉴 클릭할 때 url 파라미터 변경
+        if(updateUrlParam){
+            setUrlParam(tabId);
+        }
+    }
+
+    //파라미터 값 변경 함수
+    function setUrlParam(tabId) {
+        const params = new URLSearchParams(location.search);
+        params.set(paramName, tabId.slice(1));
+        history.pushState(null, null, `${location.origin}${location.pathname}?${params.toString()}`);
+    }
+
+    //파라미터 확인 함수
+    function getUrlParam() {
+        const urlParams = new URLSearchParams(location.search);
+        return urlParams.get(paramName);
+    }
+
+    //파라미터 값 확인
+    const tabName = getUrlParam();
+
+    //탭메뉴 클릭할 때 실행
+    $(".tab_wrap .tit_list > li a").on("click", function(e) {
+        e.preventDefault();
+        let tabId = $(this).attr("href");
+        activateTab(tabId, true);
+    });
+
+    //페이지 로드 했을 때 탭메뉴 선택
+    if (tabName) {
+        const tabTop = $('.tab_wrap').offset().top;
+        requestAnimationFrame(function() {
+            $('html, body').scrollTop(tabTop - 100);
+        });
+        activateTab(`#${tabName}`);
+    } else {
+        activateTab('first');
+    }
+
+    //뒤로가기, 앞으로가기 버튼 눌렀을 때 탭메뉴 활성화 복원
+    $(window).on('popstate', function() {
+        const newTabName = getUrlParam();
+        activateTab(newTabName ? `#${newTabName}` : 'first');
+    });
+}
+
+
+</script>
+</body>
+</html>
