@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 탭메뉴 안에 Swiper 슬라이드 넣기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 탭메뉴 안에 Swiper 슬라이드 넣기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<script src="swiper.js"></script>
+
+<style>
+* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+ul,ol,li {list-style: none;}
+
+/* 탭메뉴 */
+.tab_wrap {max-width: 800px;margin: 50px auto 0;padding: 0 15px;}
+.tab_wrap .tit_list {position: relative;font-size: 0;}
+.tab_wrap .tit_list:before {content:'';position: absolute;bottom: 0;left: 0;width: 100%;height: 1px;background: #ddd;z-index: 1;}
+.tab_wrap .tit_list > li {display: inline-block;margin-right: 3px;vertical-align: top;}
+.tab_wrap .tit_list > li a {display: inline-block;padding: 10px 15px;border: 1px solid #fff;border-radius:4px 4px 0 0;font-size: 14px;color: #000;text-decoration: none;}
+.tab_wrap .tit_list > li a:hover {background: #efefef;border-color: #efefef;}
+.tab_wrap .tit_list > li.active a {position: relative;background: #fff;border: 1px solid #ddd;border-bottom: 1px solid #fff;color: #8ab4f8;z-index: 2;}
+.tab_wrap .tab_con {border: 1px solid #ddd;border-top: none;}
+.tab_wrap .tab_con .tab_list {display: none;padding: 15px;}
+
+/* 슬라이드 */
+.slider {font-size: 0;text-align: center;}
+.slider .inner {overflow: hidden;width: 100%;margin: 0 auto;}
+.slide_list > li {width: 25%;height: 150px;background: #8ab4f8;font-size: 20px;line-height: 150px;color: #000;text-align: center;}
+.slider .btn_prev,
+.slider .btn_next {display: inline-block;width: 35px;height: 35px;margin:30px 15px 0;background:url('images/arrow.png') center center no-repeat;background-size: cover;text-indent: -999em;cursor: pointer;}
+.slider .btn_prev {transform: rotateY(180deg);}
+</style>
+</head>
+<body>
+<div class="tab_wrap">
+    <!-- 탭메뉴 제목 -->
+    <ul class="tit_list">
+        <!-- 디폴트 선택 li에 active 클래스 추가 -->
+        <li class="active"><a href="#con01">1번째 탭</a></li>
+        <li><a href="#con02">2번째 탭</a></li>
+        <li><a href="#con03">3번째 탭</a></li>
+    </ul>
+    <!-- 탭메뉴 컨텐츠 -->
+    <div class="tab_con">
+        <div id="con01" class="tab_list">
+            <!-- swiper-slide -->
+            <div class="slider">
+                <div class="inner">
+                    <ul class="swiper-wrapper slide_list">
+                        <li class="swiper-slide">slider1</li>
+                        <li class="swiper-slide">slider2</li>
+                        <li class="swiper-slide">slider3</li>
+                        <li class="swiper-slide">slider4</li>
+                        <li class="swiper-slide">slider5</li>
+                    </ul>
+                </div>
+                <span class="btn btn_prev">이전</span>
+                <span class="btn btn_next">다음</span>
+            </div>
+        </div>
+            
+        <div id="con02" class="tab_list">
+            <!-- swiper-slide -->
+            <div class="slider">
+                <div class="inner">
+                    <ul class="swiper-wrapper slide_list">
+                        <li class="swiper-slide">slider1</li>
+                        <li class="swiper-slide">slider2</li>
+                        <li class="swiper-slide">slider3</li>
+                        <li class="swiper-slide">slider4</li>
+                        <li class="swiper-slide">slider5</li>
+                    </ul>
+                </div>
+                <span class="btn btn_prev">이전</span>
+                <span class="btn btn_next">다음</span>
+            </div>
+        </div>
+
+        <div id="con03" class="tab_list">
+            <!-- swiper-slide -->
+            <div class="slider">
+                <div class="inner">
+                    <ul class="swiper-wrapper slide_list">
+                        <li class="swiper-slide">slider1</li>
+                        <li class="swiper-slide">slider2</li>
+                        <li class="swiper-slide">slider3</li>
+                        <li class="swiper-slide">slider4</li>
+                        <li class="swiper-slide">slider5</li>
+                    </ul>
+                </div>
+                <span class="btn btn_prev">이전</span>
+                <span class="btn btn_next">다음</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+$(document).ready(function () {
+    tab();
+})
+
+function tab(){
+    //탭메뉴 실행 함수
+    function activateTab(tabId){
+        //초기화
+        $(".tab_wrap .tit_list > li").removeClass("active");
+        $(".tab_wrap .tab_list").hide(); 
+
+        //실행
+        $(`.tab_wrap .tit_list > li a[href*="${tabId}"]`).parent().addClass("active");
+        $(tabId).show();
+    }
+
+    //탭메뉴 클릭할 때 실행
+    $(".tab_wrap .tit_list > li a").on("click", function(e) {
+        e.preventDefault();
+        let tabId = $(this).attr("href");
+        activateTab(tabId, true);
+    });
+
+    //페이지 로드 했을 때 탭메뉴 선택
+    let firstTabId = $('.tab_wrap .tit_list > li:first-child a').attr('href');
+    activateTab(firstTabId);
+    slider();//슬라이드 실행
+}
+
+function slider(){
+    $(".slider").each(function(index){
+        let $this = $(this);
+        let swiper = undefined;
+        let slideNum =  $this.find('.swiper-slide').length //슬라이드 총 개수
+        let slideInx = 0; //현재 슬라이드 index
+        
+        //디바이스 체크
+        let oldWChk = window.innerWidth > 768 ? 'pc' : 'mo';
+        sliderAct();
+        $(window).on('resize', function () {
+            let newWChk = window.innerWidth > 768 ? 'pc' : 'mo';
+            if(newWChk != oldWChk){
+                oldWChk = newWChk;
+                sliderAct();
+            }
+        })
+
+        function sliderAct(){
+            //슬라이드 인덱스 클래스 추가
+            $this.addClass(`slider${index}`);
+
+            //슬라이드 초기화 
+            if (swiper != undefined){ 
+                swiper.destroy();
+                swiper = undefined;
+            }
+
+            //slidesPerView 옵션 설정
+            let viewNum = oldWChk == 'pc' ? 4 : 2;
+            //loop 옵션 체크
+            let loopChk = slideNum > viewNum;
+
+            swiper = new Swiper(`.slider${index} .inner`, {
+                slidesPerView: viewNum,
+                initialSlide :slideInx,
+                spaceBetween: 10,
+                slidesPerGroup: 1,
+                observer: true, 
+                observeParents: true,
+                loop: loopChk,
+                navigation: {
+                    prevEl: $(`.slider${index} .btn_prev`),
+                    nextEl: $(`.slider${index} .btn_next`),
+                },
+                on: {
+                    activeIndexChange: function () {
+                        if($(`.slider${index}`).parent('.tab_list').css('display') != 'none'){
+                            slideInx = this.realIndex; //현재 슬라이드 index 갱신
+                        }
+                    }
+                },
+            });
+        }  
+    });
+}
+
+</script>
+</body>
+</html>
