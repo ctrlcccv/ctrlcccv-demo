@@ -1,0 +1,15 @@
+.slider {position: relative;}
+.slider .list > li {height: 400px;width: 100%;background: #a6e6ff;font-size: 24px;display: flex;justify-content: center;align-items: center;font-weight: 700;}
+
+.slider .slide_tit {position: absolute;bottom: 0;left: 50%;transform: translate(-50%,0); display: flex;max-width: 1180px;z-index: 100;}
+.slider .slide_tit > li {position: relative; display: flex;padding: 0 10px;margin: 0!important;justify-content: center;align-items: center;height: 40px;background: rgba(0,0,0,0.3); flex:1 1 0;margin: 0;width: auto;border-radius:0;opacity: 1; font-size: 16px; letter-spacing:-0.025em; color: rgb(255, 255, 255); font-weight: 500;}
+
+.slider .slide_tit > li.swiper-pagination-bullet-active {background: #fff;color: #000000;}
+.slider .slide_tit > li .bar {position: absolute;top: 0;left: 0;width:0;height: 2px;background: #000000;}
+.slider .slide_tit > li.swiper-pagination-bullet-active .bar {transition:all 3s ease-in; animation-name: countingBar;animation-duration: 3s;animation-timing-function: linear;animation-iteration-count: 1;animation-direction: alternate ;animation-fill-mode:forwards; }
+
+.slider .control {display: flex;align-items: center;justify-content: center;position: absolute;z-index: 100;bottom: 100px;left:50%;margin-left: 470px;border-radius:15px; background-color: rgb(0, 0, 0, 0.3); position: absolute; width: 120px; height: 30px;}
+.slider .control .btn {display: flex;align-items: center;font-size: 16px;color: #fff;font-weight: 400;letter-spacing:-0.025em;cursor: pointer;}
+.slider .control .btn_prev {}
+.slider .control .btn_next {}
+.slider .control .num {margin: 0 7px;font-size: 16px;letter-spacing:-0.025em;font-weight: 300;color: #fff;}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper pagination 텍스트로 커스텀 + progress bar | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper pagination 텍스트로 커스텀 + progress bar | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="swiper.js"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+* {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Noto Sans KR', sans-serif;}
+ul, li {list-style: none;}
+
+/* 슬라이드 */
+.slider {position: relative;}
+.slider .list > li {display: flex;justify-content: center;align-items: center;width: 100%;height: 400px;background: #a6e6ff;font-size: 24px;font-weight: 500;}
+
+/* 슬라이드 타이틀 */
+.slider .slide_tit {display: flex;position: absolute;bottom: 0;left: 50%;max-width: 1180px;z-index: 100;transform: translate(-50%,0);}
+.slider .slide_tit > li {display: flex;flex:1 1 0;justify-content: center;align-items: center;position: relative;width: auto;height: 40px;margin: 0!important;margin: 0;padding: 0 10px;background: rgba(0,0,0,0.3);border-radius:0;font-size: 16px;letter-spacing:-0.025em;color: rgb(255, 255, 255);opacity: 1;}
+.slider .slide_tit > li.swiper-pagination-bullet-active {background: #fff;color: #000000;}
+.slider .slide_tit > li .bar {position: absolute;top: 0;left: 0;width:0;height: 2px;background: #000000;}
+.slider .slide_tit > li.swiper-pagination-bullet-active .bar {animation-name: countingBar;animation-duration: 3s;animation-timing-function: linear;animation-fill-mode:forwards;}
+
+@keyframes countingBar {
+	0% {width: 0;}
+	100% {width:100%;}
+}
+
+/* 슬라이드 버튼, 페이지 번호 */
+.slider .control {display: flex;justify-content: center;align-items: center; position: absolute;bottom: 100px;left:50%; width: 120px; height: 30px;margin-left: 470px; background-color: rgb(0, 0, 0, 0.3);border-radius:15px;z-index: 100;}
+.slider .control .btn {display: flex;align-items: center;font-size: 16px;font-weight: 400;letter-spacing:-0.025em;color: #fff;cursor: pointer;}
+.slider .control .num {margin: 0 7px;font-size: 16px;font-weight: 300;letter-spacing:-0.025em;color: #fff;}
+
+</style>
+</head>
+<body>
+<div class="slider">
+    <!-- 슬라이드 -->
+    <ul class="list swiper-wrapper">
+        <li class="swiper-slide">1번째 슬라이드</li>
+        <li class="swiper-slide">2번째 슬라이드</li>
+        <li class="swiper-slide">3번째 슬라이드</li>
+        <li class="swiper-slide">4번째 슬라이드</li>
+        <li class="swiper-slide">5번째 슬라이드</li>
+    </ul>
+    
+    <!-- 슬라이드 타이틀 (pagination) -->
+    <ul class="slide_tit">
+        <li>1번째 슬라이드</li>
+        <li>2번째 슬라이드</li>
+        <li>3번째 슬라이드</li>
+        <li>4번째 슬라이드</li>
+        <li>5번째 슬라이드</li>
+    </ul>
+
+    <!-- 버튼, 페이지 번호 -->
+    <div class="control">
+        <span class="btn btn_prev">&lt;</span>
+        <span class="num"></span>
+        <span class="btn btn_next">&gt;</span>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        slider();
+    })
+
+    function slider(){
+		var titArray = []; //슬라이드 타이틀
+		$('.slider .slide_tit > li').each(function(index, item){
+			var txt = $(this).text();
+			titArray.push(txt);
+		}).promise().done(function() {
+			//슬라이드 전체 페이지 번호
+			var num = $(".slider .num");
+			var slides = $(".slider .swiper-slide");
+			var slideCount = slides.length;
+			num.html(`<strong>1</strong> / ${slideCount}`);
+
+			//슬라이드 시작
+			var swiper = new Swiper('.slider', {
+				loop: true,
+				slidesPerView: 1,        
+				autoplay: {
+					delay: 3000,//CSS animation과 시간 동일하게
+					disableOnInteraction: false
+				}, 
+				effect: 'fade',
+				fadeEffect: {
+					crossFade: true
+				},
+				navigation: {
+					nextEl: '.slider .btn_next',
+					prevEl: '.slider .btn_prev',
+				},
+				//pagination 텍스트 & progress bar 형태로 변경
+				pagination: {
+					el: '.slider .slide_tit',
+					clickable: 'true',
+					type: 'bullets',
+					renderBullet: (index, className) => {
+						return `<li class=${className}><span class="bar"></span><span class="txt">${titArray[index]}</span></li>`;
+					},
+				},
+				//현재 페이지 번호 갱신
+				on: {
+					slideChange: () => {
+						num.html(`<strong>${swiper.realIndex + 1}</strong> / ${slideCount}`);
+					}
+				}
+			})
+		});
+	}
+</script>
+</body>
+</html>
