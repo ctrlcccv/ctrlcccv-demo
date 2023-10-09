@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - select 태그 커스텀 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - select 태그 커스텀 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+*{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+ul,ol,li {list-style: none;}
+
+.select_cus {position: relative;max-width: 500px;margin: 50px auto 0;}
+.select_cus .trigger {display: flex;align-items: center;position: relative;height: 40px;padding: 0 36px 0 16px;border: 1px solid #D9D9D9;cursor: pointer;}
+.select_cus .trigger:after {content:'';position: absolute;top: 0;right: 0;width: 38px;height: 38px;background:url('images/select_arr.png') center center no-repeat;background-size: contain;transform:scaleY(-1);}
+.select_cus.active .trigger:after {transform:scaleY(1);}
+.select_cus .trigger_txt {overflow: hidden;font-size: 14px;font-weight: 400;letter-spacing: -0.21px;color: #ACACAC;white-space: nowrap; text-overflow: ellipsis;}
+.select_cus.select .trigger_txt {color: #222222;}
+.select_cus .option {display: none;position: absolute;top: calc(100% - 1px);width: 100%;max-height: 203px;background: #fff;border: 1px solid #D9D9D9;z-index: 1;overflow-y: auto;}
+.select_cus .option > li {padding:11px 16px;font-size: 14px;font-weight: 500;line-height: 1.3;color: #2C2C2C;cursor: pointer;}
+.select_cus .option > li:hover {background: #F2F2F2;}
+</style>
+</head>
+<body>
+<div class="select_cus">
+    <input type="hidden" class="opt_val" value="">
+    <div class="trigger">
+        <span class="trigger_txt">옵션을 선택해주세요.</span>
+    </div>
+    <ul class="option">
+        <li data-value="">옵션을 선택해주세요.</li>
+        <li data-value="option1">옵션 1번입니다.</li>
+        <li data-value="option2">옵션 2번입니다.</li>
+        <li data-value="option3">옵션 3번입니다.</li>
+        <li data-value="option4">옵션 4번입니다.</li>
+        <li data-value="option5">옵션 5번입니다.</li>
+    </ul>
+</div>
+
+<script>
+$(window).on('load',function(){
+    selectCus();
+})
+
+function selectCus(){
+    $('.select_cus').each(function() {
+        const $select = $(this);
+        const $selectTrigger = $select.find('.trigger');
+        const $options = $select.find('.option');
+        const $hiddenInput = $select.find('.opt_val');
+        
+        //select option 열기
+        $selectTrigger.click(function() {
+            $options.toggle();
+            $select.toggleClass('active');
+            $('.select_cus').not($select).find('.option').hide();
+            $('.select_cus').not($select).removeClass('active');
+        });
+
+        //option 선택
+        $options.find('li').click(function() {
+            const value = $(this).data('value');
+            const text = $(this).text();
+            $select.find('.trigger_txt').text(text);
+            $options.hide();
+            $select.removeClass('active');
+            //옵션 선택했을 때 클래스 추가
+            if(value != '' ){
+                $select.addClass('select')
+            }else{
+                $select.removeClass('select')
+            }
+            // hidden 필드에 선택한 값을 설정
+            $hiddenInput.val(value);
+        });
+    });
+
+    //select 영역 외 다른곳을 누르면 select 닫힘
+    $(document).click(function(e) {
+        if (!$(e.target).closest('.select_cus').length) {
+            $('.select_cus .option').hide();
+            $('.select_cus').removeClass('active');
+        }
+    });
+}
+</script>
+</body>
+</html>
