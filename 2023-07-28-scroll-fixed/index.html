@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 스크롤 시 특정 위치에서 Fixed (반응형) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 스크롤 시 특정 위치에서 Fixed (반응형) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+    body {padding: 0;margin: 0;}
+    header {height:200px;background: #000;margin-bottom: 15px;}
+    footer {height:300px;background: #000;}
+    section {position: relative;height: 1200px;}
+    .fixed_menu {position: absolute;top: 0;right: 15px;width: 200px;height:700px;background: #8ab4f8; }
+
+    @media(max-width:1180px){
+        header {height:100px;}
+        footer {height:100px;}
+        .fixed_menu {height:400px;}
+    }
+
+</style>
+</head>
+<body>
+    <div class="wrap">
+        <header></header>
+        <section>
+            <div class="fixed_menu"></div>
+        </section>
+        <footer></footer>
+    </div>
+
+    <script>
+        $(window).on('load',function(){
+            scrollAct();
+        })
+
+        //스크롤 시 fixed
+        function scrollAct(){
+            let $fixedMenu = $('.fixed_menu'); //fixed 컨텐츠 영역
+            let fixedMenuTop = $fixedMenu.offset().top; //fixed 컨텐츠 영역 위치
+            let fixedMenHeight = $fixedMenu.outerHeight(true); //fixed 컨텐츠 영역 높이
+            let footerTop = $('footer').offset().top; //footer 위치
+            let oldWChk = window.innerWidth > 1180 ? 'pc' : 'mo';//디바이스 체크
+
+            //스크롤 위치 갱신
+            function updatePaymentFixed() {
+                var scrollTop = $(window).scrollTop();
+                if (scrollTop > fixedMenuTop - 15 && scrollTop < (footerTop - fixedMenHeight - 30)) { //스크롤 영역 도달했을 때, footer 영역 제외
+                    $fixedMenu.css({'top': scrollTop - fixedMenuTop + 15});
+                } else if(scrollTop < fixedMenuTop - 30){ //스크롤 영역 이전일 때
+                    $fixedMenu.css({'top': 0});
+                }
+            }
+
+            //스크롤 위치 갱신 함수 호출
+            $(window).on('scroll', updatePaymentFixed);
+
+            //리사이즈 했을 때 변수값 갱신 (반응형일 시 추가)
+            $(window).on('resize', function () {
+                let newWChk = window.innerWidth > 1180 ? 'pc' : 'mo';
+                if (newWChk !== oldWChk) {
+                    oldWChk = newWChk;
+                    fixedMenuTop = $fixedMenu.css({'top': 0}).offset().top;
+                    fixedMenHeight = $fixedMenu.outerHeight(true);
+                    footerTop = $('footer').offset().top;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
