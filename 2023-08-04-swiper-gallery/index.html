@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper 갤러리 슬라이드 (반응형) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper 갤러리 슬라이드 (반응형) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<script src="swiper.js"></script>
+
+<style>
+*{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+ul,ol,li {list-style: none;}
+
+.gallery {overflow: hidden;position: relative;max-width: 900px;margin: 40px auto 0;}
+.gallery .list .inner {position: relative;}
+.gallery .list .slide_list > li {display: flex;justify-content: center;align-items: center;height:300px;background: #8ab4f8;font-size: 48px;opacity: 0 !important;}
+.gallery .list .slide_list > li.swiper-slide-active {opacity: 1 !important;} 
+.gallery .list .btn {position: absolute;top: 50%;width: 35px;height: 35px;background:url('images/arrow.png') center center no-repeat;background-size: contain;text-indent: -999em;z-index: 1;}
+.gallery .list .btn.btn_prev {left: 10px;transform:translate(0,-50%) rotateY(180deg);}
+.gallery .list .btn.btn_next {right: 10px;transform: translate(0,-50%) ;}
+
+.gallery .thumbs {margin-top: 20px;}
+.gallery .thumbs .slide_list > li {display: flex;justify-content: center;align-items: center;position: relative;height:100px;background: #ddd;background: #8ab4f8;font-size: 24px;cursor: pointer;}
+.gallery .thumbs .slide_list > li.swiper-slide-thumb-active:before {content:'';position: absolute;top: 0;right: 0;bottom: 0;left: 0;border: 4px solid #000;z-index: 1;}
+</style>
+</head>
+<body>
+<div class="gallery">
+    <!-- 메인 슬라이드 -->
+    <div class="list">
+        <div class="inner">
+        <ul class="swiper-wrapper slide_list">
+            <li class="swiper-slide">1</li>
+            <li class="swiper-slide">2</li>
+            <li class="swiper-slide">3</li>
+            <li class="swiper-slide">4</li>
+            <li class="swiper-slide">5</li>
+            <li class="swiper-slide">6</li>
+            <li class="swiper-slide">7</li>
+        </ul>
+        <span class="btn btn_prev">이전</span>
+        <span class="btn btn_next">다음</span>
+        </div>
+    </div>
+
+    <!-- 갤러리 썸네일 -->
+    <div class="thumbs">
+        <ul class="swiper-wrapper slide_list">
+        <li class="swiper-slide">1</li>
+        <li class="swiper-slide">2</li>
+        <li class="swiper-slide">3</li>
+        <li class="swiper-slide">4</li>
+        <li class="swiper-slide">5</li>
+        <li class="swiper-slide">6</li>
+        <li class="swiper-slide">7</li>
+        </ul>
+    </div>
+</div>
+      
+<script>
+$(window).on('load', function () {
+    gallery();
+});
+
+function gallery() {
+    let list = undefined;
+    let thumbs = undefined;
+    const slideNum = $('.gallery .list .swiper-slide').length; // 슬라이드 총 개수
+    let slideInx = 0; // 현재 슬라이드 index
+    let viewNum = 0;
+    let loopChk = true;
+
+    // 디바이스 체크
+    let oldWChk = window.innerWidth > 767 ? 'pc' : 'mo';
+    sliderAct();
+
+    $(window).on('resize', function () {
+        const newWChk = window.innerWidth > 767 ? 'pc' : 'mo';
+        if (newWChk !== oldWChk) {
+            oldWChk = newWChk;
+            sliderAct();
+        }
+    });
+
+    // 슬라이드 실행
+    function sliderAct() {
+        // 슬라이드 초기화
+        [list, thumbs].forEach(item => item && item.destroy());
+
+        // slidesPerView 옵션 설정
+        viewNum = oldWChk === 'pc' ? 5 : 3;
+        // loop 옵션 체크
+        loopChk = slideNum > viewNum;
+
+        // 갤러리 썸네일
+        thumbs = new Swiper(".gallery .thumbs", {
+            spaceBetween: 10,
+            slidesPerView: viewNum,
+            loopedSlides: viewNum,
+            loop: loopChk,
+            watchSlidesVisibility: true,
+            watchSlidesProgress: true,
+        });
+
+        // 메인 슬라이드
+        list = new Swiper(".gallery .list .inner", {
+            initialSlide: slideInx,
+            loopedSlides: viewNum,
+            loop: loopChk,
+            effect: "fade",
+            navigation: {
+                nextEl: ".gallery .btn_next",
+                prevEl: ".gallery .btn_prev",
+            },
+            on: {
+                activeIndexChange: function () {
+                    slideInx = this.realIndex; // 현재 슬라이드 index 갱신
+                }
+            },
+            thumbs: {
+                swiper: thumbs,
+            },
+        });
+    }
+}
+</script>
+</body>
+</html>
