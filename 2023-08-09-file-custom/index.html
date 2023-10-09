@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>input[type="file"] 태그 커스텀 (웹 접근성 개선) | 컨트롤 + CCCV</title>
+<meta name="description" content="input file 태그 커스텀 (웹 접근성 개선) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+*{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+ul,ol,li {list-style: none;}
+
+.file_cus label {display: block;width: 500px;margin: 50px auto 0;font-size: 0;cursor: pointer;}
+input[type="file"] {overflow: hidden;position: absolute;width: 1px;height: 1px;margin: -1px;font-size: initial;clip: rect(0 0 0 0);}
+.file_name {overflow: hidden;display: inline-block;vertical-align: middle;width: calc(100% - 108px);height: 40px;padding:0 12px;border: 1px solid #ddd;border-radius:4px;font-size: 14px;line-height: 38px;color: #111;white-space: nowrap; text-overflow: ellipsis;}
+.file_btn {display: inline-block;vertical-align: middle;width: 100px;height: 40px;margin-left: 8px;background: #8ab4f8;border-radius:4px;font-size: 14px;font-weight: 500;line-height: 40px;color: #fff;text-align: center;}
+input[type="file"]:focus-visible ~ .file_btn, .file_cus:hover .file_btn {background: #3478db;}
+</style>
+</head>
+<body>
+
+<div class="file_cus">
+    <label>
+        <input type="file">
+        <span class="file_name">파일을 선택해주세요.</span>
+        <span class="file_btn">파일선택</span>
+    </label>
+</div>
+
+<script>
+$(window).on('load',function(){
+    fileCus();
+})
+
+function fileCus(){
+    $(".file_cus input[type=file]").on("change", function() {
+        const fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".file_name").text(fileName || "파일을 선택해주세요.");
+    });
+}
+
+</script>
+</body>
+</html>
