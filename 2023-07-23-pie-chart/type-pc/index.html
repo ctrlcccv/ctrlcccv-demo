@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 원형 그래프 (Pie Chart) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 원형 그래프 (Pie Chart) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
+<style>
+* {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;}
+ul,ol,li {list-style: none;}
+
+/* 원형 그래프 */
+.pie_wrap {display: flex;width: 600px;margin: 50px auto 0;}
+.pie {width: 300px;height: 300px;}
+
+/* 원형 그래프 비율 표시 - CSS 고정 */
+.pie circle {r:25%;cx:50%;cy:50%;fill:transparent;stroke-width:50%;stroke:#ddd;transform: rotate(-90deg);transform-origin:center;transition:all 0.5s;}
+
+/* 원형 그래프 리스트 */
+.pie_info {width: 300px;padding: 5% 0 0 5%;}
+.pie_info > li {font-size: 0;}
+.pie_info > li .color {display: inline-block;vertical-align: middle;width: 8px;height: 8px;margin-right: 5px;border-radius:4px;background: #000;}
+.pie_info > li .txt {display: inline-block;vertical-align: middle;font-size: 14px;color: #333;}
+
+</style>
+</head>
+<body>
+    <div class="pie_wrap">
+		<!-- 원형 그래프 -->
+		<svg class="pie">
+			<circle data-percent="10" />
+			<circle data-percent="20" />
+			<circle data-percent="30" />
+			<circle data-percent="40" />
+		</svg>
+		<!-- 원형 그래프 리스트 -->
+		<ul class="pie_info">
+			<li>
+				<span class="color"></span>
+				<span class="txt">그래프 1</span>
+			</li>
+			<li>
+				<span class="color"></span>
+				<span class="txt">그래프 2</span>
+			</li>
+			<li>
+				<span class="color"></span>
+				<span class="txt">그래프 3</span>
+			</li>
+			<li>
+				<span class="color"></span>
+				<span class="txt">그래프 4</span>
+			</li>
+		</ul>
+    </div>
+<script>
+$(document).ready(function(){
+	pieAct();
+})
+
+function pieAct(){
+	var color = ["#60D0FD","#ADE7FD","#2F677D","#89B7C9"]; //그래프 색상
+	var angel = -90; //그래프 시작 지점
+	var pieWidth = $('.pie').width(); 
+
+	$('.pie circle').each(function(i){
+		var percentData = $(this).data('percent'); //그래프 비율
+		var perimeter = (pieWidth/2) * 3.14; //원의 둘레
+		var percent =  percentData*(perimeter/100); //그래프 비율만큼 원의 둘레 계산
+		
+		//그래프 비율, 색상 설정
+		$(this).css({
+			'stroke-dasharray':percent+' '+perimeter, 
+			'stroke':color[i],
+			'transform':'rotate('+angel+'deg)'
+		});
+		$('.pie_info > li').eq(i).find('.color').css({'background':color[i]});
+		
+		//그래프 시작 지점 갱신
+		angel += (percentData * 3.6); 
+	})
+}
+</script>
+</body>
+</html>
