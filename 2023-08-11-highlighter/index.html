@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>CSS - 형광펜 밑줄 효과 (+ 애니메이션 추가) | 컨트롤 + CCCV</title>
+<meta name="description" content="CSS - 형광펜 밑줄 효과 (+ 애니메이션 추가) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+*{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+
+p {font-size: 24px;color: #000;text-align: center;margin-top: 50px;}
+.highlighter {background: linear-gradient(#ffea00 0 100%); background-position: 0 calc(100% - 2px); background-size: 0 14px; background-repeat: no-repeat; transition: background-size 0.3s;}
+.highlighter.center {background-position: center calc(100% - 2px); } 
+.highlighter.right {background-position: right calc(100% - 2px); } 
+.highlighter:hover {background-size:100% 14px;}
+</style>
+</head>
+<body>
+<p><span class="highlighter">왼쪽에서 오른쪽으로 이동합니다.</span></p>
+<p><span class="highlighter center">가운데에서 좌우로 이동합니다.</span></p>
+<p><span class="highlighter right">오른쪽에서 왼쪽으로 이동합니다.</span></p>
+</body>
+</html>
