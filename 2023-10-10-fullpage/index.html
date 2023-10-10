@@ -27,6 +27,11 @@ header {position: fixed;top: 0;left: 0;width: 100%;background: #000;z-index: 1;}
 #sec3 {background: #FFF6D3;}
 #sec4 {background: #AEEEEE;}
 footer {height: 300px;background: #000;}
+
+@media (max-width: 600px) {
+    body { padding-top: 50px; }
+    .menu > li a {font-size: 14px;height: 50px;padding: 0 10px;}
+}
 </style>
 </head>
 <body>
@@ -85,6 +90,7 @@ function fullPage() {
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
         isWindowSizeValid = windowWidth > 767 && windowHeight > 700;
+        menuHeight = $('header').height();
     }
 
     // 초기 윈도우 크기 확인
