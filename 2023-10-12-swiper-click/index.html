@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper 스와이프메뉴 클릭하면 가운데오기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper 스와이프메뉴 클릭하면 가운데오기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<script src="swiper.js"></script>
+
+<style>
+*{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+ul,ol,li {list-style: none;}
+
+.menu_wrap {position: relative;max-width: 700px;margin: 30px auto 0;background: #c3e4fa;}
+.menu_wrap .in_Layer {overflow: hidden;}
+.menu {display: flex;align-items: center;}
+.menu > li:last-child {padding-right: 0;}
+.menu > li a {display: flex;align-items: center;position: relative;height: 65px;padding: 0 20px;font-size: 18px; font-weight: 500; letter-spacing:-0.025em; color: #000000;text-decoration: none;}
+.menu > li.active a {color: #2762bb;}
+.menu > li.active a:after {content:'';position: absolute;bottom: 0;left: 0;width: 100%;height: 2px;background: #2762bb;}
+
+</style>
+</head>
+<body>
+<div class="menu_wrap">
+    <div class="in_Layer tab_swiper">
+        <ul class="menu swiper-wrapper">
+            <li class="swiper-slide active"><a href="#self">첫번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">두번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">세번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">네번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">다섯번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">여섯번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">일곱번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">여덟번째 메뉴</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="menu_wrap">
+    <div class="in_Layer tab_swiper">
+        <ul class="menu swiper-wrapper">
+            <li class="swiper-slide"><a href="#self">첫번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">두번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">세번째 메뉴</a></li>
+            <li class="swiper-slide active"><a href="#self">네번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">다섯번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">여섯번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">일곱번째 메뉴</a></li>
+            <li class="swiper-slide"><a href="#self">여덟번째 메뉴</a></li>
+        </ul>
+    </div>
+</div>
+<script>
+$(window).on('load', function () {
+    // 페이지가 로드되면 탭 스와이프 초기화 함수를 호출합니다.
+    initTabSwipers();
+});
+
+function initTabSwipers() {
+    $(".tab_swiper").each(function (index) {
+        const $container = $(this);
+        
+        // 각 탭 스와이프 컨테이너에 클래스를 추가합니다.
+        $container.addClass(`tab_swiper_${index}`);
+
+        // Swiper 라이브러리를 사용하여 탭 스와이프를 초기화합니다.
+        const swiper = new Swiper(`.tab_swiper_${index}`, {
+            slidesPerView: "auto",
+            preventClicks: true,
+            preventClicksPropagation: false,
+            observer: true, // 슬라이드 변경 관찰 활성화
+            observeParents: true // 부모 요소의 변경도 관찰
+        });
+
+        // 탭 항목이 클릭 되면 실행할 함수를 연결합니다.
+        $container.on('click', '.swiper-slide a', function (e) {
+            e.preventDefault();
+            const $item = $(this).parent();
+
+            // 클릭 된 항목을 활성 상태로 표시하고 나머지 항목 비활성화
+            $container.find('.swiper-slide').removeClass('active');
+            $item.addClass('active');
+
+            // 클릭한 항목을 가운데 정렬하는 함수 호출
+            centerTabItem($item);
+        });
+
+        // 페이지 로드 후에 active 클래스가 있는 항목을 가운데 정렬
+        const $activeItem = $container.find('.swiper-slide.active');
+        if ($activeItem.length > 0) {
+            centerTabItem($activeItem);
+        }
+
+        function centerTabItem($target) {
+            const $wrapper = $container.find('.swiper-wrapper');
+            const targetPos = $target.position();
+            const containerWidth = $container.width();
+            let newPosition = 0;
+            let listWidth = 0;
+
+            // 모든 슬라이드의 너비를 합산하여 리스트 전체 너비 계산
+            $wrapper.find('.swiper-slide').each(function () {
+                listWidth += $(this).outerWidth();
+            });
+
+            // 클릭한 항목을 가운데 정렬하기 위한 위치 계산
+            const selectTargetPos = targetPos.left + $target.outerWidth() / 2;
+            if (containerWidth < listWidth) {
+                if (selectTargetPos <= containerWidth / 2) {
+                    newPosition = 0; // 왼쪽
+                } else if ((listWidth - selectTargetPos) <= containerWidth / 2) {
+                    newPosition = listWidth - containerWidth; // 오른쪽
+                } else {
+                    newPosition = selectTargetPos - containerWidth / 2;
+                }
+            }
+
+            // 슬라이드를 새 위치로 이동시키는 애니메이션 설정
+            setTimeout(function () {
+                $wrapper.css({
+                    "transform": `translate3d(${-newPosition}px, 0, 0)`,
+                    "transition-duration": "500ms"
+                });
+            }, 200);
+        }
+    });
+}
+
+</script>
+</body>
+</html>
