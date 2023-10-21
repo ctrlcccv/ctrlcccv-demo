@@ -21,4 +21,7 @@
 * [jQuery - Swiper 갤러리 슬라이드 (반응형)](https://ctrlcccv.github.io/code/2023-08-04-swiper-gallery/)
 * [jQuery - select 태그 커스텀](https://ctrlcccv.github.io/code/2023-08-07-select-custom/)
 * [input[type=file] 태그 커스텀 (웹 접근성 개선)](https://ctrlcccv.github.io/code/2023-08-09-file-custom/)
-* [CSS - 형광펜 밑줄 효과 (+ 애니메이션 추가)](https://ctrlcccv.github.io/code/2023-08-11-highlighter/)
+* [jQuery - fullpage.js 대체하는 풀페이지 스크롤 예제 (반응형) 예제 파일](https://ctrlcccv.github.io/code/2023-10-10-fullpage/)
+* [jQuery - Swiper 스와이프메뉴 클릭하면 가운데오기 예제 파일](https://ctrlcccv.github.io/code/2023-10-12-swiper-click/)
+* [CSS - 네온 효과 예제 파일](https://ctrlcccv.github.io/code/2023-10-15-neon/)
+* [jQuery - 스크롤 내렸을 때 숫자 카운트 애니메이션 예제 파일](https://ctrlcccv.github.io/code/2023-10-20-counting/)
