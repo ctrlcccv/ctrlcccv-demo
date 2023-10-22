@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper 메뉴 클릭 시 스크롤 이동, 활성화 메뉴 표시하기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper 메뉴 클릭 시 스크롤 이동, 활성화 메뉴 표시하기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<script src="swiper.js"></script>
+
+<style>
+*{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+ul,ol,li {list-style: none;}
+
+.wrap {position: relative;max-width: 700px;margin: 0 auto;padding-top: 65px;}
+.menu_wrap {position: absolute;top: 0;left: 50%;width: 100%;max-width: 700px;background: #000;transform: translate(-50%,0);}
+.menu_wrap .in_Layer {overflow: hidden;}
+.menu {display: flex;align-items: center;}
+.menu > li:last-child {padding-right: 0;}
+.menu > li a {display: flex;align-items: center;position: relative;height: 65px;padding: 0 20px;font-size: 18px; font-weight: 500; letter-spacing:-0.025em; color: #fff;text-decoration: none;}
+.menu > li.active a {color: #FFC0CB;}
+.content {display: flex;justify-content: center;align-items: center;height: calc(100vh - 65px);font-size: 60px;font-weight: 500;}
+#con1, #con3, #con5, #con7 {background: #FFC0CB;}
+#con2, #con4, #con6 {background: #E6E6FA;}
+
+@media screen and (max-width: 1180px) {
+    .wrap {padding-top: 45px;}
+    .menu > li a {height: 45px;font-size: 16px;}
+    .content {height: calc(100vh - 45px);}
+}
+</style>
+</head>
+<body>
+<div class="test" style="height:300px">efdfs</div>
+<div class="wrap">
+    <div class="menu_wrap">
+        <div class="in_Layer tab_swiper">
+            <ul class="menu swiper-wrapper">
+                <li class="swiper-slide active"><a href="#con1">첫번째 메뉴</a></li>
+                <li class="swiper-slide"><a href="#con2">두번째 메뉴</a></li>
+                <li class="swiper-slide"><a href="#con3">세번째 메뉴</a></li>
+                <li class="swiper-slide"><a href="#con4">네번째 메뉴</a></li>
+                <li class="swiper-slide"><a href="#con5">다섯번째 메뉴</a></li>
+                <li class="swiper-slide"><a href="#con6">여섯번째 메뉴</a></li>
+                <li class="swiper-slide"><a href="#con7">일곱번째 메뉴</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content" id="con1">1</div>
+    <div class="content" id="con2">2</div>
+    <div class="content" id="con3">3</div>
+    <div class="content" id="con4">4</div>
+    <div class="content" id="con5">5</div>
+    <div class="content" id="con6">6</div>
+    <div class="content" id="con7">7</div>
+</div>
+    
+<script>
+$(document).ready(function () {
+    initTabSwipers(); // 클릭하면 탭 가운데 정렬 함수
+    menuScroll(); // 메뉴 클릭 시 스크롤 이동 함수
+});
+
+function initTabSwipers() {
+    $(".tab_swiper").each(function (index) {
+        const $container = $(this);
+        
+        // 각 탭 스와이프 컨테이너에 클래스를 추가합니다.
+        $container.addClass(`tab_swiper_${index}`);
+
+        // Swiper 라이브러리를 사용하여 탭 스와이프를 초기화합니다.
+        const swiper = new Swiper(`.tab_swiper_${index}`, {
+            slidesPerView: "auto",
+            preventClicks: true,
+            preventClicksPropagation: false,
+            observer: true, // 슬라이드 변경 관찰 활성화
+            observeParents: true // 부모 요소의 변경도 관찰
+        });
+
+        // 탭 항목이 클릭 되면 실행할 함수를 연결합니다.
+        $container.on('click', '.swiper-slide a', function (e) {
+            e.preventDefault();
+            const $item = $(this).parent();
+
+            // 클릭 된 항목을 활성 상태로 표시하고 나머지 항목 비활성화
+            $container.find('.swiper-slide').removeClass('active');
+            $item.addClass('active');
+
+            // 클릭한 항목을 가운데 정렬하는 함수 호출
+            centerTabItem($item);
+        });
+
+        // 페이지 로드 후에 active 클래스가 있는 항목을 가운데 정렬
+        const $activeItem = $container.find('.swiper-slide.active');
+        if ($activeItem.length > 0) {
+            centerTabItem($activeItem);
+        }
+
+        function centerTabItem($target) {
+            const $wrapper = $container.find('.swiper-wrapper');
+            const targetPos = $target.position();
+            const containerWidth = $container.width();
+            let newPosition = 0;
+            let listWidth = 0;
+
+            // 모든 슬라이드의 너비를 합산하여 리스트 전체 너비 계산
+            $wrapper.find('.swiper-slide').each(function () {
+                listWidth += $(this).outerWidth();
+            });
+
+            // 클릭한 항목을 가운데 정렬하기 위한 위치 계산
+            const selectTargetPos = targetPos.left + $target.outerWidth() / 2;
+            if (containerWidth < listWidth) {
+                if (selectTargetPos <= containerWidth / 2) {
+                    newPosition = 0; // 왼쪽
+                } else if ((listWidth - selectTargetPos) <= containerWidth / 2) {
+                    newPosition = listWidth - containerWidth; // 오른쪽
+                } else {
+                    newPosition = selectTargetPos - containerWidth / 2;
+                }
+            }
+
+            // 슬라이드를 새 위치로 이동시키는 애니메이션 설정
+            $wrapper.css({
+                "transform": `translate3d(${-newPosition}px, 0, 0)`,
+                "transition-duration": "500ms"
+            });
+        }
+    });
+}
+
+function menuScroll() {
+    const $menuWrap = $('.menu_wrap');
+    const $menuBox = $menuWrap.find('.tab_swiper');
+    const $menu = $('.menu');
+    const $menuList = $menu.find('li');
+    const $menuItems = $menu.find('a')
+    const $contents = $('.content');
+    const offsetMo = 0; // 메뉴 상단 고정 위치 (모바일)
+    const offsetPC = 0; // 메뉴 상단 고정 위치 (PC)
+    const topMo = 45; // 스크롤 했을 때 컨텐츠 시작 위치 (모바일)
+    const topPc = 65; // 스크롤 했을 때 컨텐츠 시작 위치 (PC)
+    const responsive = 1180; // 모바일 사이즈 분기점
+    let isMobile = window.innerWidth < responsive;
+    let position = $menuWrap.offset().top;
+    let resizeTimer;
+    let scrollTimer;
+
+    // 메뉴를 고정하는 함수
+    function scrollAct() {
+        const scrollTop = $(window).scrollTop();
+        const offset = isMobile ? offsetMo : offsetPC;
+        const menuWrapTop = isMobile ? offsetMo : offsetPC;
+        if (scrollTop > position - offset) {
+            $menuWrap.css({ 'position': 'fixed', 'top': menuWrapTop + 'px' });
+        } else {
+            $menuWrap.css({ 'position': 'absolute', 'top': '0' });
+        }
+    }
+
+    // 활성화된 메뉴 항목을 중앙으로 이동하는 함수
+    function activeMenu(target) {
+        const targetPos = target.position();
+        let pos;
+        let listWidth = 0;
+
+        $menu.find('.swiper-slide').each(function () {
+            listWidth += $(this).outerWidth();
+        });
+
+        const selectTargetPos = targetPos.left + target.outerWidth() / 2;
+        if ($menu.outerWidth() < listWidth) {
+            const boxHarf = $menuBox.width() / 2;
+            if (selectTargetPos <= boxHarf) { // 왼쪽에 위치
+                pos = 0;
+            } else if ((listWidth - selectTargetPos) <= boxHarf) { // 오른쪽에 위치
+                pos = listWidth - $menuBox.width();
+            } else {
+                pos = selectTargetPos - boxHarf;
+            }
+        }
+        $menu.css({
+            "transform": "translate3d(" + (pos * -1) + "px, 0, 0)",
+            "transition-duration": "300ms"
+        });
+    }
+
+    // 창 크기 변경 이벤트 핸들러
+    function handleResize() {
+        $(window).off('scroll', scrollAct);
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+            isMobile = window.innerWidth < responsive;
+            $menuWrap.css({ 'position': 'absolute', 'top': '0' });
+            position = $menuWrap.offset().top;
+            $(window).on('scroll', scrollAct);
+        }, 100);
+    }
+
+    // 스크롤 할 때 메뉴의 활성 상태를 설정하는 함수
+    function handleScroll() {
+        if (!$('html, body').is(":animated")) {
+            const scltop = $(window).scrollTop() + (isMobile ? topMo : topPc);
+            $.each($contents, function (idx, item) {
+                const targetTop = $(this).offset().top;
+                if (targetTop <= scltop) {
+                    clearTimeout(scrollTimer);
+                    scrollTimer = setTimeout(function () {
+                        $menuList.removeClass('active');
+                        $menuList.eq(idx).addClass('active');
+                        activeMenu($menuList.eq(idx));
+                    }, 50);
+                }
+            });
+
+            if (Math.round($(window).scrollTop()) === $(document).height() - $(window).height()) {
+                $menuList.last().addClass('active').siblings().removeClass('active');
+            }
+        }
+    }
+
+    // 페이지 로드 시 초기화 작업
+    $(window).on('load', function () {
+        $(window).on('scroll', scrollAct).scroll();
+    });
+
+    // 창 크기 변경 이벤트 및 스크롤 이벤트 핸들러 등록
+    $(window).on('resize', handleResize);
+    $(window).scroll(handleScroll);
+
+    // 메뉴 클릭 이벤트 핸들러 등록
+    $menuItems.on('click', function (e) {
+        e.preventDefault();
+        const gnbHash = $(this).attr('href');
+        const offset = $(gnbHash).offset().top - (isMobile ? topMo - 1 : topPc - 1);
+        $('html, body').animate({ scrollTop: offset }, 500);
+        $(this).closest('li').addClass('active').siblings().removeClass('active');
+    });
+}
+
+
+</script>
+</body>
+</html>
