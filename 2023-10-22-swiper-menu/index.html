@@ -148,6 +148,7 @@ function menuScroll() {
     const topMo = 45; // 스크롤 했을 때 컨텐츠 시작 위치 (모바일)
     const topPc = 65; // 스크롤 했을 때 컨텐츠 시작 위치 (PC)
     const responsive = 1180; // 모바일 사이즈 분기점
+    let windowWidth = window.innerWidth;
     let isMobile = window.innerWidth < responsive;
     let position = $menuWrap.offset().top;
     let resizeTimer;
@@ -194,6 +195,7 @@ function menuScroll() {
 
     // 창 크기 변경 이벤트 핸들러
     function handleResize() {
+        if (windowWidth == window.innerWidth) return;
         $(window).off('scroll', scrollAct);
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function () {
@@ -202,26 +204,34 @@ function menuScroll() {
             position = $menuWrap.offset().top;
             $(window).on('scroll', scrollAct);
         }, 100);
+        windowWidth = window.innerWidth;
     }
 
     // 스크롤 할 때 메뉴의 활성 상태를 설정하는 함수
     function handleScroll() {
         if (!$('html, body').is(":animated")) {
             const scltop = $(window).scrollTop() + (isMobile ? topMo : topPc);
-            $.each($contents, function (idx, item) {
-                const targetTop = $(this).offset().top;
-                if (targetTop <= scltop) {
-                    clearTimeout(scrollTimer);
-                    scrollTimer = setTimeout(function () {
-                        $menuList.removeClass('active');
-                        $menuList.eq(idx).addClass('active');
-                        activeMenu($menuList.eq(idx));
-                    }, 50);
-                }
-            });
-
-            if (Math.round($(window).scrollTop()) === $(document).height() - $(window).height()) {
-                $menuList.last().addClass('active').siblings().removeClass('active');
+            if ($(window).scrollTop() + window.innerHeight < $(document).height()) {
+                const scltop = $(window).scrollTop() + (isMobile ? topMo : topPc);
+                $.each($contents, function (idx, item) {
+                    const targetTop = $(this).offset().top;
+                    if (targetTop <= scltop) {
+                        clearTimeout(scrollTimer);
+                        scrollTimer = setTimeout(function () {
+                            $menuList.removeClass('active');
+                            $menuList.eq(idx).addClass('active');
+                            activeMenu($menuList.eq(idx));
+                        }, 50);
+                    }
+                });
+            }else{ // 맨 아래에 도달하면 마지막 메뉴 항목 활성화
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(function () {
+                    const lastInx = $menuList.length - 1
+                    $menuList.removeClass('active');
+                    $menuList.eq(lastInx).addClass('active');
+                    activeMenu($menuList.eq(lastInx));
+                }, 50);
             }
         }
     }
