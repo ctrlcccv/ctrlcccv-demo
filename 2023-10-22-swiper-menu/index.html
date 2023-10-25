@@ -147,9 +147,9 @@ function menuScroll() {
     const offsetPC = 0; // 메뉴 상단 고정 위치 (PC)
     const topMo = 45; // 스크롤 했을 때 컨텐츠 시작 위치 (모바일)
     const topPc = 65; // 스크롤 했을 때 컨텐츠 시작 위치 (PC)
-    const responsive = 1180; // 모바일 사이즈 분기점
+    const breakpoints = 1181; // 모바일 사이즈 분기점
     let windowWidth = window.innerWidth;
-    let isMobile = window.innerWidth < responsive;
+    let isMobile = window.innerWidth < breakpoints;
     let position = $menuWrap.offset().top;
     let resizeTimer;
     let scrollTimer;
@@ -199,7 +199,7 @@ function menuScroll() {
         $(window).off('scroll', scrollAct);
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function () {
-            isMobile = window.innerWidth < responsive;
+            isMobile = window.innerWidth < breakpoints;
             $menuWrap.css({ 'position': 'absolute', 'top': '0' });
             position = $menuWrap.offset().top;
             $(window).on('scroll', scrollAct);
