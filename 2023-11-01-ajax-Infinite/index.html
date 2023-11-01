@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Ajax 무한 스크롤 예제 (Intersection Observer API 활용) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Ajax 무한 스크롤 예제 (Intersection Observer API 활용) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#loading {
+    text-align: center;
+    display: none;
+}
+
+</style>
+
+</head>
+<body>
+<div class="container">
+    <div id="content">
+        <!-- Data will be loaded here -->
+    </div>
+    <div id="loading">Loading...</div>
+</div>
+
+<script>
+// 변수 초기화
+let page = 1;
+const contentDiv = $('#content');
+const loadingDiv = $('#loading');
+const perPage = 10; // 한 번에 가져올 항목 수
+
+// Intersection Observer 설정
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+        loadData();
+    }
+});
+
+// 초기 데이터 로드
+loadData();
+
+// 데이터 가져오기 함수
+function loadData() {
+    loadingDiv.show();
+    $.ajax({
+        url: `test.json`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            loadingDiv.hide();
+            if (data.length === 0) {
+                // 데이터가 더 이상 없을 때 처리
+                observer.unobserve(loadingDiv[0]);
+                loadingDiv.html('No more data').show();
+            } else {
+                // 데이터 표시
+                $.each(data, function(index, item) {
+                    const itemDiv = $('<div>').text(item.text);
+                    contentDiv.append(itemDiv);
+                });
+                page++;
+            }
+        }
+    });
+}
+
+// Intersection Observer를 로딩 표시 엘리먼트에 적용
+observer.observe(loadingDiv[0]);
+
+</script>
+</body>
+</html>
