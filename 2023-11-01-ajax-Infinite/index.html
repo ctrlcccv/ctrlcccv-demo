@@ -33,17 +33,39 @@ body {background: #ddd;}
 <script>
 $(document).ready(function() {
     const data = JSON.parse(JSON.stringify(itemData));
-    let currentPage = 1;
+    let page = 1;
     const itemsPerPage = 10; // 한 번에 로드할 항목 수
 
     function loadItems() {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const itemsToLoad = data.slice(startIndex, endIndex);
-        itemsToLoad.forEach(item => {
-            $('.container').append(`<div class="item">${item.item}</div>`);
+        // const startIndex = (currentPage - 1) * itemsPerPage;
+        // const endIndex = startIndex + itemsPerPage;
+        // const itemsToLoad = data.slice(startIndex, endIndex);
+        // itemsToLoad.forEach(item => {
+        //     $('.container').append(`<div class="item">${item.item}</div>`);
+        // });
+        // currentPage++;
+        
+        // AJAX를 사용하여 데이터를 가져오는 부분
+        $.ajax({
+            url: `https://raw.githubusercontent.com/ctrlcccv/ctrlcccv-demo/main/2023-11-01-ajax-Infinite/test.json`,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // 데이터를 가져온 후 처리하는 부분
+                const newData = data.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+                newData.forEach(item => {
+                    $('.container').append(`<div class="item">${item.item}</div>`);
+                });
+
+                isLoading = false;
+                page++;
+            },
+            error: function (error) {
+                console.error('데이터를 가져오는 동안 오류가 발생했습니다:', error);
+                isLoading = false;
+            }
         });
-        currentPage++;
+        
     }
 
     loadItems();
@@ -62,7 +84,7 @@ $(document).ready(function() {
                 lastItem = $('.container .item:last')[0];
                 observer.observe(lastItem);
                 observer.unobserve(entry.target); 
-                console.log('test')
+                console.log('이벤트 발생!')
                 
             }
         });
