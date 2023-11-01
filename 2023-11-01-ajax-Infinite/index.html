@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>jQuery - Ajax 무한 스크롤 예제 (Intersection Observer API 활용) | 컨트롤 + CCCV</title>
-<meta name="description" content="jQuery - Ajax 무한 스크롤 예제 (Intersection Observer API 활용) | 컨트롤 + CCCV" />
+<title>jQuery - 스크롤 내리면 나타나는 애니메이션 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 스크롤 내리면 나타나는 애니메이션 | 컨트롤 + CCCV" />
 <meta name="robots" content="noindex">
 <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -12,73 +12,65 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <style>
-* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+body {background: #ddd;}
+.container {height: 150px;overflow-x: hidden;overflow-y: auto; width: 500px;margin: 0 auto;background: #fff;} 
+.el {
+    display: block;
+    height: 100px;
+    background-color: lightblue;
+    margin-top: 200px; /* 요소가 초기에 화면 밖에 있도록 설정합니다. */
 }
-
-#loading {
-    text-align: center;
-    display: none;
-}
-
+.el.active {background: red;}
 </style>
-
 </head>
+
 <body>
-<div class="container">
-    <div id="content">
-        <!-- Data will be loaded here -->
+    <div class="container">
+        
     </div>
-    <div id="loading">Loading...</div>
-</div>
 
+<script type="text/javascript" src="test.json"></script>
 <script>
-// 변수 초기화
-let page = 1;
-const contentDiv = $('#content');
-const loadingDiv = $('#loading');
-const perPage = 10; // 한 번에 가져올 항목 수
+$(document).ready(function() {
+    const data = JSON.parse(JSON.stringify(itemData));
+    let currentPage = 1;
+    const itemsPerPage = 10; // 한 번에 로드할 항목 수
 
-// Intersection Observer 설정
-const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-        loadData();
+    function loadItems() {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const itemsToLoad = data.slice(startIndex, endIndex);
+        itemsToLoad.forEach(item => {
+            $('.container').append(`<div class="item">${item.item}</div>`);
+        });
+        currentPage++;
     }
-});
 
-// 초기 데이터 로드
-loadData();
+    loadItems();
 
-// 데이터 가져오기 함수
-function loadData() {
-    loadingDiv.show();
-    $.ajax({
-        url: `test.json`,
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            loadingDiv.hide();
-            if (data.length === 0) {
-                // 데이터가 더 이상 없을 때 처리
-                observer.unobserve(loadingDiv[0]);
-                loadingDiv.html('No more data').show();
-            } else {
-                // 데이터 표시
-                $.each(data, function(index, item) {
-                    const itemDiv = $('<div>').text(item.text);
-                    contentDiv.append(itemDiv);
-                });
-                page++;
+    // Intersection Observer 설정
+    const observerOptions = {
+        root: null, // 루트 요소를 지정하지 않음
+        threshold: 0.5 // 요소가 50% 이상 화면에 들어올 때 콜백 실행
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // 요소가 화면에 들어올 때 새로운 항목 로드
+                loadItems();
+                lastItem = $('.container .item:last')[0];
+                observer.observe(lastItem);
+                observer.unobserve(entry.target); 
+                console.log('test')
+                
             }
-        }
-    });
-}
+        });
+    }, observerOptions);
 
-// Intersection Observer를 로딩 표시 엘리먼트에 적용
-observer.observe(loadingDiv[0]);
+    let lastItem = $('.container .item:last')[0];
+    observer.observe(lastItem);
+});
 
 </script>
 </body>
