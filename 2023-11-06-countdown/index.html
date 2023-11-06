@@ -26,11 +26,11 @@
 
 <script>
 $(document).ready(function() {
-    const $countdown = $(".countdown"); // 카운트다운을 표시할 요소
-    const $days = $(".days"); // 남은 날짜를 표시할 요소
-    const $hours = $(".hours"); // 남은 시간을 표시할 요소
-    const $minutes = $(".minutes"); // 남은 분을 표시할 요소
-    const $seconds = $(".seconds"); // 남은 초를 표시할 요소
+    const $countdown = $('.countdown'); // 카운트다운을 표시할 요소
+    const $days = $('.days'); // 남은 날짜를 표시할 요소
+    const $hours = $('.hours'); // 남은 시간을 표시할 요소
+    const $minutes = $('.minutes'); // 남은 분을 표시할 요소
+    const $seconds = $('.seconds'); // 남은 초를 표시할 요소
     let countdownInterval; // 카운트다운을 갱신하기 위한 인터벌 변수
     const format = true; // 0을 포함한 두 자리 숫자로 표시할지 여부를 결정하는 변수 (true, false)
 
@@ -48,7 +48,7 @@ $(document).ready(function() {
         // 현재 날짜와 시간을 가져옵니다.
         const now = new Date();
         // 목표 날짜와 시간을 설정합니다.
-        const target = new Date("2100-01-01T00:00:00");
+        const target = new Date('2100-01-01T00:00:00');
         // 목표 날짜까지의 시간 차이를 계산합니다.
         const diff = target - now;
 
@@ -69,7 +69,6 @@ $(document).ready(function() {
             $hours.text(hours);
             $minutes.text(minutes);
             $seconds.text(seconds);
-            console.log('tet')
         } else {
             // 카운트다운이 종료되면 메시지를 표시하고 인터벌을 중지합니다.
             $countdown.html('종료되었습니다.');
