@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 남은시간 타이머 만들기 (카운트다운) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 남은시간 타이머 만들기 (카운트다운) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+.countdown {text-align: center;padding-top: 40px;font-size: 42px;font-weight: 700;}
+</style>
+</head>
+
+<body>
+<div class="countdown">
+    <span class="days">0</span>일
+    <span class="hours">0</span>시간
+    <span class="minutes">0</span>분
+    <span class="seconds">0</span>초
+</div>
+
+<script>
+$(document).ready(function() {
+    const $countdown = $(".countdown"); // 카운트다운을 표시할 요소
+    const $days = $(".days"); // 남은 날짜를 표시할 요소
+    const $hours = $(".hours"); // 남은 시간을 표시할 요소
+    const $minutes = $(".minutes"); // 남은 분을 표시할 요소
+    const $seconds = $(".seconds"); // 남은 초를 표시할 요소
+    let countdownInterval; // 카운트다운을 갱신하기 위한 인터벌 변수
+
+    // 카운트다운을 계산하는 함수
+    function calculateCountdown() {
+        // 현재 날짜와 시간을 가져옵니다.
+        const now = new Date();
+        // 목표 날짜와 시간을 설정합니다.
+        const target = new Date("2100-01-01T00:00:00");
+        // 목표 날짜까지의 시간 차이를 계산합니다.
+        const diff = target - now;
+
+        if (diff > 0) {
+            // 시간 차이를 초, 분, 시간, 일로 분해합니다.
+            const secDiff = Math.floor(diff / 1000);
+            const minDiff = Math.floor(secDiff / 60);
+            const hrDiff = Math.floor(minDiff / 60);
+            const dayDiff = Math.floor(hrDiff / 24);
+
+            // 각 요소에 해당하는 값을 설정하여 화면에 표시합니다.
+            const days = dayDiff;
+            const hours = hrDiff % 24;
+            const minutes = minDiff % 60;
+            const seconds = secDiff % 60;
+
+            $days.text(days);
+            $hours.text(hours);
+            $minutes.text(minutes);
+            $seconds.text(seconds);
+        } else {
+            // 카운트다운이 종료되면 메시지를 표시하고 인터벌을 중지합니다.
+            $countdown.html('종료되었습니다.');
+            clearInterval(countdownInterval);
+        }
+    }
+
+    // 초기 카운트다운 값을 설정하고 1초마다 업데이트합니다.
+    calculateCountdown();
+    countdownInterval = setInterval(calculateCountdown, 1000);
+});
+</script>
+</body>
+</html>
