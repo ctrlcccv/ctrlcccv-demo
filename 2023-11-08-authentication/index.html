@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 인증번호 타이머 예제 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 인증번호 타이머 예제 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+body {background: #f5f5f5;}
+.join {width: 330px;margin: 100px auto 0;padding: 15px 15px 0;background: #fff;border: 1px solid #ddd;border-radius:4px;}
+.join label {display: block;margin-bottom: 4px;font-size: 14px;color: #000;}
+.join .input_wrap {display: flex;align-items: center; width: 100%;margin-bottom: 15px;}
+.join input[type="tel"] {width: calc(100% - 106px);height: 35px;padding: 0 15px;border: 1px solid #ced4da;border-radius:4px;font-size: 14px;color: #000;} 
+.join .code_wrap {position: relative;width: calc(100% - 106px);}
+.join .code_wrap .time {position: absolute;top:50%;right: 8px;font-size: 13px;color: #007bff;transform: translate(0,-50%);}
+.join .code_wrap input[type="tel"] {width: 100%;padding-right: 50px;}
+.join button {width: 100px;height: 35px;margin-left: 6px;background: #007bff;border: none;border-radius:4px;font-size: 12px;color: #fff;white-space: nowrap;transition: all 0.3s;cursor: pointer;}
+.join button:hover {background: #0069d9;}
+</style>
+</head>
+
+<body>
+<div class="join">
+    <form>
+        <label for="tel">전화번호 입력</label>
+        <div class="input_wrap">
+            <input type="tel" id="tel" name="tel">
+            <button class="btn_send">인증번호 받기</button>
+        </div>
+        <label for="code">인증번호 입력</label>
+        <div class="input_wrap">
+            <div class="code_wrap">
+                <input type="tel" id="code" name="code">
+                <span class="time"></span>
+            </div>
+            <button class="btn_auth">인증하기</button>
+        </div>
+    </form>
+</div>
+
+<script>
+$(document).ready(function() {
+    let seconds; // 남은 시간 변수
+    let countdown; // 카운트다운을 관리하는 변수
+    const $timeSpan = $('.time'); // 시간을 표시할 요소
+    const $btnSend = $('.btn_send'); // "인증번호 받기" 버튼 요소
+
+    // 시간을 업데이트하고 화면에 표시하는 함수
+    const updateCountdown = function() {
+        if (seconds >= 0) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            $timeSpan.text(`${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`);
+            seconds--;
+        } else {
+            clearInterval(countdown);
+            alert('인증번호 유효시간이 만료되었습니다.');
+        }
+    };
+
+    // "인증번호 받기" 버튼 클릭 이벤트 핸들러
+    $btnSend.on('click', function(e) {
+        e.preventDefault();
+        $btnSend.text('재전송');
+        alert('인증번호가 발송되었습니다.');
+
+        clearInterval(countdown);
+        seconds = 180; // 3분(180초)
+
+        updateCountdown();
+        // 1초마다 카운트다운 업데이트
+        countdown = setInterval(updateCountdown, 1000); 
+    });
+});
+
+
+
+</script>
+</body>
+</html>
