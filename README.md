@@ -27,9 +27,9 @@
 * [jQuery - 스크롤 내렸을 때 숫자 카운트 애니메이션](https://ctrlcccv.github.io/code/2023-10-20-counting/)
 * [jQuery - Swiper 메뉴 클릭 시 스크롤 이동, 활성화 메뉴 표시하기](https://ctrlcccv.github.io/code/2023-10-22-swiper-menu/)
 * [jQuery - 스크롤 내리면 나타나는 애니메이션](https://ctrlcccv.github.io/code/2023-10-30-scroll-show/)
-* [jQuery - Ajax 무한 스크롤 예제 (Intersection Observer API 활용)](https://ctrlcccv.github.io/code/2023-11-01-ajax-Infinite/)
+* [jQuery - Ajax 무한 스크롤 예제 (Intersection Observer API 활용)](https://ctrlcccv.github.io/code/2023-11-01-ajax-infinite/)
 * [CSS - 햄버거 메뉴 애니메이션](https://ctrlcccv.github.io/code/2023-11-03-hamburger-menu/)
-* [jQuery - 남은시간 타이머 만들기 (카운트다운)](https://ctrlcccv.github.io/code/2023-11-06-countdowng/)
+* [jQuery - 남은시간 타이머 만들기 (카운트다운)](https://ctrlcccv.github.io/code/2023-11-06-countdown/)
 * [jQuery - 인증번호 타이머 예제](https://ctrlcccv.github.io/code/2023-11-08-authentication/)
 * [jQuery - Input password 비밀번호 보이기](https://ctrlcccv.github.io/code/2023-11-09-password/)
 
