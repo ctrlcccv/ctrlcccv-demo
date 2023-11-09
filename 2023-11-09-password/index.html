@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Input password 비밀번호 보이기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Input password 비밀번호 보이기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+body {background: #f5f5f5;}
+.join {width: 330px;margin: 100px auto 0;padding: 15px;background: #fff;border: 1px solid #ddd;border-radius:4px;}
+.join .tit {display: block;margin-bottom: 4px;font-size: 14px;color: #000;}
+#pw {width: 100%;height: 35px;padding: 0 15px;border: 1px solid #ced4da;border-radius:4px;font-size: 14px;color: #000;} 
+.pw_show {display: flex;align-items: center; margin-top: 10px; font-size: 12px;}
+.pw_show input[type="checkbox"] {display: flex;align-items: center;margin-right: 5px;font-size: 12px; }
+</style>
+</head>
+
+<body>
+<div class="join">
+    <form>
+        <label for="pw" class="tit">비밀번호 입력</label>
+        <input type="password" id="pw" name="pw" value="password!@">
+        <label class="pw_show"><input type="checkbox">비밀번호 표시</label>
+    </form>
+</div>
+
+<script>
+$(document).ready(function() {
+    const pwInput = $("#pw");
+    $('.pw_show input[type="checkbox"]').on('change', function() {
+        if (this.checked) {
+            pwInput.prop("type", "text");
+        } else {
+            pwInput.prop("type", "password");
+        }
+    });
+});
+
+</script>
+</body>
+</html>
