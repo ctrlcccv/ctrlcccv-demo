@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>CSS - 토글 스위치 만들기 | 컨트롤 + CCCV</title>
+<meta name="description" content="CSS - 토글 스위치 만들기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+.wrap {text-align: center; margin: 100px auto 0;}
+.toggle_switch { display: inline-block; position: relative; width: 70px; height: 34px; } 
+.toggle_switch input[type="checkbox"] { overflow: hidden; position: absolute; width: 1px; height: 1px; margin: -1px; font-size: initial; clip: rect(0 0 0 0); } 
+.toggle_switch .slider { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background-color: #ccc; border-radius: 34px; cursor: pointer; transition: 0.4s; } 
+.toggle_switch input[type="checkbox"]:checked + .slider { background-color: #007bff; } 
+.toggle_switch .slider:before { content: ""; position: absolute; top: 4px; left: 4px; width: 26px; height: 26px; background-color: #fff; border-radius: 50%; transition: 0.4s; } 
+.toggle_switch input[type="checkbox"]:checked + .slider:before { transform:translateX(36px); } 
+</style>
+</head>
+
+<body>
+<div class="wrap">
+    <label class="toggle_switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+    </label>
+</div>
+</body>
+</html>
