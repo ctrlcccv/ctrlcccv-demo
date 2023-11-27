@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 마우스 커서 애니메이션 (반전, 확대) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 마우스 커서 애니메이션 (반전, 확대) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { background: #fff; } 
+.cursor { position: absolute; top: 0; left: 0; width: 40px; height: 40px; background-color: #fff; border-radius: 50%; z-index: 9999; pointer-events: none; transition: transform 200ms ease-out; mix-blend-mode: difference; } 
+.cursor.cursor_expand { transform: scale(1.5); } 
+.title { margin-top: 200px; padding: 30px 0; font-size: 40px; font-weight: 700; color: #000; text-align: center; } 
+.link { display: block; margin-top: 200px; padding: 30px 0; font-size: 40px; font-weight: 700; color: #000; text-align: center; text-decoration: none; } 
+</style>
+</head>
+<body>
+<div class="cursor"></div>
+<div class="title">마우스를 요소 위에 올리면 반전됩니다.</div>
+<a href="#self" class="link">링크 위에 올리면 확대됩니다.</a>
+
+<script>
+const $cursor = $('.cursor');
+const $link = $('.link');
+let isMouseOverLink = false; // .link 요소 위에 마우스가 있는지 추적
+let isMouseDown = false; // 마우스 버튼이 눌려 있는지 추적
+
+// 커서 상태 업데이트 - $link 위에 있거나 마우스 버튼이 눌려있으면 확대
+function updateCursor() {
+    if (isMouseOverLink || isMouseDown) {
+        $cursor.addClass('cursor_expand');
+    } else {
+        $cursor.removeClass('cursor_expand');
+    }
+}
+
+// 마우스 이동에 따라 커서 위치 업데이트
+$(document).mousemove(function(e) {
+    $cursor.css({
+        'left': e.pageX - $cursor.width() / 2 + 'px',
+        'top': e.pageY - $cursor.height() / 2 + 'px'
+    });
+    updateCursor(); // 마우스 이동 시 커서 상태 업데이트
+});
+
+// .link 요소에 마우스 오버 시 isMouseOverLink 업데이트
+$link.mouseenter(function() {
+    isMouseOverLink = true;
+    updateCursor();
+}).mouseleave(function() {
+    isMouseOverLink = false;
+    updateCursor();
+});
+
+// 마우스 버튼 누름/뗌에 따라 isMouseDown 업데이트
+$(document).mousedown(function() {
+    isMouseDown = true;
+    updateCursor();
+}).mouseup(function() {
+    isMouseDown = false;
+    updateCursor();
+});
+</script>
+
+</body>
+</html>
