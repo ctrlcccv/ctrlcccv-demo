@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 마우스 따라 움직이는 눈 만들기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 마우스 따라 움직이는 눈 만들기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #8ab4f8; } 
+.eyes { display: flex; flex-wrap: wrap; position: relative; } 
+.eye { position: relative; top: 0; width: 100px; height: 100px; margin: 0 15px; background: #fff; border-radius: 50%; } 
+.eye:before { content: ''; position: absolute; top: 50px; left:25px; width:45px; height: 45px; background: #333; border-radius: 50%; transform: translate(-50%, -50%); } 
+
+</style>
+</head>
+<body>
+
+
+<div class="eyes">
+    <span class="eye"></span>
+    <span class="eye"></span>
+</div>
+
+<script>
+// 문서에 마우스 움직임 이벤트 리스너를 설정합니다.
+$(document).mousemove(function(event) {
+    // 각 '.eye' 클래스를 가진 요소에 대해 반복합니다.
+    $('.eye').each(function() {
+        // 현재 눈의 중심 좌표를 계산합니다. 
+        const centerX = $(this).offset().left + $(this).width() / 2;
+        const centerY = $(this).offset().top + $(this).height() / 2;
+
+        // 마우스 위치와 눈의 중심 사이의 각도를 계산합니다.
+        const angle = Math.atan2(event.pageX - centerX, event.pageY - centerY);
+
+        // 각도를 도(degree) 단위로 변환하고, 270도를 더해 눈동자가 마우스를 바라보도록 조정합니다.
+        const rotateDeg = (angle * (180 / Math.PI) * -1) + 270;
+
+        // 계산된 각도로 눈동자의 회전을 설정합니다.
+        $(this).css('transform', `rotate(${rotateDeg}deg)`);
+    });
+});
+</script>
+
+</body>
+</html>
