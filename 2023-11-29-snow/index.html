@@ -24,81 +24,64 @@ canvas {background: #141f3e;}
 
 <script>
 
-$(document).ready(function() {
-    const canvas = $('#show')[0];
+const canvas = $('#show')[0];
     const ctx = canvas.getContext('2d');
 
-    // 초기 너비와 높이를 적절하게 설정
     let W = $('.snow_wrap').width();
     let H = $('.snow_wrap').height();
 
     function setCanvasSize() {
-        // 임시 캔버스로 현재 내용을 저장
-        const tempCanvas = document.createElement('canvas');
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCanvas.width = W;
-        tempCanvas.height = H;
-        tempCtx.drawImage(canvas, 0, 0);
-
-        // 캔버스 크기 재설정
         W = $('.snow_wrap').width();
         H = $('.snow_wrap').height();
         canvas.width = W;
         canvas.height = H;
-
-        // 임시 캔버스의 내용을 원래 캔버스에 복원
-        ctx.drawImage(tempCanvas, 0, 0);
+        createParticles(); // 캔버스 크기가 변경될 때마다 눈송이 갱신
     }
 
-    // 창 크기 변경 시 캔버스 크기 재설정
-    $(window).resize(setCanvasSize);
-
-    // 눈송이 파티클 생성 및 그리기 로직은 동일
     let particles = [];
 
-for (let i = 0; i < 100; i++) {
-    particles.push(new createParticle());
-}
+    function createParticles() {
+        particles = []; // 기존 파티클을 지우고 새로 시작합니다.
+        const isMobile = window.innerWidth < 768;
+        const particleCount = isMobile ? 50 : 100;
 
-function createParticle() {
-    this.x = Math.random() * W;
-    this.y = Math.random() * H;
-    this.vx = Math.random() * 4 - 1;
-    this.vy = Math.random() * 4 + 1;
-    this.color = `rgba(255, 255, 255, ${Math.random()})`;
-    this.radius = Math.random() * 5 + 2;
-}
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new createParticle());
+        }
+    }
 
-function draw() {
-    ctx.clearRect(0, 0, W, H);
+    function createParticle() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.vx = Math.random() * 4 - 1;
+        this.vy = Math.random() * 4 + 1;
+        this.color = `rgba(255, 255, 255, ${Math.random()})`;
+        this.radius = Math.random() * 5 + 2;
+    }
 
-    particles.forEach(function(p) {
-        ctx.beginPath();
-        let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-        gradient.addColorStop(1, p.color);
-        gradient.addColorStop(1, "rgb(66, 66, 66)");
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(function(p) {
+            ctx.beginPath();
+            let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+            gradient.addColorStop(1, p.color);
+            gradient.addColorStop(1, "rgb(66, 66, 66)");
+            ctx.fillStyle = gradient;
+            ctx.arc(p.x, p.y, p.radius, Math.PI * 2, false);
+            ctx.fill();
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < -50) p.x = W + 50;
+            if (p.y < -50) p.y = H + 50;
+            if (p.x > W + 50) p.x = -50;
+            if (p.y > H + 50) p.y = -50;
+        });
+    }
 
-        ctx.fillStyle = gradient;
-        ctx.arc(p.x, p.y, p.radius, Math.PI * 2, false);
-        ctx.fill();
+    $(window).resize(setCanvasSize);
+    setCanvasSize(); // 처음에 캔버스 크기를 설정합니다.
 
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < -50) p.x = W + 50;
-        if (p.y < -50) p.y = H + 50;
-        if (p.x > W + 50) p.x = -50;
-        if (p.y > H + 50) p.y = -50;
-    });
-}
-
-setInterval(draw, 33);
-
-    // 캔버스 크기를 처음 설정
-    canvas.width = W;
-    canvas.height = H;
-});
-
+    setInterval(draw, 33); // 눈송이 애니메이션 시작
 
 </script>
 
