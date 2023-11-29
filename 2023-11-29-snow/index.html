@@ -13,94 +13,103 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <style>
 * { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
-.snow_wrap {width: 100%;height: 100vh;overflow: hidden;}
-canvas {background: #141f3e;}
+.snow_wrap { overflow: hidden; position: relative; width: 100%; height: 100vh; } 
+canvas { background: #141f3e; } 
+h1 { position: absolute; top: 50%; left: 50%; font-weight:48px; font-weight: 500; color: #fff; text-align: center; z-index: 1; transform: translate(-50%,-50%); word-break: keep-all; } 
 </style>
 </head>
 <body>
 <div class="snow_wrap">
     <canvas id="show"></canvas>
+    <h1>브라우저 화면 크기를 변경하여<br>반응형 전환 효과를 확인해보세요.</h1>
 </div>
 
 <script>
-   
-   const canvas = $('#show')[0];
-    const ctx = canvas.getContext('2d');
+const canvas = $('#show')[0];
+const context = canvas.getContext('2d');
 
-    let W = $('.snow_wrap').width();
-    let H = $('.snow_wrap').height();
-    let lastDeviceType = window.innerWidth < 768 ? 'mobile' : 'desktop';
+// 캔버스의 초기 너비와 높이를 설정합니다.
+let canvasWidth = $('.snow_wrap').width();
+let canvasHeight = $('.snow_wrap').height();
+let lastDeviceType = window.innerWidth < 768 ? 'mobile' : 'desktop';
 
-    function createParticles() {
-        particles = []; // 기존 파티클을 지우고 새로 시작합니다.
-        const particleCount = lastDeviceType === 'mobile' ? 40 : 100;
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new createParticle());
-        }
+// 눈송이 파티클을 생성하는 함수입니다.
+function createParticles() {
+    // 기존 파티클을 삭제하고 새 파티클을 생성합니다.
+    snowParticles = []; 
+    // 디바이스에 따라 파티클 수를 조정합니다.
+    const particleCount = lastDeviceType === 'mobile' ? 40 : 100; 
+    for (let i = 0; i < particleCount; i++) {
+        snowParticles.push(new createParticle());
     }
+}
 
-    function setCanvasSize() {
-        const currentDeviceType = window.innerWidth < 768 ? 'mobile' : 'desktop';
-        if (currentDeviceType !== lastDeviceType) {
-            lastDeviceType = currentDeviceType;
-            createParticles();
-        }
-        
-        // 임시 캔버스로 현재 내용을 저장
-        const tempCanvas = document.createElement('canvas');
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCanvas.width = W;
-        tempCanvas.height = H;
-        tempCtx.drawImage(canvas, 0, 0);
-
-        // 캔버스 크기 재설정
-        W = $('.snow_wrap').width();
-        H = $('.snow_wrap').height();
-        canvas.width = W;
-        canvas.height = H;
-
-        // 임시 캔버스의 내용을 원래 캔버스에 복원
-        ctx.drawImage(tempCanvas, 0, 0);
+// 캔버스의 크기를 조정하는 함수입니다.
+function setCanvasSize() {
+    const currentDeviceType = window.innerWidth < 768 ? 'mobile' : 'desktop';
+    // 디바이스가 변경되면 새로운 파티클을 생성합니다.
+    if (currentDeviceType !== lastDeviceType) {
+        lastDeviceType = currentDeviceType;
+        createParticles();
     }
+    
+    // 임시 캔버스를 사용하여 현재 내용을 저장합니다.
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = canvasWidth;
+    tempCanvas.height = canvasHeight;
+    tempCtx.drawImage(canvas, 0, 0);
 
-    let particles = [];
+    // 캔버스의 크기를 재설정합니다.
+    canvasWidth = $('.snow_wrap').width();
+    canvasHeight = $('.snow_wrap').height();
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
-    function createParticle() {
-        this.x = Math.random() * W;
-        this.y = Math.random() * H;
-        this.vx = Math.random() * 4 - 1;
-        this.vy = Math.random() * 4 + 1;
-        this.color = `rgba(255, 255, 255, ${Math.random()})`;
-        this.radius = Math.random() * 5 + 2;
-    }
+    // 임시 캔버스의 내용을 원래 캔버스에 복원합니다.
+    context.drawImage(tempCanvas, 0, 0);
+}
 
-    function draw() {
-        ctx.clearRect(0, 0, W, H);
-        particles.forEach(function(p) {
-            ctx.beginPath();
-            let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-            gradient.addColorStop(1, p.color);
-            gradient.addColorStop(1, "rgb(66, 66, 66)");
-            ctx.fillStyle = gradient;
-            ctx.arc(p.x, p.y, p.radius, Math.PI * 2, false);
-            ctx.fill();
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < -50) p.x = W + 50;
-            if (p.y < -50) p.y = H + 50;
-            if (p.x > W + 50) p.x = -50;
-            if (p.y > H + 50) p.y = -50;
-        });
-    }
+// 눈송이 파티클을 저장할 배열입니다.
+let snowParticles = []; 
 
-    $(window).resize(setCanvasSize);
+// 개별 눈송이 파티클을 생성하는 생성자 함수입니다.
+function createParticle() {
+    this.x = Math.random() * canvasWidth;
+    this.y = Math.random() * canvasHeight;
+    this.vx = Math.random() * 4 - 1;
+    this.vy = Math.random() * 4 + 1;
+    this.color = `rgba(255, 255, 255, ${Math.random()})`;
+    this.radius = Math.random() * 5 + 2;
+}
 
-    setCanvasSize(); // 처음에 캔버스 크기를 설정합니다.
-    createParticles(); // 초기 파티클 생성
+// 눈송이 파티클을 그리는 함수입니다.
+function draw() {
+    context.clearRect(0, 0, canvasWidth, canvasHeight); // 캔버스를 지웁니다.
+    snowParticles.forEach(function(particle) {
+        context.beginPath();
+        let gradient = context.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.radius);
+        gradient.addColorStop(1, particle.color);
+        gradient.addColorStop(1, "rgb(66, 66, 66)");
+        context.fillStyle = gradient;
+        context.arc(particle.x, particle.y, particle.radius, Math.PI * 2, false);
+        context.fill();
+        // 파티클 위치 업데이트
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        // 파티클이 캔버스 밖으로 나가면 반대편에서 다시 시작
+        if (particle.x < -50) particle.x = canvasWidth + 50;
+        if (particle.y < -50) particle.y = canvasHeight + 50;
+        if (particle.x > canvasWidth + 50) particle.x = -50;
+        if (particle.y > canvasHeight + 50) particle.y = -50;
+    });
+}
 
-    setInterval(draw, 33); // 눈송이 애니메이션 시작
-   
-   </script>
-
+// 창 크기가 변경될 때마다 캔버스 크기를 조정합니다.
+$(window).resize(setCanvasSize);
+setCanvasSize(); // 초기 캔버스 크기를 설정합니다.
+createParticles(); // 초기 파티클을 생성합니다.
+setInterval(draw, 33); // 33ms 간격으로 눈송이 애니메이션을 시작합니다.
+</script>
 </body>
 </html>
