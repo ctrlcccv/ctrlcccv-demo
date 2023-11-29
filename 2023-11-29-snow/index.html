@@ -23,32 +23,47 @@ canvas {background: #141f3e;}
 </div>
 
 <script>
-
-const canvas = $('#show')[0];
+   
+   const canvas = $('#show')[0];
     const ctx = canvas.getContext('2d');
 
     let W = $('.snow_wrap').width();
     let H = $('.snow_wrap').height();
-
-    function setCanvasSize() {
-        W = $('.snow_wrap').width();
-        H = $('.snow_wrap').height();
-        canvas.width = W;
-        canvas.height = H;
-        createParticles(); // 캔버스 크기가 변경될 때마다 눈송이 갱신
-    }
-
-    let particles = [];
+    let lastDeviceType = window.innerWidth < 768 ? 'mobile' : 'desktop';
 
     function createParticles() {
         particles = []; // 기존 파티클을 지우고 새로 시작합니다.
-        const isMobile = window.innerWidth < 768;
-        const particleCount = isMobile ? 50 : 100;
-
+        const particleCount = lastDeviceType === 'mobile' ? 30 : 100;
         for (let i = 0; i < particleCount; i++) {
             particles.push(new createParticle());
         }
     }
+
+    function setCanvasSize() {
+        const currentDeviceType = window.innerWidth < 768 ? 'mobile' : 'desktop';
+        if (currentDeviceType !== lastDeviceType) {
+            lastDeviceType = currentDeviceType;
+            createParticles();
+        }
+        
+        // 임시 캔버스로 현재 내용을 저장
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCanvas.width = W;
+        tempCanvas.height = H;
+        tempCtx.drawImage(canvas, 0, 0);
+
+        // 캔버스 크기 재설정
+        W = $('.snow_wrap').width();
+        H = $('.snow_wrap').height();
+        canvas.width = W;
+        canvas.height = H;
+
+        // 임시 캔버스의 내용을 원래 캔버스에 복원
+        ctx.drawImage(tempCanvas, 0, 0);
+    }
+
+    let particles = [];
 
     function createParticle() {
         this.x = Math.random() * W;
@@ -79,11 +94,13 @@ const canvas = $('#show')[0];
     }
 
     $(window).resize(setCanvasSize);
+
     setCanvasSize(); // 처음에 캔버스 크기를 설정합니다.
+    createParticles(); // 초기 파티클 생성
 
     setInterval(draw, 33); // 눈송이 애니메이션 시작
-
-</script>
+   
+   </script>
 
 </body>
 </html>
