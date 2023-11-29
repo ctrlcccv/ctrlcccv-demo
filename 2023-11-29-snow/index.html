@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>CSS와 jQuery로 눈 내리는 효과 만들기 (반응형) | 컨트롤 + CCCV</title>
-<meta name="description" content="CSS와 jQuery로 눈 내리는 효과 만들기 (반응형) | 컨트롤 + CCCV" />
+<title>jQuery - 마우스 따라 움직이는 눈 만들기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 마우스 따라 움직이는 눈 만들기 | 컨트롤 + CCCV" />
 <meta name="robots" content="noindex">
 <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -23,84 +23,83 @@ canvas {background: #141f3e;}
 </div>
 
 <script>
-const canvas = $('#show')[0];
-const ctx = canvas.getContext('2d');
 
-// 초기 너비와 높이를 적절하게 설정
-let W = $('.snow_wrap').width();
-let H = $('.snow_wrap').height();
+$(document).ready(function() {
+    const canvas = $('#show')[0];
+    const ctx = canvas.getContext('2d');
 
-function setCanvasSize() {
-    // 임시 캔버스로 현재 내용을 저장
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = W;
-    tempCanvas.height = H;
-    tempCtx.drawImage(canvas, 0, 0);
+    // 초기 너비와 높이를 적절하게 설정
+    let W = $('.snow_wrap').width();
+    let H = $('.snow_wrap').height();
 
-    // 캔버스 크기 재설정
-    W = $('.snow_wrap').width();
-    H = $('.snow_wrap').height();
-    canvas.width = W;
-    canvas.height = H;
+    function setCanvasSize() {
+        // 임시 캔버스로 현재 내용을 저장
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCanvas.width = W;
+        tempCanvas.height = H;
+        tempCtx.drawImage(canvas, 0, 0);
 
-    // 임시 캔버스의 내용을 원래 캔버스에 복원
-    ctx.drawImage(tempCanvas, 0, 0);
+        // 캔버스 크기 재설정
+        W = $('.snow_wrap').width();
+        H = $('.snow_wrap').height();
+        canvas.width = W;
+        canvas.height = H;
+
+        // 임시 캔버스의 내용을 원래 캔버스에 복원
+        ctx.drawImage(tempCanvas, 0, 0);
+    }
+
+    // 창 크기 변경 시 캔버스 크기 재설정
+    $(window).resize(setCanvasSize);
+
+    // 눈송이 파티클 생성 및 그리기 로직은 동일
+    let particles = [];
+
+for (let i = 0; i < 100; i++) {
+    particles.push(new createParticle());
 }
 
-// 창 크기 변경 시 캔버스 크기 재설정
-$(window).resize(setCanvasSize);
-
-// 눈송이 파티클 생성 함수
 function createParticle() {
-        this.x = Math.random() * W;
-        this.y = Math.random() * H;
-        this.vx = Math.random() * 4 - 2;
-        this.vy = Math.random() * 4 + 2;
-        this.color = `rgba(255, 255, 255, ${Math.random()})`;
-        this.radius = Math.random() * 5 + 1;
-    }
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = Math.random() * 4 - 1;
+    this.vy = Math.random() * 4 + 1;
+    this.color = `rgba(255, 255, 255, ${Math.random()})`;
+    this.radius = Math.random() * 5 + 2;
+}
 
-    // 초기 눈송이 파티클 생성
-    let particles = [];
-    for (let i = 0; i < 100; i++) {
-        particles.push(new createParticle());
-    }
+function draw() {
+    ctx.clearRect(0, 0, W, H);
 
-    // 눈송이 그리기 함수
-    function draw() {
-        ctx.clearRect(0, 0, W, H);
-        particles.forEach(p => {
-            ctx.beginPath();
-            let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    particles.forEach(function(p) {
+        ctx.beginPath();
+        let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+        gradient.addColorStop(1, p.color);
+        gradient.addColorStop(1, "rgb(66, 66, 66)");
 
-            ctx.fillStyle = gradient;
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fill();
+        ctx.fillStyle = gradient;
+        ctx.arc(p.x, p.y, p.radius, Math.PI * 2, false);
+        ctx.fill();
 
-            // 눈송이 위치 업데이트
-            p.x += p.vx;
-            p.y += p.vy;
+        p.x += p.vx;
+        p.y += p.vy;
 
-            // 화면 밖으로 나간 눈송이 처리
-            if (p.x < -50) p.x = W + 50;
-            if (p.y < -50) p.y = H + 50;
-            if (p.x > W + 50) p.x = -50;
-            if (p.y > H + 50) p.y = -50;
-        });
-    }
+        if (p.x < -50) p.x = W + 50;
+        if (p.y < -50) p.y = H + 50;
+        if (p.x > W + 50) p.x = -50;
+        if (p.y > H + 50) p.y = -50;
+    });
+}
 
-    // 눈송이 애니메이션 갱신
-    setInterval(draw, 33);
+setInterval(draw, 33);
 
-    // 처음 로드할 때 캔버스 크기 설정
-    setCanvasSize();
+    // 캔버스 크기를 처음 설정
+    canvas.width = W;
+    canvas.height = H;
+});
 
-// 캔버스 크기를 처음 설정
-canvas.width = W;
-canvas.height = H;
+
 </script>
 
 </body>
