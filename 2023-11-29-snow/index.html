@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 마우스 따라 움직이는 눈 만들기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 마우스 따라 움직이는 눈 만들기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+.snow_wrap {width: 100%;height: 100vh;overflow: hidden;}
+canvas {background: #141f3e;}
+</style>
+</head>
+<body>
+<div class="snow_wrap">
+    <canvas id="show"></canvas>
+</div>
+
+<script>
+const canvas = $('#show')[0];
+const ctx = canvas.getContext('2d');
+
+let W, H;
+
+function setCanvasSize() {
+    W = $('.snow_wrap').width();
+    H = $('.snow_wrap').height();
+    canvas.width = W;
+    canvas.height = H;
+}
+
+// 처음 로드할 때 캔버스 크기 설정
+setCanvasSize();
+
+// 창 크기 변경 시 캔버스 크기 재설정
+$(window).resize(function() {
+    setCanvasSize();
+});
+
+let particles = [];
+
+for (let i = 0; i < 100; i++) {
+    particles.push(new createParticle());
+}
+
+function createParticle() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = Math.random() * 4 - 1;
+    this.vy = Math.random() * 4 + 1;
+    this.color = `rgba(255, 255, 255, ${Math.random()})`;
+    this.radius = Math.random() * 5 + 2;
+}
+
+function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    particles.forEach(function(p) {
+        ctx.beginPath();
+        let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+        gradient.addColorStop(1, p.color);
+        gradient.addColorStop(1, "rgb(66, 66, 66)");
+
+        ctx.fillStyle = gradient;
+        ctx.arc(p.x, p.y, p.radius, Math.PI * 2, false);
+        ctx.fill();
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < -50) p.x = W + 50;
+        if (p.y < -50) p.y = H + 50;
+        if (p.x > W + 50) p.x = -50;
+        if (p.y > H + 50) p.y = -50;
+    });
+}
+
+setInterval(draw, 30);
+</script>
+
+</body>
+</html>
