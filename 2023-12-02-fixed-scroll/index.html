@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 가로 스크롤에 따라 fixed 요소 위치 조정 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 가로 스크롤에 따라 fixed 요소 위치 조정 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 400; box-sizing: border-box; } 
+.wrap { display: flex; align-items: flex-start; width: 1000px; margin: 0 auto; } 
+.left { width: 800px; height: 100vh; background: #cdb4db; font-size: 24px; font-weight: 500; padding: 30px; word-break: keep-all; text-align: center; } 
+.right { width: 200px; height: 100vh; background: #ffc8dd; } 
+.fixed_box { position: fixed; width:200px; height: 200px; background: #a2d2ff; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: 500; } 
+</style>
+</head>
+
+<body>
+<div class="wrap">
+    <div class="left">브라우저 화면 크기 1000px 이하에서<br>오른쪽으로 스크롤하여 고정 요소를 확인해보세요.</div>
+    <div class="right">
+        <div class="fixed_box">고정 요소</div>
+    </div>
+</div>
+<div style="height: 100vh;"></div>
+
+<script>
+const fixedBox = $(".fixed_box"); // 고정 요소 선택
+let lastScroll = 0; // 마지막 스크롤 위치 저장
+
+$(window).on('scroll', function() {
+    const currentScroll = $(this).scrollLeft(); // 현재 스크롤 위치
+
+    // 위치 변경 시 요소 이동
+    if (currentScroll !== lastScroll) {
+        fixedBox.css("margin-left", -currentScroll);
+        lastScroll = currentScroll;  // 위치 업데이트
+    }
+});
+</script>
+</body>
+</html>
