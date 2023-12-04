@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>CSS - 마우스 스크롤 유도 애니메이션 | 컨트롤 + CCCV</title>
+<meta name="description" content="CSS - 마우스 스크롤 유도 애니메이션 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+
+body { background-color: #000; } 
+.mouse_scroll { position: fixed; bottom: 50%; left: 50%; transform: translateX(-50%); } 
+.mouse { display: block; width: 23px; height: 36px; border: 2px solid #ffffff; border-radius: 23px; } 
+.mouse::after { content:''; display: block; position: relative; width: 2px; height: 6px; margin: 5px auto; background: #ffffff; animation: mouse-pulse 1.2s ease infinite; } 
+.dowm_arrow {margin-top: 6px;}
+.dowm_arrow span { display: block; position: relative; left: 50%; width: 8px; height: 8px; margin-bottom: 2px; margin-left: -2px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(45deg) translateX(-50%); animation: fade-arrow 1s infinite; } 
+.dowm_arrow2:nth-of-type(2) { animation-delay: .2s; animation-direction: alternate; } 
+.dowm_arrow3:nth-of-type(3) { animation-delay: .3s; animation-direction: alternate; } 
+@keyframes mouse-pulse { 
+    0% { opacity: 1; transform: translateY(0); } 
+    100% { opacity: 0; transform: translateY(6px); } 
+}
+
+@keyframes fade-arrow { 
+    0% { opacity: 0; } 
+    100% { opacity: 1; } 
+}
+
+</style>
+</head>
+<body>
+
+<div class="mouse_scroll" aria-label="스크롤 유도">
+    <span class="mouse"></span>
+    <div class="dowm_arrow">
+        <span class="dowm_arrow1"></span>
+        <span class="dowm_arrow2"></span>
+        <span class="dowm_arrow3"></span>
+    </div>
+</div>
+
+</body>
+</html>
