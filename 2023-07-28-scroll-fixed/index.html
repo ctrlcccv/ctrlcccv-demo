@@ -7,72 +7,81 @@
 <meta name="robots" content="noindex">
 <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <style>
-    body {padding: 0;margin: 0;}
-    header {height:200px;background: #000;margin-bottom: 15px;}
-    footer {height:300px;background: #000;}
-    section {position: relative;height: 1200px;}
-    .fixed_menu {position: absolute;top: 0;right: 15px;width: 200px;height:700px;background: #8ab4f8; }
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 400; box-sizing: border-box; } 
+header, footer { height: 300px; background: #000; } 
+.wrap { display: flex; align-items: flex-start; width: 1200px; margin: 0 auto; } 
+.left { width: 900px; height: 100vh; background: #cdb4db; } 
+.right { position: relative; width: 300px; height: 100vh; background: #ffc8dd; } 
+.fixed_box { position: absolute; width:300px; height: 500px; background: #a2d2ff; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: 500; } 
 
-    @media(max-width:1180px){
-        header {height:100px;}
-        footer {height:100px;}
-        .fixed_menu {height:400px;}
-    }
-
+/* 반응형 스타일 예시 -> 1200px 이하에서는 고정 요소가 아래에 배치됩니다. */
+@media (max-width: 1200px){
+    .wrap { display: block; width: 100%; } 
+    .left, .right, .fixed_box { width: 100%; height: 300px; } 
+}
 </style>
 </head>
 <body>
-    <div class="wrap">
-        <header></header>
-        <section>
-            <div class="fixed_menu"></div>
-        </section>
-        <footer></footer>
+
+<header></header>
+<div class="wrap">
+    <div class="left"></div>
+    <div class="right">
+        <div class="fixed_box">고정 요소</div>
     </div>
+</div>
+<footer></footer>
 
-    <script>
-        $(window).on('load',function(){
-            scrollAct();
-        })
+<script>
+$(window).on('load', function() {
+    // 캐싱된 요소들을 선언합니다.
+    const $fixedBox = $('.fixed_box'); // 고정될 박스 요소
+    const $footer = $('footer'); // 페이지 하단의 footer 요소
+    const $body = $('body'); // 페이지 본문
+    const topMargin = 50; // 고정될 때의 상단, 하단 여백
+    const breakpoint = 1200; // 반응형 디자인의 기준 너비
 
-        //스크롤 시 fixed
-        function scrollAct(){
-            let $fixedMenu = $('.fixed_menu'); //fixed 컨텐츠 영역
-            let fixedMenuTop = $fixedMenu.offset().top; //fixed 컨텐츠 영역 위치
-            let fixedMenHeight = $fixedMenu.outerHeight(true); //fixed 컨텐츠 영역 높이
-            let footerTop = $('footer').offset().top; //footer 위치
-            let oldWChk = window.innerWidth > 1180 ? 'pc' : 'mo';//디바이스 체크
+    // 고정 박스가 없으면 함수를 종료합니다.
+    if (!$fixedBox.length) return;
 
-            //스크롤 위치 갱신
-            function updatePaymentFixed() {
-                var scrollTop = $(window).scrollTop();
-                if (scrollTop > fixedMenuTop - 15 && scrollTop < (footerTop - fixedMenHeight - 30)) { //스크롤 영역 도달했을 때, footer 영역 제외
-                    $fixedMenu.css({'top': scrollTop - fixedMenuTop + 15});
-                } else if(scrollTop < fixedMenuTop - 30){ //스크롤 영역 이전일 때
-                    $fixedMenu.css({'top': 0});
-                }
+    // 고정 박스의 초기 상단 위치를 계산합니다.
+    let initialTop = $fixedBox.offset().top;
+
+    // 스크롤 위치와 화면 너비에 따라 고정 박스의 위치를 업데이트하는 함수
+    const updatePosition = () => {
+        const scrollTop = $(window).scrollTop(); // 현재 스크롤 위치
+        const footerHeight = $footer.outerHeight(true); // footer의 높이
+        const bodyHeight = $body.outerHeight(true); // body의 높이
+        // 고정 박스가 위치할 수 있는 최대 높이를 계산합니다.
+        const availableHeight = bodyHeight - footerHeight - $fixedBox.outerHeight(true) - initialTop - topMargin;
+
+        // 스크롤 위치와 화면 너비에 따라 고정 박스의 위치를 조정합니다.
+        if (scrollTop > initialTop - topMargin && window.innerWidth > breakpoint) {
+            if (availableHeight + initialTop - topMargin > scrollTop) {
+                $fixedBox.css({ 'position': 'fixed', 'top': `${topMargin}px` });
+            } else {
+                $fixedBox.css({ 'position': 'absolute', 'top': `${availableHeight}px` });
             }
-
-            //스크롤 위치 갱신 함수 호출
-            $(window).on('scroll', updatePaymentFixed);
-
-            //리사이즈 했을 때 변수값 갱신 (반응형일 시 추가)
-            $(window).on('resize', function () {
-                let newWChk = window.innerWidth > 1180 ? 'pc' : 'mo';
-                if (newWChk !== oldWChk) {
-                    oldWChk = newWChk;
-                    fixedMenuTop = $fixedMenu.css({'top': 0}).offset().top;
-                    fixedMenHeight = $fixedMenu.outerHeight(true);
-                    footerTop = $('footer').offset().top;
-                }
-            });
+        } else {
+            $fixedBox.css({ 'position': 'static' }); // 화면이 좁을 때는 기본 위치로 설정
         }
-    </script>
+    };
+    
+    // 창 크기가 변경될 때 고정 박스의 위치를 초기화하고 초기 상단 위치를 다시 계산합니다.
+    $(window).on('resize', () => {
+        $fixedBox.css({ 'position': 'absolute', 'top': '0' });
+        initialTop = $fixedBox.offset().top;
+    });
+
+    // 창 크기 변경과 스크롤 이벤트 모두에서 위치 업데이트 함수를 호출합니다.
+    $(window).on('resize scroll', updatePosition);
+});
+</script>
+
 </body>
 </html>
