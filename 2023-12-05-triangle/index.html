@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>자동으로 CSS 삼각형 코드 만들기 | 컨트롤 + CCCV</title>
+<meta name="description" content="자동으로 CSS 삼각형 코드 만들기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f7f7f7; } 
+.container { padding: 20px; background: #fff; border-radius: 10px; text-align: center; box-shadow: 0 0 15px rgba(0,0,0,0.1); } 
+.form_input, .generate { height: 40px; margin: 10px 3px; padding: 0 8px; border: 1px solid #ccc; border-radius: 5px; vertical-align: top; } 
+.generate { background-color: #1C39BB; border-color: #1C39BB; color: #fff; cursor: pointer; } 
+.triangle { width: 0; height: 0; margin: 20px auto 0; } 
+.css_code { overflow: auto; margin-top: 20px; padding: 10px; background: #eee; border-radius: 5px; font-size: 14px; text-align: left; white-space: pre; } 
+
+@media only screen and (max-width: 1024px){
+    .container { width: 90%; } 
+    .form_input { width: 45%; margin: 10px 1%; } 
+    .generate { width: 100%; max-width: 300px; margin: 20px auto 0; }
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+    <input type="number" id="width" class="form_input" placeholder="Width">
+    <input type="number" id="height" class="form_input" placeholder="Height">
+    <input type="color" id="color" class="form_input" placeholder="Color">
+    <select id="direction" class="form_input">
+        <option value="up">위</option>
+        <option value="down">아래</option>
+        <option value="left">왼쪽</option>
+        <option value="right">오른쪽</option>
+        <option value="up-left">위 - 왼쪽</option>
+        <option value="up-right">위 - 오른쪽</option>
+        <option value="down-left">아래 - 왼쪽</option>
+        <option value="down-right">아래 - 오른쪽</option>
+    </select>    
+    <button class="generate">삼각형 만들기</button>
+    <div class="css_code"></div>
+    <div class="triangle"></div>
+</div>
+
+<script>
+
+$(document).ready(function() {
+    // 삼각형 생성 버튼 클릭 이벤트 핸들러
+    $('.generate').click(function() {
+        // 입력값 가져오기
+        const width = $('#width').val();
+        const height = $('#height').val();
+        const color = $('#color').val();
+        const direction = $('#direction').val();
+
+        // 삼각형 CSS 계산
+        const triangleCSS = calculateTriangleCSS(width, height, color, direction);
+        $('.triangle').css(triangleCSS);
+
+        // 생성된 CSS 코드 표시
+        displayCSSCode(triangleCSS);
+    });
+
+    // 삼각형의 CSS 스타일을 계산하는 함수
+    function calculateTriangleCSS(width, height, color, direction) {
+        const css = {
+            width: 0,
+            height: 0,
+            borderTop: '',
+            borderBottom: '',
+            borderLeft: '',
+            borderRight: ''
+        };
+
+        // 삼각형 방향에 따라 CSS 스타일 결정
+        switch (direction) {
+            case 'up':
+                css.borderLeft = `${width / 2}px solid transparent`;
+                css.borderRight = `${width / 2}px solid transparent`;
+                css.borderBottom = `${height}px solid ${color}`;
+                break;
+            case 'down':
+                css.borderLeft = `${width / 2}px solid transparent`;
+                css.borderRight = `${width / 2}px solid transparent`;
+                css.borderTop = `${height}px solid ${color}`;
+                break;
+                case 'left':
+                css.borderTop = `${height / 2}px solid transparent`;
+                css.borderBottom = `${height / 2}px solid transparent`;
+                css.borderRight = `${width}px solid ${color}`;
+                break;
+            case 'right':
+                css.borderTop = `${height / 2}px solid transparent`;
+                css.borderBottom = `${height / 2}px solid transparent`;
+                css.borderLeft = `${width}px solid ${color}`;
+                break;
+
+            case 'up-left':
+                css.borderBottom = `${height / 2}px solid transparent`;
+                css.borderRight = `${width / 2}px solid transparent`;
+                css.borderTop = `${height / 2}px solid ${color}`;
+                css.borderLeft = `${width / 2}px solid ${color}`;
+                break;
+
+            case 'up-right':
+                css.borderBottom = `${height / 2}px solid transparent`;
+                css.borderLeft = `${width / 2}px solid transparent`;
+                css.borderTop = `${height / 2}px solid ${color}`;
+                css.borderRight = `${width / 2}px solid ${color}`;
+                break;
+            
+            case 'down-left':
+                css.borderTop = `${height / 2}px solid transparent`;
+                css.borderRight = `${width / 2}px solid transparent`;
+                css.borderBottom = `${height / 2}px solid ${color}`;
+                css.borderLeft = `${width / 2}px solid ${color}`;
+                break;
+
+            case 'down-right':
+                css.borderTop = `${height / 2}px solid transparent`;
+                css.borderLeft = `${width / 2}px solid transparent`;
+                css.borderBottom = `${height / 2}px solid ${color}`;
+                css.borderRight = `${width / 2}px solid ${color}`;
+                break;
+        }
+
+        return css;
+    }
+
+    // camelCase를 kebab-case로 변환하는 함수
+    function camelToKebabCase(str) {
+        return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
+    }
+
+    // CSS 코드를 표시하는 함수
+    function displayCSSCode(cssObj) {
+        let cssCode = `.triangle {\n`;
+        for (const [key, value] of Object.entries(cssObj)) {
+            if (value !== '') {
+                cssCode += `    ${camelToKebabCase(key)}: ${value};\n`;
+            }
+        }
+        cssCode += `}`;
+        $('.css_code').text(cssCode);
+    }
+});
+
+</script>
+</body>
+</html>
+
+
+</script>
+
+</body>
+</html>
