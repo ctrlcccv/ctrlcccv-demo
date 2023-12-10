@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper 가운데 크게 정렬하기 (반응형) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper 가운데 크게 정렬하기 (반응형) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper.min.css">
+<script src="swiper.js"></script>
+
+<style>
+* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+ul,ol,li {list-style: none;}
+
+/* 슬라이더 기본 스타일 */
+.slider { position: relative; margin: 150px auto 0; } 
+.slider .inner { overflow: hidden; width: 100%; margin: 0 auto; } 
+
+/* 슬라이더 내 각 슬라이드 아이템 스타일 */
+.slide_list > li { position: relative; width: 31%; transform: scale(0.7); transition: all 0.3s; opacity: 0.5; } 
+.slide_list > li a { display: block; } 
+.slide_list > li .img { overflow: hidden; display: block; position: relative; padding-bottom: 60%; border-radius: 10px; } 
+.slide_list > li .img img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; } 
+
+/* 현재 활성화된 슬라이드 스타일 */
+.slide_list > li.swiper-slide-active,
+.slide_list > li.swiper-slide-duplicate-active { transform: scale(1); opacity: 1; } 
+
+/* 이전 및 다음 슬라이드의 여백 조정 */
+.slide_list > li.swiper-slide-prev { margin-right: 2%; margin-left: -2%; } 
+.slide_list > li.swiper-slide-next { margin-right: -2%; margin-left: 2%; } 
+
+/* 화면상 첫 번째 및 마지막 슬라이드의 여백 조정 */
+.slide_list > li.first { margin-right: -4%; margin-left: 4%; } 
+.slide_list > li.last { margin-right: 4%; margin-left:-4%; } 
+
+/* 슬라이더 이동 버튼 스타일 */
+.slider .btn { position: absolute; top: 50%; width:3%; z-index: 10; transform: translate(0,-50%); cursor: pointer; } 
+.slider .btn img { width: 100%; } 
+.slider .btn.btn_prev { right: 50%; margin-right: 17%; } 
+.slider .btn.btn_next { left: 50%; margin-left: 17%; } 
+.slider .btn.btn_prev img { transform: rotateY(180deg); } 
+
+/* 모바일 화면에서 슬라이더 스타일 조정 */
+@media (max-width: 767px){
+    .slider { margin-top: 50px; } 
+    .slide_list > li .img { border-radius: 5px; } 
+    .slide_list > li { width: 50%; } 
+    .slider .btn { display: none; } 
+}
+
+</style>
+</head>
+<body>
+<div class="slider">
+    <div class="inner">
+        <ul class="swiper-wrapper slide_list">
+            <li class="swiper-slide"><span class="img"><img src="https://picsum.photos/id/10/1000/600" alt="썸네일 이미지"></span></li>
+            <li class="swiper-slide"><span class="img"><img src="https://picsum.photos/id/20/1000/600" alt="썸네일 이미지"></span></li>
+            <li class="swiper-slide"><span class="img"><img src="https://picsum.photos/id/30/1000/600" alt="썸네일 이미지"></span></li>
+            <li class="swiper-slide"><span class="img"><img src="https://picsum.photos/id/40/1000/600" alt="썸네일 이미지"></span></li>
+            <li class="swiper-slide"><span class="img"><img src="https://picsum.photos/id/50/1000/600" alt="썸네일 이미지"></span></li>
+            <li class="swiper-slide"><span class="img"><img src="https://picsum.photos/id/60/1000/600" alt="썸네일 이미지"></span></li>
+        </ul>
+    </div>
+    <span class="btn btn_prev"><img src="./images/arrow.png" alt="이젼"></span>
+    <span class="btn btn_next"><img src="./images/arrow.png" alt="다음"></span>
+</div>
+
+
+<script>
+// 슬라이더 요소 선택 및 변수 초기화
+const $slider = $('.slider');
+let swiper = undefined;
+let slideNum = $slider.find('.swiper-slide').length; // 슬라이드 총 개수
+let slideInx = 0; // 현재 슬라이드 인덱스
+
+// 디바이스 크기에 따라 화면 유형 설정 ('pc' 또는 'mo')
+let oldWChk = window.innerWidth > 767 ? 'pc' : 'mo';
+sliderAct(); // 슬라이더 활성화
+
+let resizeTimer;
+// 창 크기 변경 시 디바이스 크기 체크 및 슬라이더 재설정
+$(window).on('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        let newWChk = window.innerWidth > 767 ? 'pc' : 'mo';
+        if (newWChk != oldWChk) {
+            oldWChk = newWChk;
+            sliderAct();
+        }
+    }, 300);
+});
+
+// 슬라이더 실행 및 설정 함수
+function sliderAct() {
+    // 슬라이더 초기화 (이미 존재하는 경우)
+    if (swiper != undefined) {
+        swiper.destroy();
+        swiper = undefined;
+    }
+
+    // 슬라이드 보기 옵션 설정 (디바이스에 따라 변경)
+    let viewNum = oldWChk == 'pc' ? 2 : 1;
+
+    // 슬라이드 수에 따라 무한반복 옵션 설정
+    let loopChk = slideNum > viewNum;
+
+    // 슬라이더 구성 및 옵션 설정
+    swiper = new Swiper($slider.find('.inner'), {
+        slidesPerView: "auto",
+        initialSlide: slideInx,
+        loop: loopChk,
+        centeredSlides: true,
+        navigation: {
+            prevEl: $slider.find('.btn_prev'),
+            nextEl: $slider.find('.btn_next'),
+        },
+        on: {
+            slideChangeTransitionStart: function() {
+                slideInx = this.realIndex; // 현재 슬라이드 인덱스 갱신
+                updateClass();
+            },
+            init: function() {
+                updateClass();
+            },
+        },
+    });
+
+    // 슬라이더 클래스 업데이트 함수
+    function updateClass() {
+        // 화면상 첫 번째 및 마지막 슬라이드에 클래스 추가 및 제거
+        $slider.find('.swiper-slide-prev').prev().addClass('first').siblings().removeClass('first');
+        $slider.find('.swiper-slide-next').next().addClass('last').siblings().removeClass('last');
+    }
+}
+
+</script>
+</body>
+</html>
