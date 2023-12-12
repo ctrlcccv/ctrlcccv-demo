@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 2단 탭메뉴 만들기 (탭 안에 탭) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 2단 탭메뉴 만들기 (탭 안에 탭) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 400; box-sizing: border-box; } 
+h1 { font-size: 18px; } 
+ul,ol { list-style: none; } 
+a { color: #000; text-decoration: none; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+
+/* 전체 탭 컨테이너 */
+.tabs { width: 100%; max-width: 800px; } 
+
+/* 메인 탭과 서브 탭 내비게이션 바 */
+.tab_nav, 
+.sub_tab_nav { display: flex; align-items: center; position: relative; padding: 15px 15px 0; background: #f7f7f7; border: 1px solid #ddd; border-bottom: none; border-radius:6px 6px 0 0; } 
+.sub_tab_nav { margin-top: 20px; } 
+.tab_nav::after,
+.sub_tab_nav::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: #ddd; z-index: 1; } 
+
+/* 메인 및 서브 탭 */
+.tab_nav li a,
+.sub_tab_nav li a { display: block; position: relative; padding: 10px 15px; border: 1px solid #f7f7f7; border-bottom: none; font-size: 18px; font-weight: 500; color: #000; z-index: 0; } 
+
+/* 활성화된 탭 */
+.tab_nav li.active a,
+.sub_tab_nav li.active a { background: #fff; border-color: #ddd; border-radius:6px 6px 0 0; z-index: 2; } 
+
+/* 탭 컨텐츠 영역 */
+.tab, .sub_tab { display: none; padding: 15px; background-color: white; border: 1px solid #ddd; border-top: none; border-radius:0 0 6px 6px; } 
+
+/* 활성화된 탭 컨텐츠 영역을 표시 */
+.tab.active, .sub_tab.active { display: block; } 
+</style>
+</head>
+<body>
+<div class="tabs">
+    <ul class="tab_nav">
+        <li><a href="#tab1">Tab 1</a></li>
+        <li><a href="#tab2">Tab 2</a></li>
+        <li><a href="#tab3">Tab 3</a></li>
+    </ul>
+
+    <div class="tab" id="tab1">
+        <h1>Tab 1</h1>
+        <ul class="sub_tab_nav">
+            <li><a href="#sub_tab1">Sub Tab 1</a></li>
+            <li><a href="#sub_tab2">Sub Tab 2</a></li>
+        </ul>
+        <div class="sub_tab" id="sub_tab1">
+            Sub Tab 1
+        </div>
+        <div class="sub_tab" id="sub_tab2">
+            Sub Tab 2
+        </div>
+    </div>
+
+    <div class="tab" id="tab2">
+        <h1>Tab 2</h1>
+        <ul class="sub_tab_nav">
+            <li><a href="#sub_tab3">Sub Tab 3</a></li>
+            <li><a href="#sub_tab4">Sub Tab 4</a></li>
+        </ul>
+        <div class="sub_tab" id="sub_tab3">
+            Sub Tab 3
+        </div>
+        <div class="sub_tab" id="sub_tab4">
+            Sub Tab 4
+        </div>
+    </div>
+
+    <div class="tab" id="tab3">
+        <h1>Tab 3</h1>
+        <ul class="sub_tab_nav">
+            <li><a href="#sub_tab5">Sub Tab 5</a></li>
+            <li><a href="#sub_tab6">Sub Tab 6</a></li>
+        </ul>
+        <div class="sub_tab" id="sub_tab5">
+            Sub Tab 5
+        </div>
+        <div class="sub_tab" id="sub_tab6">
+            Sub Tab 6
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    const subTabNav = $(".sub_tab_nav a"); // 서브 탭 앵커 태그
+    const tabNav = $(".tab_nav a"); // 메인 탭 앵커 태그
+    const tabNavLi = $('.tab_nav li'); // 메인 탭 리스트
+
+    // 서브 탭 클릭 이벤트 핸들러
+    subTabNav.on("click", function (e) {
+        e.preventDefault();
+        const target = $(this).attr("href");
+
+        // 해당 서브 탭 활성화
+        $(target).addClass("active").siblings('.active').removeClass("active");
+        $(this).closest('li').addClass("active").siblings().removeClass("active");
+    });
+
+    // 메인 탭 클릭 이벤트 핸들러
+    tabNav.on("click", function (e) {
+        e.preventDefault();
+        const target = $(this).attr("href");
+
+        // 해당 메인 탭 활성화
+        $(target).addClass("active").siblings('.active').removeClass("active");
+        $(this).closest('li').addClass("active").siblings().removeClass("active");
+
+        // 서브 탭 유지 또는 첫 번째 서브 탭 활성화
+        const subTabActive = $(target).find('.sub_tab_nav li.active');
+        if (!subTabActive.length) {
+            $(target).find('.sub_tab_nav li:first-child a').trigger('click');
+        } else {
+            subTabActive.find('a').trigger('click');
+        }
+    });
+
+    // 페이지 로드 시 첫 번째 탭 활성화
+    const mainTabActive = tabNavLi.filter('.active');
+    if (!mainTabActive.length) {
+        tabNavLi.first().find('a').trigger('click');
+    } else {
+        mainTabActive.find('a').trigger('click');
+    }
+});
+</script>
+
+</body>
+</html>
