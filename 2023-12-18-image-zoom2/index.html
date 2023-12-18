@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 마우스 움직임에 따라 이미지가 확대되는 코드 구현 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 마우스 움직임에 따라 이미지가 확대되는 코드 구현 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 400; box-sizing: border-box; } 
+ul,ol { list-style: none; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+
+.image { overflow: hidden; position: relative; width: 400px; height: 400px; } 
+.image:hover { --zoom: 2; } 
+.image img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(var(--zoom, 1)); transform-origin: var(--x) var(--y); transition: transform 0.3s ease; } 
+</style>
+</head>
+<body>
+
+<div class="image">
+    <img src="https://picsum.photos/id/20/1000/1000" alt="이미지">
+</div>
+
+<script>
+// 이미지 컨테이너에 마우스 이벤트를 바인딩합니다.
+$('.image').on('mouseenter', function() {
+	// 이미지 컨테이너의 위치와 크기 정보를 저장합니다.
+	const rect = this.getBoundingClientRect();
+	const width = rect.width;
+	const height = rect.height;
+
+	// 마우스가 움직일 때 이벤트를 처리합니다.
+	$(this).off('mousemove').on('mousemove', function(e) {
+		// 마우스 포인터의 위치를 기반으로 이미지 확대 위치를 계산합니다.
+		const xPos = (e.clientX - rect.left) / width * 100;
+		const yPos = (e.clientY - rect.top) / height * 100;
+
+		// CSS 변수를 업데이트하여 이미지 확대 위치를 조정합니다.
+		$(this).css('--x', xPos + '%');
+		$(this).css('--y', yPos + '%');
+	});
+});
+</script>
+</body>
+</html>
