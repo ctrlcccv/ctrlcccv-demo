@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 이미지 돋보기 효과 구현하기 (원하는 비율로 확대) | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 이미지 돋보기 효과 구현하기 (원하는 비율로 확대) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 400; box-sizing: border-box; } 
+ul,ol { list-style: none; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+
+.img_wrap { display: flex; gap:10px; width: 600px; } 
+.img { position: relative; width:calc(50% - 5px); margin: 0 auto 0; } 
+.img img { display: block; width: 100%; } 
+.magnifier { display: none; position: absolute; width: 100px; height: 100px; border-radius: 50%; z-index: 1; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); } 
+.magnifier::after { content:''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; border: 4px solid #fff; border-radius: 50%; z-index: 2; } 
+</style>
+</head>
+<body>
+
+<div class="img_wrap"> 
+	<div class="img">
+		<img src="https://picsum.photos/id/74/1000/1000" alt="이미지">
+		<span class="magnifier"></span>
+	</div>
+	<div class="img">
+		<img src="https://picsum.photos/id/74/1000/1000" alt="이미지">
+		<span class="magnifier"></span>
+	</div>
+</div>
+
+<script>
+// 각 이미지에 이벤트 리스너를 설정하기
+$(".img").each(function () {
+	const zoomFactor = 2; // 확대 배율 설정
+	const imageTarget = $(this).find('img'); // 대상 이미지
+	const magnifierDiv = $(this).find('.magnifier'); // 돋보기 요소
+
+	// 확대 효과 함수 정의
+	function magnify(e) {
+		const mousePosX = e.pageX - $(this).offset().left; // 마우스 X 좌표
+		const mousePosY = e.pageY - $(this).offset().top; // 마우스 Y 좌표
+
+		// 마우스가 이미지 영역 안에 있는지 확인
+		if (mousePosX < $(this).width() && mousePosY < $(this).height() && mousePosX > 0 && mousePosY > 0) {
+			magnifierDiv.fadeIn(100); // 돋보기 표시
+		} else {
+			magnifierDiv.fadeOut(100); // 돋보기 숨기기
+		}
+
+		// 돋보기가 보일 때 위치와 배경을 업데이트
+		if (magnifierDiv.is(":visible")) {
+			const bgPosX = -(mousePosX * zoomFactor - magnifierDiv.width() / 2);
+			const bgPosY = -(mousePosY * zoomFactor - magnifierDiv.height() / 2);
+			const magnifierPosX = mousePosX - magnifierDiv.width() / 2;
+			const magnifierPosY = mousePosY - magnifierDiv.height() / 2;
+
+			magnifierDiv.css({
+				"left": magnifierPosX,
+				"top": magnifierPosY,
+				"background-image": `url('${imageTarget.attr("src")}')`, // 배경 이미지 설정
+				"background-repeat": "no-repeat",
+				"background-size": `${imageTarget.width() * zoomFactor}px ${imageTarget.height() * zoomFactor}px`, // 배경 크기 설정
+				"background-position": `${bgPosX}px ${bgPosY}px`
+			});
+		}
+	}
+
+	// 이미지에 mousemove 이벤트 핸들러 연결
+	$(this).on('mousemove', magnify);
+});
+</script>
+</body>
+</html>
