@@ -68,7 +68,11 @@ $(window).on('load', function() {
                 $fixedBox.css({ 'position': 'absolute', 'top': `${availableHeight}px` });
             }
         } else {
-            $fixedBox.css({ 'position': 'static' }); // 화면이 좁을 때는 기본 위치로 설정
+            if (window.innerWidth > breakpoint){
+                $fixedBox.css({ 'position': 'absolute', 'top': `0` }); //고정 박스 위치가 최상단일 때
+            }else{
+                $fixedBox.css({ 'position': 'static' }); // 화면이 좁을 때는 기본 위치로 설정
+            }
         }
     };
     
