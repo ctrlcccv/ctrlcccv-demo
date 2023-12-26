@@ -119,8 +119,8 @@ function sliderAct() {
         loop: loopChk,
         centeredSlides: true,
         navigation: {
-            prevEl: $slider.find('.btn_prev'),
-            nextEl: $slider.find('.btn_next'),
+            prevEl: $slider.find('.btn_prev')[0],
+            nextEl: $slider.find('.btn_next')[0],
         },
         on: {
             slideChangeTransitionStart: function() {
