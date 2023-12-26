@@ -110,11 +110,11 @@ ul, li {list-style: none;}
                 observer: true,  
                 observeParents: true,
                 navigation: {
-                    prevEl: $('.slider .paging_prev'),
-                    nextEl: $('.slider .paging_next'),
+                    prevEl: $('.slider .paging_prev')[0],
+                    nextEl: $('.slider .paging_next')[0],
                 },
                 pagination: {
-                    el: $('.slider .paging_list'),
+                    el: $('.slider .paging_list')[0],
                     clickable: true,
                     renderBullet: function (index, className) {
                         return `<li class="${className}"><span>${index+1}</span></li>`;
