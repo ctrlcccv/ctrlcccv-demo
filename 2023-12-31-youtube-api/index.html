@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>유튜브 API 사용법 및 예제 (IFrame Player API) | 컨트롤 + CCCV</title>
+<meta name="description" content="유튜브 API 사용법 및 예제 (IFrame Player API) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; box-sizing: border-box; } 
+ul, ol { list-style: none; }
+body {display: flex;align-items: center;justify-content: center;min-height: 100vh;}
+
+</style>
+</head>
+
+<body>
+<div id="player"></div>
+
+<script>
+    // YouTube API 스크립트 동적으로 로드
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/player_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+
+    function onYouTubePlayerAPIReady() {
+        // 플레이어 생성 및 설정
+        player = new YT.Player('player', {
+            height: '360',
+            width: '640',
+            videoId: 'Jruqk1rSGeg',
+            playerVars: {
+                'autoplay': 1,  // 자동 재생
+                'controls': 0,  // 컨트롤 숨김
+                'rel': 0       // 관련 동영상 표시 안 함
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        // 플레이어 준비 시 음소거 및 재생 시작
+        event.target.mute();
+        event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {
+        // 플레이어 상태 변화 감지
+        // 여기에 원하는 추가 작업을 수행할 수 있습니다.
+        if (event.data == YT.PlayerState.ENDED) {
+            // 동영상 재생이 종료되었을 때의 동작
+            console.log('동영상 재생이 종료되었습니다.');
+        } else if (event.data == YT.PlayerState.PLAYING) {
+            // 동영상 재생 중일 때의 동작
+            console.log('동영상이 재생 중입니다.');
+        } else if (event.data == YT.PlayerState.PAUSED) {
+            // 동영상 일시정지 상태일 때의 동작
+            console.log('동영상이 일시정지되었습니다.');
+        }
+        // ... 추가적인 상태에 따른 동작을 정의할 수 있습니다.
+    }
+</script>
+    
+</body>
+</html>
