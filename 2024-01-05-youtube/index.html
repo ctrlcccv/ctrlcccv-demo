@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title> | 컨트롤 + CCCV</title>
+<meta name="description" content=" | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+ul, li { list-style: none; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+.video {overflow: hidden;position: relative;width: 100%;padding-bottom: 56.25%;}
+.video iframe {position: absolute;top: -60px; left:0; bottom: -60px !important; width:100%; height:calc(100% + 120px) !important;}
+</style>
+
+<div class="video">
+    <iframe src="https://www.youtube.com/embed/y6w7k6Ba5sQ?si=q9x2Um6AePEpMRBW&autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+<a href="https://ctrlcccv.github.io" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+const $wrap = $('.vertical_banner');
+const $list = $('.vertical_banner .list');
+let wrapHeight; // 배너 컨테이너의 높이
+let listHeight; // 배너 리스트의 전체 높이
+
+// 배너 리스트 복제 후 추가
+let $clone = $list.clone();
+$wrap.append($clone);
+
+// 배너 애니메이션 처리하는 함수
+function verticalBanner() {
+    // 배너 애니메이션 초기화
+    if (wrapHeight != '') {
+        $wrap.find('.list').css({
+            'animation': 'none'
+        });
+        $wrap.find('.list').slice(2).remove();
+    }
+
+    // 배너 컨테이너와 리스트 아이템의 현재 높이 가져오기
+    wrapHeight = $wrap.innerHeight();
+    listHeight = $list.innerHeight();
+    const speed = $list.find('li').innerHeight() / 2;
+
+    // 내용이 컨테이너보다 작은 경우 무한 반복을 만들기 위해 리스트를 복제하여 추가
+    if (listHeight < wrapHeight) {
+        const listCount = Math.ceil(wrapHeight * 2 / listHeight);
+        for (let i = 2; i < listCount; i++) {
+            $clone = $clone.clone();
+            $wrap.append($clone);
+        }
+    }
+
+    // 수직 롤링 효과를 위해 모든 리스트 아이템에 애니메이션 적용
+    $wrap.find('.list').css({
+        'animation': `${listHeight / speed}s linear infinite verticalRolling`
+    });
+}
+
+// 초기 배너 설정
+verticalBanner();
+
+// 창 크기에 따른 현재 디바이스 유형을 반환하는 함수
+function getWindow() {
+    return window.innerWidth > 1280 ? 'pc' : window.innerWidth > 767 ? 'ta' : 'mo';
+}
+
+// 반응형 처리 설정
+let oldWindow = getWindow();
+$(window).on('resize', function () {
+    const newWindow = getWindow();
+    // 디바이스 유형이 변경된 경우에만 배너 롤링 재설정
+    if (newWindow !== oldWindow) {
+        oldWindow = newWindow;
+        verticalBanner();
+    }
+});
+
+// 마우스 이벤트 처리: 배너 롤링 일시 정지 및 재생
+$wrap.on({
+    mouseenter: function () {
+        $wrap.find('.list').css('animation-play-state', 'paused');
+    },
+    mouseleave: function () {
+        $wrap.find('.list').css('animation-play-state', 'running');
+    }
+});
+</script>
+</body>
+</html>
