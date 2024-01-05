@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title> | 컨트롤 + CCCV</title>
-<meta name="description" content=" | 컨트롤 + CCCV" />
+<title>CSS - 유튜브 동영상 배경 만들기 (반응형) | 컨트롤 + CCCV</title>
+<meta name="description" content="CSS - 유튜브 동영상 배경 만들기 (반응형) | 컨트롤 + CCCV" />
 <meta name="robots" content="noindex">
 <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -21,17 +21,18 @@ ul, li { list-style: none; }
 .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
 .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
-.video { overflow: hidden; position: relative; width: 100%; padding-bottom: 56.25%; } 
+.video_bg { overflow: hidden; position: relative; width: 100%; padding-bottom: 56.25%; } 
 /* 영상 타이틀, 컨트롤러 숨김 */
-.video iframe { position: absolute; top: 0; bottom: 0; left:0; right: 0; width:100%; height:100%; border: none; } 
+.video_bg iframe { position: absolute; top: -60px; bottom: -60px; left:0; width:100%; height:calc(100% + 120px); border: none; } 
 /* 영상 클릭, 터치 방지 */
-.video::after { content:''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; } 
+.video_bg::after { content:''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; } 
 </style>
 
-<div class="video">
+<div class="video_bg">
     <iframe src="https://www.youtube.com/embed/rJe_YsLJqUY?autoplay=1&mute=1&loop=1&playlist=rJe_YsLJqUY"></iframe>
 </div>
 
 <a href="https://ctrlcccv.github.io" class="blog" target="_blank">컨트롤 + CCCV</a>
+
 </body>
 </html>
