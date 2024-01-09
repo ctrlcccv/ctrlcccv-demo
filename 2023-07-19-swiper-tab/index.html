@@ -15,27 +15,30 @@
 <script src="swiper.js"></script>
 
 <style>
-* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
-ul,ol,li {list-style: none;}
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; box-sizing: border-box; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+ul,ol,li { list-style: none; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
 /* 탭메뉴 */
-.tab_wrap {max-width: 800px;margin: 50px auto 0;padding: 0 15px;}
-.tab_wrap .tit_list {position: relative;font-size: 0;}
-.tab_wrap .tit_list:before {content:'';position: absolute;bottom: 0;left: 0;width: 100%;height: 1px;background: #ddd;z-index: 1;}
-.tab_wrap .tit_list > li {display: inline-block;margin-right: 3px;vertical-align: top;}
-.tab_wrap .tit_list > li a {display: inline-block;padding: 10px 15px;border: 1px solid #fff;border-radius:4px 4px 0 0;font-size: 14px;color: #000;text-decoration: none;}
-.tab_wrap .tit_list > li a:hover {background: #efefef;border-color: #efefef;}
-.tab_wrap .tit_list > li.active a {position: relative;background: #fff;border: 1px solid #ddd;border-bottom: 1px solid #fff;color: #8ab4f8;z-index: 2;}
-.tab_wrap .tab_con {border: 1px solid #ddd;border-top: none;}
-.tab_wrap .tab_con .tab_list {display: none;padding: 15px;}
+.tab_wrap { width: 100%; max-width: 800px; padding: 0 15px; } 
+.tab_wrap .tit_list { position: relative; font-size: 0; } 
+.tab_wrap .tit_list:before { content:''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: #ddd; z-index: 1; } 
+.tab_wrap .tit_list > li { display: inline-block; margin-right: 3px; vertical-align: top; } 
+.tab_wrap .tit_list > li a { display: inline-block; padding: 10px 15px; border: 1px solid #fff; border-radius:4px 4px 0 0; font-size: 14px; color: #000; text-decoration: none; } 
+.tab_wrap .tit_list > li a:hover { background: #efefef; border-color: #efefef; } 
+.tab_wrap .tit_list > li.active a { position: relative; background: #fff; border: 1px solid #ddd; border-bottom: 1px solid #fff; color: #8ab4f8; z-index: 2; } 
+.tab_wrap .tab_con { border: 1px solid #ddd; border-top: none; } 
+.tab_wrap .tab_con .tab_list { display: none; padding: 15px; } 
 
 /* 슬라이드 */
-.slider {font-size: 0;text-align: center;}
-.slider .inner {overflow: hidden;width: 100%;margin: 0 auto;}
-.slide_list > li {width: 25%;height: 150px;background: #8ab4f8;font-size: 20px;line-height: 150px;color: #000;text-align: center;}
+.slider { font-size: 0; text-align: center; } 
+.slider .inner { overflow: hidden; width: 100%; margin: 0 auto; } 
+.slide_list > li { width: 25%; height: 150px; background: #8ab4f8; font-size: 20px; line-height: 150px; color: #000; text-align: center; } 
 .slider .btn_prev,
-.slider .btn_next {display: inline-block;width: 35px;height: 35px;margin:30px 15px 0;background:url('images/arrow.png') center center no-repeat;background-size: cover;text-indent: -999em;cursor: pointer;}
-.slider .btn_prev {transform: rotateY(180deg);}
+.slider .btn_next { display: inline-block; width: 35px; height: 35px; margin:30px 15px 0; background:url('images/arrow.png') center center no-repeat; background-size: cover; text-indent: -999em; cursor: pointer; } 
+.slider .btn_prev { transform: rotateY(180deg); } 
 </style>
 </head>
 <body>
@@ -102,7 +105,7 @@ ul,ol,li {list-style: none;}
     </div>
 </div>
 
-
+<a href="https://ctrlcccv.github.io/code/2023-07-19-swiper-tab/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 $(document).ready(function () {
