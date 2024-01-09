@@ -12,20 +12,22 @@
 <script src="swiper.js"></script>
 
 <style>
-* {margin: 0;padding: 0;box-sizing: border-box;}
-ul, li {list-style: none;}
+* { margin: 0; padding: 0; box-sizing: border-box; } 
+ul, li { list-style: none; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
-.slider {position: relative;max-width: 1180px;margin: 20px auto 0;padding: 0 50px;}
-.slider .inner {overflow: hidden;margin-right: -1.333%;}
-.slider .swiper-slide {display:flex;flex-wrap:wrap;}
-.slider .list {width: 32%;height: 150px;margin: 1% 1.333% 1% 0;background: #8ab4f8;font-size: 20px;line-height: 150px;text-align: center;}
-.slider .swiper-prev, .slider .swiper-next {position: absolute;top: 50%;width: 35px;height: 35px;background:url('images/arrow.png') center center no-repeat;background-size: cover;text-indent: -999em;cursor: pointer;font-size: 0;}
-.slider .swiper-prev {left: 0;transform: rotateY(180deg) translate(0,-50%);}
-.slider .swiper-next {right:0;transform: translate(0,-50%);}
+.slider { position: relative; max-width: 1180px; margin: 20px auto 0; padding: 0 50px; } 
+.slider .inner { overflow: hidden; margin-right: -1.333%; } 
+.slider .swiper-slide { display:flex; flex-wrap:wrap; } 
+.slider .list { width: 32%; height: 150px; margin: 1% 1.333% 1% 0; background: #8ab4f8; font-size: 20px; line-height: 150px; text-align: center; } 
+.slider .swiper-prev, .slider .swiper-next { position: absolute; top: 50%; width: 35px; height: 35px; background:url('images/arrow.png') center center no-repeat; background-size: cover; font-size: 0; text-indent: -999em; cursor: pointer; } 
+.slider .swiper-prev { left: 0; transform: rotateY(180deg) translate(0,-50%); } 
+.slider .swiper-next { right:0; transform: translate(0,-50%); } 
 
-@media (max-width: 768px) {
-    .slider .inner {margin-right: -2%;}
-    .slider .list{width: 48%;margin-right: 2%;}
+@media (max-width: 768px){
+    .slider .inner { margin-right: -2%; } 
+    .slider .list { width: 48%; margin-right: 2%; } 
 }
 </style>
 </head>
@@ -73,6 +75,7 @@ ul, li {list-style: none;}
     <div class="swiper-next">다음</div>
 </div>
 
+<a href="https://ctrlcccv.github.io/code/2023-03-09-swiper-col/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 $(document).ready(function () {
