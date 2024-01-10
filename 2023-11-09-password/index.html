@@ -12,13 +12,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <style>
-* {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
-body {background: #f5f5f5;}
-.join {width: 330px;margin: 100px auto 0;padding: 15px;background: #fff;border: 1px solid #ddd;border-radius:4px;}
-.join .tit {display: block;margin-bottom: 4px;font-size: 14px;color: #000;}
-#pw {width: 100%;height: 35px;padding: 0 15px;border: 1px solid #ced4da;border-radius:4px;font-size: 14px;color: #000;} 
-.pw_show {display: flex;align-items: center; margin-top: 10px; font-size: 12px;}
-.pw_show input[type="checkbox"] {display: flex;align-items: center;margin-right: 5px;font-size: 12px; }
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; box-sizing: border-box; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f5f5f5; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+.join { width: 330px; padding: 15px; background: #fff; border: 1px solid #ddd; border-radius:4px; } 
+.join .tit { display: block; margin-bottom: 4px; font-size: 14px; color: #000; } 
+#pw { width: 100%; height: 35px; padding: 0 15px; border: 1px solid #ced4da; border-radius:4px; font-size: 14px; color: #000; } 
+.pw_show { display: flex; align-items: center; margin-top: 10px; font-size: 12px; } 
+.pw_show input[type="checkbox"] { display: flex; align-items: center; margin-right: 5px; font-size: 12px; } 
 </style>
 </head>
 
@@ -30,6 +33,8 @@ body {background: #f5f5f5;}
         <label class="pw_show"><input type="checkbox">비밀번호 표시</label>
     </form>
 </div>
+
+<a href="https://ctrlcccv.github.io/code/2023-11-09-password/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 $(document).ready(function() {
