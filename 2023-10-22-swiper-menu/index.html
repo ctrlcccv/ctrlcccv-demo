@@ -18,6 +18,8 @@
 <style>
 *{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
 ul,ol,li {list-style: none;}
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
 .wrap {position: relative;max-width: 700px;margin: 0 auto;padding-top: 65px;}
 .menu_wrap {position: absolute;top: 0;left: 50%;width: 100%;max-width: 700px;background: #000;transform: translate(-50%,0);}
@@ -61,7 +63,9 @@ ul,ol,li {list-style: none;}
     <div class="content" id="con6">6</div>
     <div class="content" id="con7">7</div>
 </div>
-    
+
+<a href="https://ctrlcccv.github.io/code/2023-10-22-swiper-menu/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
 <script>
 $(document).ready(function () {
     initTabSwipers(); // 클릭하면 탭 가운데 정렬 함수
