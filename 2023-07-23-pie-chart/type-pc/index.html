@@ -14,53 +14,58 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
 <style>
-* {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;}
-ul,ol,li {list-style: none;}
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; box-sizing: border-box; } 
+ul,ol,li { list-style: none; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
 /* 원형 그래프 */
-.pie_wrap {display: flex;width: 600px;margin: 50px auto 0;}
-.pie {width: 300px;height: 300px;}
+.pie_wrap { display: flex; width: 600px; } 
+.pie { width: 300px; height: 300px; } 
 
 /* 원형 그래프 비율 표시 - CSS 고정 */
-.pie circle {r:25%;cx:50%;cy:50%;fill:transparent;stroke-width:50%;stroke:#ddd;transform: rotate(-90deg);transform-origin:center;transition:all 0.5s;}
+.pie circle { r:25%; cx:50%; cy:50%; fill:transparent; stroke-width:50%; stroke:#ddd; transform: rotate(-90deg); transform-origin:center; transition:all 0.5s; } 
 
 /* 원형 그래프 리스트 */
-.pie_info {width: 300px;padding: 5% 0 0 5%;}
-.pie_info > li {font-size: 0;}
-.pie_info > li .color {display: inline-block;vertical-align: middle;width: 8px;height: 8px;margin-right: 5px;border-radius:4px;background: #000;}
-.pie_info > li .txt {display: inline-block;vertical-align: middle;font-size: 14px;color: #333;}
+.pie_info { width: 300px; padding: 5% 0 0 5%; } 
+.pie_info > li { font-size: 0; } 
+.pie_info > li .color { display: inline-block; width: 8px; height: 8px; margin-right: 5px; background: #000; border-radius:4px; vertical-align: middle; } 
+.pie_info > li .txt { display: inline-block; font-size: 14px; color: #333; vertical-align: middle; } 
 
 </style>
 </head>
 <body>
-    <div class="pie_wrap">
-		<!-- 원형 그래프 -->
-		<svg class="pie">
-			<circle data-percent="10" />
-			<circle data-percent="20" />
-			<circle data-percent="30" />
-			<circle data-percent="40" />
-		</svg>
-		<!-- 원형 그래프 리스트 -->
-		<ul class="pie_info">
-			<li>
-				<span class="color"></span>
-				<span class="txt">그래프 1</span>
-			</li>
-			<li>
-				<span class="color"></span>
-				<span class="txt">그래프 2</span>
-			</li>
-			<li>
-				<span class="color"></span>
-				<span class="txt">그래프 3</span>
-			</li>
-			<li>
-				<span class="color"></span>
-				<span class="txt">그래프 4</span>
-			</li>
-		</ul>
-    </div>
+<div class="pie_wrap">
+	<!-- 원형 그래프 -->
+	<svg class="pie">
+		<circle data-percent="10" />
+		<circle data-percent="20" />
+		<circle data-percent="30" />
+		<circle data-percent="40" />
+	</svg>
+	<!-- 원형 그래프 리스트 -->
+	<ul class="pie_info">
+		<li>
+			<span class="color"></span>
+			<span class="txt">그래프 1</span>
+		</li>
+		<li>
+			<span class="color"></span>
+			<span class="txt">그래프 2</span>
+		</li>
+		<li>
+			<span class="color"></span>
+			<span class="txt">그래프 3</span>
+		</li>
+		<li>
+			<span class="color"></span>
+			<span class="txt">그래프 4</span>
+		</li>
+	</ul>
+</div>
+
+<a href="https://ctrlcccv.github.io/code/2023-07-23-pie-chart/" class="blog" target="_blank">컨트롤 + CCCV</a>
 <script>
 $(document).ready(function(){
 	pieAct();
