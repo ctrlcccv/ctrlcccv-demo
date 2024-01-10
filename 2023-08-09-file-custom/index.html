@@ -16,8 +16,11 @@
 <style>
 *{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
 ul,ol,li {list-style: none;}
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
-.file_cus label {display: block;width: 500px;margin: 50px auto 0;font-size: 0;cursor: pointer;}
+.file_cus label {display: block;width: 500px;font-size: 0;cursor: pointer;}
 input[type="file"] {overflow: hidden;position: absolute;width: 1px;height: 1px;margin: -1px;font-size: initial;clip: rect(0 0 0 0);}
 .file_name {overflow: hidden;display: inline-block;vertical-align: middle;width: calc(100% - 108px);height: 40px;padding:0 12px;border: 1px solid #ddd;border-radius:4px;font-size: 14px;line-height: 38px;color: #111;white-space: nowrap; text-overflow: ellipsis;}
 .file_btn {display: inline-block;vertical-align: middle;width: 100px;height: 40px;margin-left: 8px;background: #8ab4f8;border-radius:4px;font-size: 14px;font-weight: 500;line-height: 40px;color: #fff;text-align: center;}
@@ -33,6 +36,8 @@ input[type="file"]:focus-visible ~ .file_btn, .file_cus:hover .file_btn {backgro
         <span class="file_btn">파일선택</span>
     </label>
 </div>
+
+<a href="https://ctrlcccv.github.io/code/2023-08-09-file-custom/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 $(window).on('load',function(){
