@@ -13,6 +13,9 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <style>
 * {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
 .container { width: 500px;height: 250px;margin: 150px auto 0;background: #fff;border: 1px solid #ededed;border-radius:6px;overflow-x: hidden;overflow-y: auto;} 
 .item {padding: 10px 15px;font-size: 16px;}
 .item + .item {border-top: 1px solid #ededed;}
@@ -21,6 +24,8 @@
 
 <body>
 <div class="container"></div>
+
+<a href="https://ctrlcccv.github.io/code/2023-11-01-ajax-infinite/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 $(document).ready(function() {
