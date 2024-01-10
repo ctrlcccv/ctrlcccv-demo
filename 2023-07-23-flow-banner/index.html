@@ -14,103 +14,105 @@
 </head>
 
 <body>
-    <style>
-		* {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Noto Sans KR', sans-serif;}
-		ul, li {list-style: none;}
-        .flow_banner {overflow: hidden;display: flex;max-width: 1180px;margin: 30px auto;background: #000;}
-        .flow_banner .list {display: flex;}
-        .flow_banner .list > li {white-space: nowrap;font-size: 18px;color: #fff;padding: 20px;}
-        @keyframes flowRolling {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+ul, li { list-style: none; } 
+.flow_banner { overflow: hidden; display: flex; width: 100%; max-width: 1180px; background: #000; } 
+.flow_banner .list { display: flex; } 
+.flow_banner .list > li { padding: 20px; font-size: 18px; color: #fff; white-space: nowrap; } 
+@keyframes flowRolling { 
+    0% { transform: translateX(0); } 
+    100% { transform: translateX(-100%); } 
+}
+
+/* 반응형 스타일 */
+@media (max-width: 1280px){
+    .flow_banner .list > li { padding: 10px; font-size: 16px; } 
+}
+
+@media (max-width: 767px){
+    .flow_banner .list > li { padding: 5px; font-size: 14px; } 
+}
+</style>
+
+<div class="flow_banner">
+    <ul class="list">
+        <li>TEXT1</li>
+        <li>TEXT2</li>
+        <li>TEXT3</li>
+        <li>TEXT4</li>
+        <li>TEXT5</li>
+    </ul>
+</div>
+
+<a href="https://ctrlcccv.github.io/code/2023-07-23-flow-banner/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+$(window).on('load', function() {
+    setFlowBanner();
+})
+
+function setFlowBanner() {
+    const $wrap = $('.flow_banner');
+    const $list = $('.flow_banner .list');
+    let wrapWidth = ''; //$wrap의 가로 크기
+    let listWidth = ''; //$list의 가로 크기
+    const speed = 92; //1초에 몇픽셀 이동하는지 설정
+
+    //리스트 복제
+    let $clone = $list.clone();
+    $wrap.append($clone);
+    flowBannerAct()
+
+    //반응형 :: 디바이스가 변경 될 때마다 배너 롤링 초기화
+    let oldWChk = window.innerWidth > 1279 ? 'pc' : window.innerWidth > 767 ? 'ta' : 'mo';
+    $(window).on('resize', function() {
+        let newWChk = window.innerWidth > 1279 ? 'pc' : window.innerWidth > 767 ? 'ta' : 'mo';
+        if (newWChk != oldWChk) {
+            oldWChk = newWChk;
+            flowBannerAct();
         }
+    });
 
-        /* 반응형 스타일 */
-        @media (max-width: 1280px) {
-            .flow_banner .list > li {font-size: 16px;padding: 10px;}
-        }
-
-        @media (max-width: 767px) {
-            .flow_banner .list > li {font-size: 14px;padding: 5px;}
-        }
-	</style>
-
-    <div class="flow_banner">
-		<ul class="list">
-			<li>TEXT1</li>
-			<li>TEXT2</li>
-			<li>TEXT3</li>
-			<li>TEXT4</li>
-			<li>TEXT5</li>
-		</ul>
-	</div>
-
-    <script>
-        $(window).on('load', function() {
-            setFlowBanner();
-        })
-
-        function setFlowBanner() {
-            const $wrap = $('.flow_banner');
-            const $list = $('.flow_banner .list');
-            let wrapWidth = ''; //$wrap의 가로 크기
-            let listWidth = ''; //$list의 가로 크기
-            const speed = 92; //1초에 몇픽셀 이동하는지 설정
-
-            //리스트 복제
-            let $clone = $list.clone();
-            $wrap.append($clone);
-            flowBannerAct()
-
-            //반응형 :: 디바이스가 변경 될 때마다 배너 롤링 초기화
-            let oldWChk = window.innerWidth > 1279 ? 'pc' : window.innerWidth > 767 ? 'ta' : 'mo';
-            $(window).on('resize', function() {
-                let newWChk = window.innerWidth > 1279 ? 'pc' : window.innerWidth > 767 ? 'ta' : 'mo';
-                if (newWChk != oldWChk) {
-                    oldWChk = newWChk;
-                    flowBannerAct();
-                }
+    //배너 실행 함수
+    function flowBannerAct() {
+        //배너 롤링 초기화
+        if (wrapWidth != '') {
+            $wrap.find('.list').css({
+                'animation': 'none'
             });
-
-            //배너 실행 함수
-            function flowBannerAct() {
-                //배너 롤링 초기화
-                if (wrapWidth != '') {
-                    $wrap.find('.list').css({
-                        'animation': 'none'
-                    });
-                    $wrap.find('.list').slice(2).remove();
-                }
-                wrapWidth = $wrap.width();
-                listWidth = $list.width();
-
-                //무한 반복을 위해 리스트를 복제 후 배너에 추가
-                if (listWidth < wrapWidth) {
-                    const listCount = Math.ceil(wrapWidth * 2 / listWidth);
-                    for (let i = 2; i < listCount; i++) {
-                        $clone = $clone.clone();
-                        $wrap.append($clone);
-                    }
-                }
-                $wrap.find('.list').css({
-                    'animation': `${listWidth / speed}s linear infinite flowRolling`
-                });
-            }
-
-            // 마우스가 요소 위로 진입했을 때 일시정지
-            $wrap.on('mouseenter', function () {
-                $wrap.find('.list').css('animation-play-state', 'paused');
-            });
-
-            // 마우스가 요소에서 빠져나갈 때 재생
-            $wrap.on('mouseleave', function () {
-                $wrap.find('.list').css('animation-play-state', 'running');
-            });
+            $wrap.find('.list').slice(2).remove();
         }
-    </script>
+        wrapWidth = $wrap.width();
+        listWidth = $list.width();
+
+        //무한 반복을 위해 리스트를 복제 후 배너에 추가
+        if (listWidth < wrapWidth) {
+            const listCount = Math.ceil(wrapWidth * 2 / listWidth);
+            for (let i = 2; i < listCount; i++) {
+                $clone = $clone.clone();
+                $wrap.append($clone);
+            }
+        }
+        $wrap.find('.list').css({
+            'animation': `${listWidth / speed}s linear infinite flowRolling`
+        });
+    }
+
+    // 마우스가 요소 위로 진입했을 때 일시정지
+    $wrap.on('mouseenter', function () {
+        $wrap.find('.list').css('animation-play-state', 'paused');
+    });
+
+    // 마우스가 요소에서 빠져나갈 때 재생
+    $wrap.on('mouseleave', function () {
+        $wrap.find('.list').css('animation-play-state', 'running');
+    });
+}
+</script>
 </body>
 </html>
