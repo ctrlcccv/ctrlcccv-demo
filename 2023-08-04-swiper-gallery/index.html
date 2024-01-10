@@ -18,8 +18,11 @@
 <style>
 *{margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
 ul,ol,li {list-style: none;}
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
-.gallery {overflow: hidden;position: relative;max-width: 900px;margin: 40px auto 0;}
+.gallery {overflow: hidden;position: relative;max-width: 900px;width: 100%;}
 .gallery .list .inner {position: relative;}
 .gallery .list .slide_list > li {display: flex;justify-content: center;align-items: center;height:300px;background: #8ab4f8;font-size: 48px;opacity: 0 !important;}
 .gallery .list .slide_list > li.swiper-slide-active {opacity: 1 !important;} 
@@ -65,6 +68,8 @@ ul,ol,li {list-style: none;}
     </div>
 </div>
       
+<a href="https://ctrlcccv.github.io/code/2023-08-04-swiper-gallery/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
 <script>
 $(window).on('load', function () {
     gallery();
