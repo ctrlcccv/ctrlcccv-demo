@@ -13,7 +13,11 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <style>
 * { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
-#container { overflow: hidden; display: flex; justify-content: center; align-items: center; position: relative; width: 600px; height: 600px; margin: 50px auto 0; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+#container { overflow: hidden; display: flex; justify-content: center; align-items: center; position: relative; width: 600px; height: 600px; } 
 #container .bg { width: 800px; height: 800px; } 
 #container .title {position: absolute;top: 50%;left: 50%;margin-top: -33px;margin-left: -63px;font-size: 46px; font-weight: 700;color: #fff; text-shadow: 0 0 10px rgba(0, 0, 0, 0.4); }
 </style>
@@ -24,6 +28,8 @@
     <img src="https://unsplash.it/800/800?random=" alt="배경 이미지" class="bg">
     <h1 class="title">타이틀</h1>
 </div>
+
+<a href="https://ctrlcccv.github.io/code/2023-11-28-cursor-background/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 // #container 요소를 선택합니다.
