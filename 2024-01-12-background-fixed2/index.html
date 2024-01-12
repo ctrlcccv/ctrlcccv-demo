@@ -23,6 +23,9 @@ ul, li { list-style: none; }
 h1 { display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 48px; font-weight: 500; text-align: center; word-break: keep-all; } 
 
 .bg_fixed { height:100vh; clip-path: inset(0 0 0 0); } 
+@supports (-webkit-appearance:none) and (stroke-color: transparent) {
+    min-height:-webkit-fill-available;
+}
 .bg_fixed img { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; } 
 .contents { display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 48px; font-weight: 500; } 
 </style>
