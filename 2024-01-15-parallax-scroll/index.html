@@ -30,8 +30,8 @@ ul, li { list-style: none; }
 </style>
 <div class="parallax">
     <img src="https://picsum.photos/id/80/2000/2000" alt="배경 이미지" class="bg">
-    <p class="fast">배경 이미지보다<br>빠르게 올라갑니다.</p>
-    <p class="slow">배경 이미지보다<br>느리게 올라갑니다.</p>
+    <p class="fast">빠르게 올라갑니다.</p>
+    <p class="slow">느리게 올라갑니다.</p>
 </div>
 
 <div class="container">
@@ -47,14 +47,14 @@ $(document).ready(function () {
     // 패럴랙스 효과를 관리하는 함수입니다.
     function parallax() {
         ypos = $(window).scrollTop(); // 현재 window의 스크롤 위치를 가져옵니다.
-        updatePosition('.bg', ypos, 0.5, 'top'); // 배경에 대한 top 위치 업데이트
+        updatePosition('.bg', ypos, 0.8, 'top'); // 배경에 대한 top 위치 업데이트
         updatePosition('.parallax .fast', ypos, 0.2, 'margin-top'); // 빠른 속도로 움직이는 요소 위치 업데이트
-        updatePosition('.parallax .slow', ypos, 0.8, 'margin-top'); // 느린 속도로 움직이는 요소 위치 업데이트
+        updatePosition('.parallax .slow', ypos, 0.6, 'margin-top'); // 느린 속도로 움직이는 요소 위치 업데이트
     }
 
     // 주어진 요소의 위치를 업데이트하는 함수입니다.
     function updatePosition(selector, scrollPos, factor, type) {
-        $(selector).css(type, `${scrollPos * factor}px`); // 계산된 값을 사용하여 CSS 속성 값을 설정합니다.
+        $(selector).css(type, `${scrollPos * factor}px`); // 계산된 값을 사용하여 CSS 속성값을 설정합니다.
     }
 
     // 스크롤 이벤트가 발생할 때 parallax 함수를 호출합니다.
