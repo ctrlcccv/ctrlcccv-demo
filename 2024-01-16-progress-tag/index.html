@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 프로그레스바 애니메이션 예제 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 프로그레스바 애니메이션 예제 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+ul, li { list-style: none; } 
+body { display: flex; flex-wrap:wrap;justify-content: center; align-items: center; min-height: 100vh; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+.contents {display: flex;justify-content: center;align-items: center;width: 100%;height: 100vh;font-size: 24px;text-align: center;}
+.progress {width: 500px;padding-bottom: 15px;font-size: 0;}
+
+label {display: block;padding: 15px 5px 5px;font-size: 16px;}
+progress { overflow: hidden; width: 100%; height: 35px; background-color: #f3f3f3; border: 0; border-radius: 18px; } 
+progress::-webkit-progress-bar { background-color: #f3f3f3; } 
+progress::-webkit-progress-value { border-radius: 18px; background-image: linear-gradient(60deg, #13E2DA, #543ab7); } 
+progress::-moz-progress-bar { border-radius: 18px; background-image: linear-gradient(60deg, #13E2DA, #543ab7); } 
+</style>
+
+<div class="contents">
+    <h1>스크롤을 내려서<br>프로그레스바 애니메이션를<br>확인해보세요.</h1>
+</div>
+<div class="progress">
+    <label for="html">HTML</label>
+    <progress id="html" max="100" value="100">100%</progress>
+
+    <label for="css">CSS</label>
+    <progress id="css" max="100" value="70">70%</progress>
+
+    <label for="js">JS</label>
+    <progress id="js" max="100" value="50">50%</progress>
+</div> 
+<div class="contents"></div>
+
+<a href="https://ctrlcccv.github.io/code/2024-01-16-progress-tag/" class="blog" target="_blank">컨트롤 + CCCV</a>
+<script>
+
+/*
+$(document).ready(function () {
+    // 각 'progress' 태그를 순회합니다.
+    $('progress').each(function () {
+        // 'value' 속성을 읽어와 'max' 변수에 저장합니다.
+        const max = $(this).attr('value');
+        // 0에서 'max'까지 1초(1000ms) 동안 애니메이션합니다.
+        $(this).val(0).animate({ value: max }, 1000);
+    });
+});
+*/
+
+$(document).ready(function() {
+    // progress 모든 요소를 선택합니다.
+    const $counters = $("progress");
+
+    // 노출 비율(%)과 애니메이션 반복 여부(true/false)를 설정합니다.
+    const exposurePercentage = 100; // ex) 스크롤 했을 때 $counters 컨텐츠가 화면에 100% 노출되면 숫자가 올라갑니다.
+    const loop = true; // 애니메이션 반복 여부를 설정합니다. (true로 설정할 경우, 요소가 화면에서 사라질 때 다시 숨겨집니다.)
+
+    // 각 progress 요소에 대한 value 속성값을 배열에 추가합니다.
+    const maxValues = [];
+    $counters.each(function() {
+        const max = $(this).attr('value');
+        maxValues.push(max);
+        $(this).val(0);
+    });
+    
+    // 윈도우의 스크롤 이벤트를 모니터링합니다.
+    $(window).on('scroll', function() {
+        // 각 "scroll_on" 클래스를 가진 요소에 대해 반복합니다.
+        $counters.each(function(i) {
+            const $el = $(this);
+    
+            // 요소의 위치 정보를 가져옵니다.
+            const rect = $el[0].getBoundingClientRect();
+            const winHeight = window.innerHeight; // 현재 브라우저 창의 높이
+            const contentHeight = rect.bottom - rect.top; // 요소의 높이
+            
+            // 요소가 화면에 특정 비율만큼 노출될 때 처리합니다.
+            if (rect.top <= winHeight - (contentHeight * exposurePercentage / 100) && rect.bottom >= (contentHeight * exposurePercentage / 100)) {
+                if (!$el.hasClass('animated')){
+                    $el.stop().animate({ value: maxValues[i] }, 1000).addClass('animated');
+                }
+            }
+
+            // 요소가 화면에서 완전히 사라졌을 때 처리합니다.
+            if (loop && (rect.bottom <= 0 || rect.top >= window.innerHeight)) {
+                if ($el.hasClass('animated')){
+                    $el.stop().val(0).removeClass('animated');
+                }
+            }
+        });
+    }).scroll();
+});
+
+</script>
+</body>
+</html>
