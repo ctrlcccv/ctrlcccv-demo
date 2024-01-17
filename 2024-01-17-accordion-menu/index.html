@@ -26,7 +26,7 @@ h1 {text-align: center;font-size: 24px;margin: 80px 0 20px;}
 .accordion_menu { width: 500px; max-width: 90%; margin:0 auto; padding-bottom: 10px; background-color: #fff; border: 1px solid #f8f8f8; border-radius:6px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); } 
 .accordion_menu details { display: block; padding: 10px;} 
 .accordion_menu details summary { position: relative; padding: 10px 50px 10px 20px; background-color: #f5f5f5; border-radius: 6px; font-size: 16px; font-weight: 500; color: #333; cursor: pointer; list-style-type: none; } 
-details > summary::-webkit-details-marker {display: none;}
+.accordion_menu details > summary::-webkit-details-marker {display: none;}
 .accordion_menu details summary::before,
 .accordion_menu details summary::after { content:''; position: absolute; top: 50%; right: 20px; width: 10px; height: 2px; background: #333; transform: translate(0,-50%); transition: all 0.3s; } 
 .accordion_menu details summary::after {transform:translate(0,-50%) rotate(90deg);}
@@ -34,7 +34,7 @@ details > summary::-webkit-details-marker {display: none;}
 .accordion_menu.type3 details[open] summary::after,
 .accordion_menu.type4 details[open] summary::after { transform:translate(0,-50%) rotate(90deg); }
 .accordion_menu details.open summary::after { transform:translate(0,-50%) rotate(0) !important; } 
-.accordion_menu details p { margin-top: 10px; font-size: 14px; color: #333; transition: all 0.3s; } 
+.accordion_menu details p { margin-top: 10px; font-size: 14px; color: #333; } 
 </style>
 
 <h1>기본 메뉴 (JS 필요 없음)</h1>
