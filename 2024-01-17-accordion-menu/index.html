@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - &lt;details&gt; 태그를 활용하여 아코디언 메뉴 만들기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - &lt;details&gt; 태그를 활용하여 아코디언 메뉴 만들기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+ul, li { list-style: none; } 
+body {padding-bottom: 130px;}
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+h1 {text-align: center;font-size: 24px;margin: 80px 0 20px;}
+
+.accordion_menu { width: 500px; margin:0 auto; padding-bottom: 10px; background-color: #fff; border: 1px solid #f8f8f8; border-radius:6px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); } 
+.accordion_menu details { display: block; padding: 10px;} 
+.accordion_menu details summary { position: relative; padding: 10px 50px 10px 20px; background-color: #f5f5f5; border-radius: 6px; font-size: 16px; font-weight: 500; color: #333; cursor: pointer; list-style-type: none; } 
+details > summary::-webkit-details-marker {display: none;}
+.accordion_menu details summary::before,
+.accordion_menu details summary::after { content:''; position: absolute; top: 50%; right: 20px; width: 10px; height: 2px; background: #333; transform: translate(0,-50%); transition: all 0.3s; } 
+.accordion_menu details summary::after {transform:translate(0,-50%) rotate(90deg);}
+.accordion_menu details[open] summary::after { transform:translate(0,-50%) rotate(0); }
+.accordion_menu.type3 details[open] summary::after,
+.accordion_menu.type4 details[open] summary::after { transform:translate(0,-50%) rotate(90deg); }
+.accordion_menu details.open summary::after { transform:translate(0,-50%) rotate(0) !important; } 
+.accordion_menu details p { margin-top: 10px; font-size: 14px; color: #333; transition: all 0.3s; } 
+</style>
+
+<h1>기본 메뉴 (JS 필요 없음)</h1>
+<div class="accordion_menu">
+    <details>
+        <summary>메뉴 1</summary>
+        <p>메뉴 1의 내용입니다.</p>
+    </details>
+    <details>
+        <summary>메뉴 2</summary>
+        <p>메뉴 2의 내용입니다.</p>
+    </details>
+    <details>
+        <summary>메뉴 3</summary>
+        <p>메뉴 3의 내용입니다.</p>
+    </details>
+</div>
+
+<h1>하나만 펼쳐지는 아코디언 메뉴</h1>
+<div class="accordion_menu type2">
+    <details>
+        <summary>메뉴 1</summary>
+        <p>메뉴 1의 내용입니다.</p>
+    </details>
+    <details>
+        <summary>메뉴 2</summary>
+        <p>메뉴 2의 내용입니다.</p>
+    </details>
+    <details>
+        <summary>메뉴 3</summary>
+        <p>메뉴 3의 내용입니다.</p>
+    </details>
+</div>
+
+<h1>슬라이드 효과 추가</h1>
+<div class="accordion_menu type3">
+    <details>
+        <summary>메뉴 1</summary>
+        <p>메뉴 1의 내용입니다.</p>
+    </details>
+    <details>
+        <summary>메뉴 2</summary>
+        <p>메뉴 2의 내용입니다.</p>
+    </details>
+    <details>
+        <summary>메뉴 3</summary>
+        <p>메뉴 3의 내용입니다.</p>
+    </details>
+</div>
+
+<h1>아코디언 메뉴 + 슬라이드 효과 추가</h1>
+<div class="accordion_menu type4">
+    <details>
+        <summary>메뉴 1</summary>
+        <p>메뉴 1의 내용입니다.</p>
+    </details>
+    <details>
+        <summary>메뉴 2</summary>
+        <p>메뉴 2의 내용입니다.</p>
+    </details>
+    <details>
+        <summary>메뉴 3</summary>
+        <p>메뉴 3의 내용입니다.</p>
+    </details>
+</div>
+
+
+<a href="https://ctrlcccv.github.io/code/2024-01-17-accordion-menu/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+$(document).ready(function() {
+    // 하나만 펼쳐지는 아코디언 메뉴
+    $('.accordion_menu.type2 summary').on('click', function() {
+        const $details = $(this).parent();
+        $details.siblings('details').removeAttr('open');
+    });
+    
+    //슬라이드 효과 추가
+    $('.accordion_menu.type3 details').attr('open', true).each(function() {
+        const $summary = $(this).find('summary');
+        $summary.nextAll().wrapAll('<div class="con"></div>').parent().hide();
+        $summary.on('click', function(e) {
+            e.preventDefault();
+            $(this).next('.con').slideToggle();
+            $(this).parent().toggleClass('open');
+        });
+    });
+
+    // 아코디언 메뉴 + 슬라이드 효과 추가
+    $('.accordion_menu.type4 details').attr('open', true).each(function() {
+        const $summary = $(this).find('summary');
+        $summary.nextAll().wrapAll('<div class="con"></div>').parent().hide();
+        $summary.on('click', function(e) {
+            e.preventDefault();
+            $(this).next('.con').slideToggle().parent().siblings().find('.con').slideUp();
+            $(this).parent().toggleClass('open').siblings().removeClass('open');
+        });
+    });
+});
+</script>
+</body>
+</html>
