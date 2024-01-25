@@ -214,7 +214,6 @@ function menuScroll() {
     // 스크롤 할 때 메뉴의 활성 상태를 설정하는 함수
     function handleScroll() {
         if (!$('html, body').is(":animated")) {
-            const scltop = $(window).scrollTop() + (isMobile ? topMo : topPc);
             if ($(window).scrollTop() + window.innerHeight < $(document).height()) {
                 const scltop = $(window).scrollTop() + (isMobile ? topMo : topPc);
                 $.each($contents, function (idx, item) {

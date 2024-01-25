@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>jQuery - 원형 프로그레스바 및 애니메이션 구현하기  | 컨트롤 + CCCV</title>
+  <meta name="description" content="jQuery - 원형 프로그레스바 및 애니메이션 구현하기 | 컨트롤 + CCCV" />
+  <meta name="robots" content="noindex">
+  <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+    * { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+    body { display: flex; gap:30px; justify-content: center; align-items: center; min-height: 100vh; background: #fff; } 
+    ul, li { list-style: none; } 
+    body { padding-bottom: 130px; }
+    .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom: 50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius: 23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+    .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+    
+    .canvas_wrap { position: relative; max-width: 300px; max-height:300px; } 
+    .canvas_wrap .percent { display: block; position: absolute; top: 50%; left: 50%; font-size: 50px; color: #3949AB; transform: translate(-50%, -50%); } 
+    .canvas_wrap .percent::after { content: '%'; } 
+    .canvas_wrap canvas { width: 100%; height: 100%; } 
+</style>
+
+<div class="canvas_wrap">
+    <canvas class="canvas" width="300" height="300" data-percent="78"></canvas>
+    <span class="percent"></span>
+</div>
+
+<div class="canvas_wrap">
+    <canvas class="canvas" width="300" height="300" data-percent="0"></canvas>
+    <span class="percent"></span>
+</div>
+
+
+<a href="https://ctrlcccv.github.io/code/2024-01-18-scroll-progress/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+$(document).ready(function() { 
+    // 각 캔버스 요소에 대해
+    $('.canvas').each(function() { 
+        // 퍼센트를 표시할 요소 선택
+        const spanpercent = $(this).siblings('.percent');
+        
+        // 원의 테두리 너비(px) 및 애니메이션 지속 시간(ms) 정의 
+        const border = 20;
+        const duration = 700; 
+
+        // 캔버스 및 2D 컨텍스트 설정
+        const canvas = $(this)[0]; 
+        const ctx = canvas.getContext('2d');
+
+        // 애니메이션에 필요한 변수 및 데이터 속성에서 목표 퍼센트 가져오기
+        const targetPercent = $(this).data('percent');
+        const posX = canvas.width / 2;
+        const posY = canvas.height / 2;
+        const onePercent = 360 / 100;
+        const result = onePercent * targetPercent;
+        const radius = (canvas.width / 2) - (border / 2);
+        let percent = 0;
+        ctx.lineCap = (targetPercent <= 0) ? 'butt' : 'round';
+
+        // 원을 그리고 퍼센트 업데이트하는 함수
+        function arcMove() {
+            let degrees = 0;
+            let startTime = null;
+
+            // 애니메이션을 처리하는 함수
+            function animate(timestamp) {
+                if (!startTime) startTime = timestamp;
+                let progress = (timestamp - startTime) / duration;
+                progress = Math.min(1, progress);
+                degrees = progress * result;
+
+                // 캔버스 초기화 및 퍼센트 업데이트
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                percent = Math.floor(degrees / onePercent);
+                spanpercent.text(percent);
+
+                // 배경 선 그리기
+                ctx.beginPath();
+                ctx.arc(posX, posY, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = '#b1b1b1';
+                ctx.lineWidth = border;
+                ctx.stroke();
+
+                // 애니메이션 되는 선 그리기
+                ctx.beginPath();
+                ctx.strokeStyle = '#3949AB';
+                ctx.lineWidth = border;
+                ctx.arc(posX, posY, radius, Math.PI * -0.5, (Math.PI / 180) * degrees - (Math.PI / 2));
+                ctx.stroke();
+
+                // 애니메이션이 완료되지 않았다면 계속해서 프레임 요청
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            // 첫 프레임 요청
+            requestAnimationFrame(animate);
+        }
+
+        // 애니메이션 함수 호출
+        arcMove();
+    });
+});
+</script>
+    
+</body>
+</html>
