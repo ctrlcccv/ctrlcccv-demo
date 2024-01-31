@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>jQuery - 메뉴 hover 움직이는 밑줄 효과 만들기 | 컨트롤 + CCCV</title>
+  <meta name="description" content="jQuery - 메뉴 hover 움직이는 밑줄 효과 만들기 | 컨트롤 + CCCV" />
+  <meta name="robots" content="noindex">
+  <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+    * { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+    body { display: flex; } 
+    ul, li { list-style: none; } 
+    body { padding-bottom: 130px; }
+    .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom: 50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius: 23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+    .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+    nav { display: block; position: relative; width: 100%; background-color: #001F3F; } 
+    nav .inner { position: relative; max-width: 600px; margin: 0 auto; } 
+    nav .marker { position: absolute; bottom: 0; width:90px; height: 3px; background-color: #FFD700; z-index: 1; opacity: 0; transform: translateX(-50%) translateX(var(--marker-translate, 0px)); transition: all 0.3s ease; } 
+    nav .inner:hover .marker { opacity: 1; } 
+    .menu { display: flex; justify-content:center; text-align: center; list-style: none; } 
+    .menu li { flex:1; } 
+    .menu li a { display: block; padding: 15px 0 18px; font-size: 16px; color: #ffffff; text-decoration: none; text-transform: uppercase; transition: all 0.3s ease; } 
+    .menu li:hover a { color: #FFD700; } 
+</style>
+
+<nav>
+    <div class="inner">
+        <ul class='menu'>
+            <li class='active'><a href='#'>메뉴 1</a></li>
+            <li><a href='#'>메뉴 2</a></li>
+            <li><a href='#'>메뉴 3</a></li>
+            <li><a href='#'>메뉴 4</a></li>
+            <li><a href='#'>메뉴 5</a></li>
+        </ul>
+        <span class='marker'></span>
+    </div>
+</nav>
+
+<a href="https://ctrlcccv.github.io/code/2024-01-31-underline-move/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+$('.menu li').on('mouseenter', function () {
+    // 각 메뉴 li의 left 위치와 너비를 가져옵니다.
+    const $menuItem = $(this);
+    const itemLeft = $menuItem.position().left;
+    const itemWidth = $menuItem.outerWidth();
+
+    // 마커의 위치값을 계산합니다.
+    const centerValue = itemLeft + itemWidth / 2;
+
+    // 마커를 움직여 메뉴 li의 가운데로 위치시킵니다.
+    $('.marker').css('--marker-translate', centerValue + 'px');
+});
+</script>
+</body>
+</html>
