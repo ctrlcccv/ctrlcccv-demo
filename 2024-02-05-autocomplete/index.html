@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery - autocomplete (자동완성) 주요 옵션 및 예제 | 컨트롤 + CCCV</title>
+    <meta name="description" content="jQuery - autocomplete (자동완성) 주요 옵션 및 예제 | 컨트롤 + CCCV" />
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+    * { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+    body { background-color: #f9f9f9; margin: 0; padding: 0; } 
+    ul, li { list-style: none; } 
+    body { padding-bottom: 130px; }
+    .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom: 50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius: 23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+    .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+    .list { max-width: 360px; margin: 60px auto 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background: #fff; } 
+    .list h1 { margin-bottom: 10px; font-size: 20px; font-weight: 500; color: #333; text-align: center; } 
+    .list ul { display: flex; flex-wrap:wrap; gap:10px; padding: 0; list-style-type: none; } 
+    .list li { font-size: 16px; padding: 10px 15px; background-color: #f0f0f0; border-radius: 5px; transition: background-color 0.3s ease; } 
+
+    .autocomplete-input { display: block; width: 360px; margin: 10px auto 0; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; outline: none; } 
+    .ui-autocomplete { position: absolute; max-height: 200px; margin: 0; padding: 0; background-color: #fff; border: 1px solid #ccc; border-radius: 8px; z-index: 1; list-style: none; overflow-y: auto; } 
+    .ui-autocomplete li { padding: 10px; cursor: pointer; font-size: 16px; color: #000; } 
+    .ui-autocomplete li strong { color: #0077cc; } 
+    .ui-helper-hidden-accessible { display: none; } 
+</style>
+
+<div class="list">
+  <h1>data list</h1>
+  <ul>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+      <li>jQuery</li>
+      <li>Ajax</li>
+      <li>React</li>
+      <li>Angular</li>
+      <li>Vue.js</li>
+      <li>Node.js</li>
+      <li>Express</li>
+  </ul>
+</div>
+
+<input type="text" id="autocomplete" class="autocomplete-input">
+
+<a href="https://ctrlcccv.github.io/code/2024-01-31-underline-move/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+$(document).ready(function () {
+    const data = [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "jQuery",
+        "Ajax",
+        "React",
+        "Angular",
+        "Vue.js",
+        "Node.js",
+        "Express"
+    ];
+
+    // 자동 완성 셋업
+    $("#autocomplete").autocomplete({
+        // 입력 문자열에 대해 필터링된 제안을 반환하는 함수
+        source: function (request, response) {
+            const inputText = request.term.toLowerCase();
+            const filteredItems = data.filter(item => item.toLowerCase().includes(inputText));
+            response(filteredItems);
+        },
+        
+        // 자동 완성 위치 조정
+        position: { my: "left top+5" },
+
+        // 자동 완성 메뉴가 열렸을 때, 하이라이팅 로직
+        open: function () {
+            const inputText = $("#autocomplete").val().toLowerCase();
+            // 각 제안 아이템에 대한 하이라이팅
+            $(".ui-autocomplete li").each(function () {
+                let suggestion = $(this).text();
+                const index = suggestion.toLowerCase().indexOf(inputText);
+
+                if (index !== -1) {
+                    // 단어의 일부를 강조하는 HTML을 사용하여 새로운 제안 생성
+                    const highlightedPart = `<strong>${suggestion.substr(index, inputText.length)}</strong>`;
+                    suggestion = suggestion.substring(0, index) + highlightedPart + suggestion.substring(index + inputText.length);
+                    // 새로운 제안으로 항목 내용을 업데이트
+                    $(this).html(suggestion);
+                }
+            });
+        },
+    });
+});
+</script>
+</body>
+</html>
