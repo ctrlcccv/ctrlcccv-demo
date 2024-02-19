@@ -21,8 +21,9 @@
     .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
     @keyframes fall { 
-        0% { top: 0}
-        100% { top: 100%} 
+        0% { opacity: 1;top: 0}
+        80% { opacity: 1;} 
+        100% { opacity: 0.2;top: 100%} 
     }
 
     .sakura_wrap { position: relative;overflow: hidden; width: 600px; height: 600px; max-width: 100%; max-height: 100vh; perspective: 1000px; background:#000 url('sakura.png') center center no-repeat;background-size: cover; } 
@@ -98,7 +99,7 @@ var petalCreator = function () {
     petal
         .css({
             'width':size,
-            'height':size * 1.2,
+            'height':size,
             'left': startPosLeft,
             'position': 'absolute',
             'animation': 'fall ' + fallTime + 's linear'
