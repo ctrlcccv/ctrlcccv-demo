@@ -15,71 +15,56 @@
 <body>
 <style>
     * { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
-    body { background-color: #f9f9f9; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; } 
-    body { overflow: hidden; padding-bottom: 130px; perspective: 1000px; }
+    body { background-color: #f9f9f9; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding-bottom: 130px; } 
     ul, li { list-style: none; }
     .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom: 50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius: 23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
     .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
     @keyframes fall { 
-        0% { opacity: 0.9; top: 0}
-        100% { opacity: 0.2; top: 100%} 
-    }
-    .sakura {
-        background: linear-gradient(
-            -45deg,
-            rgba(255, 183, 197, 0.9) 0%,
-            rgba(255, 197, 208, 0.7) 50%,
-            rgba(255, 223, 230, 0.9) 100%
-        );
-        border-radius: 10% 50% 40% 50%; /* Adjust values to change the shape */
-        pointer-events: none;
-        position: absolute;
-        transform-style: preserve-3d;
+        0% { top: 0}
+        100% { top: 100%} 
     }
 
+    .sakura_wrap { position: relative;overflow: hidden; width: 600px; height: 600px; max-width: 100%; max-height: 100vh; perspective: 1000px; background:#000 url('sakura.png') center center no-repeat;background-size: cover; } 
+    .sakura { position: absolute;  background: linear-gradient(-45deg, rgba(255, 182, 193, 1) 0%, rgba(255, 197, 208, 1) 40%, rgba(255, 223, 230, 1) 80%); box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); border-radius: 10% 50% 40% 50%; pointer-events: none; transform-style: preserve-3d;z-index: 2; } 
 
 </style>
 
+<div class="sakura_wrap"></div>
+  
 
 <a href="https://ctrlcccv.github.io/code/2024-02-06-hover-gallery/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 // initialize variables
 var lastTime = 0;
-var $window = $(window);
-var $document = $(document);
-var $body = $('body');
+var $document = $('.sakura_wrap');
 var documentHeight = $document.height();
 var documentWidth = $document.width();
-var sakura = $('<div class="sakura" />');
+var sakura = $('<div class="sakura"></div>');
 
 // Basic setting
 var defaults = {
     fallSpeed: 1,
-    maxSize: 30,
-    minSize: 20,
+    maxSize: 15,
+    minSize: 10,
     newOn: 300
 };
-
 var getRandomRotateValue = function () {
-    var rotateX = (Math.random() * 90 - 45); 
-    var rotateY = (Math.random() * 90 - 45);
-    var rotateZ = (Math.random() * 180 - 45);
-    var translateX = (Math.random() * 20 - 10);
-    var translateY = (Math.random() * 20 - 10);
-    var translateZ = (Math.random() * 60);
+    var rotateX = (Math.random() * 60 - 30); 
+    var rotateY = (Math.random() * 60 - 30);
+    var rotateZ = (Math.random() * 120 - 30);
+    var translateX = (Math.random() * 10 - 5);
+    var translateY = (Math.random() * 10 - 5); 
+    var translateZ = (Math.random() * 30);
 
     return 'rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) rotateZ(' + rotateZ + 'deg) translateX(' + translateX + 'px) translateY(' + translateY + 'px) translateZ(' + translateZ + 'px)';
 };
 
-
-// Array to store sway animation
 var randomSwayAnimations = Array.from({ length: 10 }, function () {
     return { transform: getRandomRotateValue() };
 });
 
-// Function to apply sway animation to elements
 var applySwayAnimation = function (element) {
     var randomSway = randomSwayAnimations[Math.floor(Math.random() * randomSwayAnimations.length)];
 
@@ -91,10 +76,9 @@ var applySwayAnimation = function (element) {
     setTimeout(function () {
         element.css('transition', '');
         applySwayAnimation(element);
-    }, 2000);
+    }, 1000);
 };
 
-//petal creation function
 var petalCreator = function () {
     setTimeout(function () {
         requestAnimationFrame(petalCreator);
@@ -107,7 +91,6 @@ var petalCreator = function () {
     var fallTime = (Math.round(documentHeight * 0.007) + Math.random() * 5) * defaults.fallSpeed;
     var horizontalOffset = Math.random() * 2 - 1;
 
-    // Register an event handler for the AnimationEnd event
     petal.on('animationend', function () {
         $(this).remove();
     });
@@ -120,11 +103,10 @@ var petalCreator = function () {
             'position': 'absolute',
             'animation': 'fall ' + fallTime + 's linear'
         })
-        .appendTo('body');
+        .appendTo($document);
 
-    // Function to apply horizontal movement
     var updatePosition = function () {
-        petal.css('left', '+=' + horizontalOffset); // Adjust the multiplication value to control speed
+        petal.css('left', '+=' + horizontalOffset); 
         requestAnimationFrame(updatePosition);
     };
 
@@ -132,14 +114,12 @@ var petalCreator = function () {
     applySwayAnimation(petal);
 };
 
-// Update documentHeight and documentWidth when window size changes
-$window.resize(function () {
+$(window).resize(function () {
     documentHeight = $document.height();
     documentWidth = $document.width();
 });
 
-// Start creating petal after loading the page
-$window.on('load', function () {
+$(window).on('load', function () {
     requestAnimationFrame(petalCreator);
 });
 
