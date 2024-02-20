@@ -25,8 +25,8 @@
         80% { opacity: 1; } 
         100% { top: 100%; opacity: 0.2; } 
     }
-    .cherry_blossom { overflow: hidden; position: relative; width: 600px; height: 600px; max-width: 100%; max-height: 100vh; background:#000 url('sakura.png') center center no-repeat; background-size: cover; perspective: 1000px; } 
-    .cherry_blossom .petal { position: absolute; background: linear-gradient(-45deg, rgba(255, 182, 193, 1) 0%, rgba(255, 197, 208, 1) 40%, rgba(255, 223, 230, 1) 80%); border-radius: 10% 50% 40% 50%; z-index: 2; box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); pointer-events: none; transform-style: preserve-3d; } 
+    .cherry_blossom { overflow: hidden; position: relative; width: 600px; height: 600px; max-width: 100%; max-height: 100vh; background:#000 url('sakura.png') center center no-repeat; background-size: cover; perspective: 1000px;  } 
+    .cherry_blossom .petal { position: absolute; background: linear-gradient(-45deg, rgba(255, 182, 193, 1) 0%, rgba(255, 197, 208, 1) 40%, rgba(255, 223, 230, 1) 80%); border-radius: 10% 50% 40% 50%; z-index: 2; box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); pointer-events: none; transform-style: preserve-3d; transition: transform 1000ms linear; } 
 
 </style>
 
@@ -49,31 +49,27 @@ var defaults = {
     minSize: 10,
     newOn: 400
 };
+
 var getRandomRotateValue = function () {
     var rotateX = 360;
     var rotateY = (Math.random() * 60 - 30);
     var rotateZ = (Math.random() * 120 - 30);
     var translateX = (Math.random() * 10 - 5);
-    var translateY = (Math.random() * 10 - 5); 
-    var translateZ = (Math.random() * 30);
-
+    var translateY = (Math.random() * 10 - 5);
+    var translateZ = (Math.random() * 15);
     return 'rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) rotateZ(' + rotateZ + 'deg) translateX(' + translateX + 'px) translateY(' + translateY + 'px) translateZ(' + translateZ + 'px)';
 };
 
-var randomSwayAnimations = Array.from({ length: 10 }, function () {
-    return { transform: getRandomRotateValue() };
-});
-
 var applySwayAnimation = function (element) {
-    var randomSway = randomSwayAnimations[Math.floor(Math.random() * randomSwayAnimations.length)];
-
-    element.css({
-        'transition': 'transform 1000ms linear',
-        'transform': randomSway.transform
+    var randomSwayAnimations = Array.from({ length: 10 }, function () {
+        return { transform: getRandomRotateValue() };
     });
 
+    var randomSway = randomSwayAnimations[Math.floor(Math.random() * randomSwayAnimations.length)];
+    element.css({
+        'transform': randomSway.transform
+    });
     setTimeout(function () {
-        element.css('transition', '');
         applySwayAnimation(element);
     }, 1000);
 };
