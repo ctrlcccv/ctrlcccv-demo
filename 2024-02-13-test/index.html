@@ -51,20 +51,22 @@ var defaults = {
 };
 
 var getRandomRotateValue = function () {
+    
     var rotateX = 360;
     var rotateY = (Math.random() * 60 - 30);
     var rotateZ = (Math.random() * 120 - 30);
     var translateX = (Math.random() * 10 - 5);
     var translateY = (Math.random() * 10 - 5);
-    var translateZ = (Math.random() * 15);
+    var translateZ = (Math.random() * 15 - 15);
     return 'rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) rotateZ(' + rotateZ + 'deg) translateX(' + translateX + 'px) translateY(' + translateY + 'px) translateZ(' + translateZ + 'px)';
 };
 
-var applySwayAnimation = function (element) {
-    var randomSwayAnimations = Array.from({ length: 10 }, function () {
-        return { transform: getRandomRotateValue() };
-    });
+var randomSwayAnimations = Array.from({ length: 10 }, function () {
+    return { transform: getRandomRotateValue() };
+});
 
+var applySwayAnimation = function (element) {
+    console.log('test')
     var randomSway = randomSwayAnimations[Math.floor(Math.random() * randomSwayAnimations.length)];
     element.css({
         'transform': randomSway.transform
