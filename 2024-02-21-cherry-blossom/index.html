@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery - 벚꽃 흩날리는 효과 | 컨트롤 + CCCV</title>
+    <meta name="description" content="jQuery - 벚꽃 흩날리는 효과 | 컨트롤 + CCCV" />
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+    * { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+    body { background-color: #f9f9f9; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding-bottom: 130px; } 
+    ul, li { list-style: none; }
+    .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom: 50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius: 23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+    .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+    .cherry_blossom { overflow: hidden; position: relative; width: 600px; height: 600px; background:#000 url('sakura.png') center center no-repeat; background-size: cover; perspective: 1000px;  } 
+    .cherry_blossom .petal { position: absolute; background: linear-gradient(-45deg, #ffb6c1 0%, #ffc5d0 40%, #ffdfe6 80%); border-radius: 10% 50% 40% 50%; z-index: 1; box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); pointer-events: none; transform-style: preserve-3d; transition: transform 1000ms linear; } 
+    @keyframes fall { 
+        0% { top: 0; opacity: 1; } 
+        80% { opacity: 1; } 
+        100% { top: 100%; opacity: 0.2; } 
+    }
+</style>
+
+<div class="cherry_blossom"></div>
+
+<a href="https://ctrlcccv.github.io/code/2024-02-20-cherry-blossom/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+// 기본 값 설정
+const defaults = {
+    speed: 5,
+    maxSize: 15,
+    minSize: 10,
+    newOn: 400
+};
+
+// 벚꽃 영역 크기를 저장할 변수
+var $wrap = $('.cherry_blossom');
+let wrapH = $wrap.height();
+let wrapW = $wrap.width();
+
+// 벚꽃 잎 생성
+const $petal = $('<span class="petal"></span>');
+
+// 랜덤 회전 값을 생성하는 함수
+const getRandomRotate = () => {
+    const rotateX = 360;
+    const rotateY = Math.random() * 60 - 30;
+    const rotateZ = Math.random() * 120 - 30;
+    const translateX = Math.random() * 10 - 5;
+    const translateY = Math.random() * 10 - 10;
+    const translateZ = Math.random() * 15;
+    return `rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px)`;
+};
+
+// 무작위 흔들림 애니메이션 배열 생성
+const randomSwayAnims = [...Array(10)].map(getRandomRotate);
+
+// 특정 요소에 흔들림 애니메이션 적용
+const applySwayAnim = (element) => {
+    const randomSway = randomSwayAnims[Math.floor(Math.random() * randomSwayAnims.length)];
+    element.css('transform', randomSway);
+    setTimeout(() => {
+        applySwayAnim(element);
+    }, 1000);
+};
+
+// 벚꽃 잎 생성 함수
+const petalGen = () => {
+    setTimeout(requestAnimationFrame, defaults.newOn, petalGen);
+
+    const petal = $petal.clone();
+    const size = Math.floor(Math.random() * (defaults.maxSize - defaults.minSize + 1)) + defaults.minSize;
+    const startPosLeft = Math.random() * wrapW;
+    const fallTime = (wrapH * 0.1 + Math.random() * 5) / defaults.speed;
+    const horizontalOffset = Math.random() * 2 - 1;
+
+    // 애니메이션 끝나면 제거
+    petal.on('animationend', () => {
+        petal.remove();
+    }).css({
+        width: size,
+        height: size,
+        left: startPosLeft,
+        position: 'absolute',
+        animation: `fall ${fallTime}s linear`
+    }).appendTo($wrap);
+
+    // 위치 업데이트 함수
+    const updatePos = () => {
+        petal.css('left', `+=${horizontalOffset}`);
+        requestAnimationFrame(updatePos);
+    };
+
+    updatePos();
+    applySwayAnim(petal);
+};
+
+// 창 크기가 변경될 때 문서 크기 업데이트
+$(window).resize(() => {
+    wrapH = $wrap.height();
+    wrapW = $wrap.width();
+});
+
+// 로딩 완료 후 벚꽃 잎 생성 시작
+$(window).on('load', () => {
+    requestAnimationFrame(petalGen);
+});
+
+</script>
+</body>
+</html>
