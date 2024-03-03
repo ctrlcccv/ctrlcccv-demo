@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>핀터레스트 레이아웃, masonry.js로 쉽게 구현하기 | 컨트롤 + CCCV</title>
+    <meta name="description" content="핀터레스트 레이아웃, masonry.js로 쉽게 구현하기 | 컨트롤 + CCCV" />
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="./masonry.pkgd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+    * { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+    body { margin: 0; padding: 0; } 
+    ul, li { list-style: none; }
+    .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom: 50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius: 23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+    .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+    .masonry { max-width: 600px; margin: 0 auto; }
+    .item { display: flex; justify-content: center; align-items: center; width: calc(25% - 20px); margin:10px; background: #8ab4f8; font-size: 24px; font-weight: 500; } 
+</style>
+
+<div class="masonry">
+    <div class="item" style="height: 300px;">1</div>
+    <div class="item" style="height: 100px;">2</div>
+    <div class="item" style="height: 200px;">3</div>
+    <div class="item" style="height: 300px;">4</div>
+    <div class="item" style="height: 100px;">5</div>
+    <div class="item" style="height: 200px;">6</div>
+    <div class="item" style="height: 100px;">7</div>
+    <div class="item" style="height: 150px;">8</div>
+    <div class="item" style="height: 100px;">9</div>
+    <div class="item" style="height: 200px;">10</div>
+</div>
+
+<script>
+$('.masonry').masonry({
+    itemSelector: '.item',
+    horizontalOrder: true
+});
+</script>
+</body>
+</html>
