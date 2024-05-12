@@ -57,15 +57,11 @@ $(document).ready(function(){
     });
 
     // 쿠키 확인하여 팝업을 보여줄지 결정
-    function checkCookie() {
-        if (document.cookie.indexOf('hidePopup=true') >= 0) {
-            $popup.hide(); // 팝업 숨기기
-        } else {
-            $popup.show(); // 쿠키가 없으면 팝업을 보여줌
-        }
+    if (document.cookie.indexOf('hidePopup=true') >= 0) {
+        $popup.hide(); // 팝업 숨기기
+    } else {
+        $popup.show(); // 쿠키가 없으면 팝업을 보여줌
     }
-
-    checkCookie(); // 쿠키 상태 확인해서 팝업 보여주기 또는 숨기기
 })
 
 </script>
