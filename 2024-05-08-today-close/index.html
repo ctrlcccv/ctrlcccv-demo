@@ -31,7 +31,7 @@ ul, li { list-style: none; }
 <div class="popup">
     <div class="content">팝업 컨텐츠</div>
     <div class="btn_wrap">
-        <label><input type="checkbox" class="today_chk">오늘 하루 보지 않기</label>
+        <label><input type="checkbox" class="today_chk">오늘 하루 보지 않기 dfdfdf</label>
         <a href="#self" class="close">닫기</a>
     </div>    
 </div>
@@ -46,7 +46,7 @@ $(document).ready(function(){
     // 닫기 버튼 클릭 시 팝업 숨기기와 쿠키 설정
     $popup.on('click', '.close', function(e) {
         e.preventDefault();
-        const hidePopup = $('#today_chk').prop('checked'); // 팝업을 숨길지 여부
+        const hidePopup = $('.today_chk').prop('checked'); // 팝업을 숨길지 여부
         if (hidePopup) {
             const d = new Date();
             d.setTime(d.getTime() + (hour * 60 * 60 * 1000)); 
