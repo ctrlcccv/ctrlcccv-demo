@@ -162,9 +162,8 @@ function menuScroll() {
     function scrollAct() {
         const scrollTop = $(window).scrollTop();
         const offset = isMobile ? offsetMo : offsetPC;
-        const menuWrapTop = isMobile ? offsetMo : offsetPC;
         if (scrollTop > position - offset) {
-            $menuWrap.css({ 'position': 'fixed', 'top': menuWrapTop + 'px' });
+            $menuWrap.css({ 'position': 'fixed', 'top': offset + 'px' });
         } else {
             $menuWrap.css({ 'position': 'absolute', 'top': '0' });
         }
