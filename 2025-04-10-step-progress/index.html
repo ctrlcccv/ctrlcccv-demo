@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery - 자동 계산되는 단계별 프로그레스바 (ProgressBar)</title>
+    <meta name="description" content="jQuery - 자동 계산되는 단계별 프로그레스바 (ProgressBar) | 컨트롤 + CCCV" />
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { margin: 0; padding: 0; background-color: #fff; } 
+ol, ul, li { list-style: none; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom: 50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius: 23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+.progress { display: flex; justify-content: space-between; position: relative; max-width: 600px; margin: 0 11px 28px; margin: 200px auto 0; } 
+.progress::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background: #D6D6D6; z-index: 0; transform: translate(0,-50%); } 
+.progress::after { content: ''; position: absolute; top: 50%; left: 0; width: var(--progress-width); height: 4px; background: #007AFF; z-index: 1; transform: translate(0,-50%); } 
+.progress > li { position: relative; width: 20px; text-align: center; } 
+.progress > li .step { display: flex; justify-content: center; align-items: center; position: relative; width: 20px; height: 20px; margin: -2px auto 0; background: #EEEEEE; border: 1px solid #999999; border-radius: 50%; font-size: 10px; line-height: 1; color: #999999; z-index: 2; } 
+.progress > li.end .step { background: #007AFF; border-color: #007AFF; color: #fff; } 
+.progress > li.active .step { background: #fff; border-color: #007AFF; color: #007AFF; } 
+.progress > li .tit { position: absolute; top: calc(100% + 4px); left: 50%; font-size: 12px; font-weight: 400; line-height: 130%; color: #999999; white-space: nowrap; transform: translate(-50%,0); } 
+.progress > li.end .tit { color: #4D4D4D; } 
+.progress > li.active .tit { color: #007AFF; } 
+</style>
+
+<!-- 현재 진행중인 li에 active 클래스를 추가해주세요 -->
+<ol class="progress">
+    <li>
+        <span class="step">1</span>
+        <strong class="tit">진행 완료</strong>
+    </li>
+    <li class="active">
+        <span class="step">2</span>
+        <strong class="tit">진행중</strong>
+    </li>
+    <li>
+        <span class="step">3</span>
+        <strong class="tit">진행 예정</strong>
+    </li>
+</ol>
+
+<a href="https://ctrlcccv.github.io/code/2025-04-10-step-progress/" class="blog" target="_blank">컨트롤 + CCCV</a>
+  
+<script>
+$(document).ready(() => {
+    initProgress();
+});
+
+function initProgress() {
+    // 각 .progress 요소에 대해 반복
+    $('.progress').each((_, progressElement) => {
+        const $progress = $(progressElement); // 현재 progress 요소 래핑
+        const $items = $progress.find('> li'); // 현재 progress의 li 항목들 선택
+        const activeIndex = $items.index($items.filter('.active')); // 'active' 클래스를 가진 항목의 인덱스 구하기
+
+        // 현재 활성화된 항목까지의 모든 항목에 'end' 클래스 추가
+        $items.slice(0, activeIndex).addClass('end');
+
+        // 총 항목 수 계산 (마지막 항목 제외)
+        const totalItemsCount = $items.length - 1;
+        // 비율 계산
+        const percentage = (activeIndex / totalItemsCount) * 100; 
+        // '--progress-width' CSS 변수를 사용하여 진행 상황의 너비 설정
+        $progress.css('--progress-width', `${percentage}%`);
+    });
+}
+</script>
+</body>
+</html>
