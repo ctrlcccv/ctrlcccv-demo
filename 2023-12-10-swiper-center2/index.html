@@ -116,7 +116,7 @@ function sliderAct() {
     let loopChk = slideNum > viewNum;
 
     // 슬라이더 구성 및 옵션 설정
-    swiper = new Swiper($slider.find('.inner'), {
+    swiper = new Swiper($slider.find('.inner')[0], {
         slidesPerView: "auto",
         initialSlide: slideInx,
         loop: loopChk,
