@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>jQuery - Swiper multi row (다중 행) 정렬 문제 해결 | 컨트롤 + CCCV</title>
-<meta name="description" content="jQuery - Swiper multi row (다중 행) 정렬 문제 해결 | 컨트롤 + CCCV" />
+<title>Swiper.js 11+ centeredSlides 슬라이드 전환 오류 해결 | 컨트롤 + CCCV</title>
+<meta name="description" content="Swiper.js 11+ centeredSlides 슬라이드 전환 오류 해결 | 컨트롤 + CCCV" />
 <meta name="robots" content="noindex">
 <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,55 +16,18 @@ ul, li { list-style: none; }
 .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
 .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
-/* 기본 스타일 설정 */
-.center_slider {
-    position: relative;
-    overflow: hidden;
-
-}
-
-.center_slider .inner {position: relative;left: 50%;transform: translate(-50%); width: 200vw;  overflow: hidden; }
-
-
-/* 슬라이드 스타일 */
-.center_list > li {
-    width:300px; /* 슬라이드 너비(여백을 빼고 계산) */
-    height: 400px;
-    background: #00000030;
-}
-
-/* 슬라이드 이미지 스타일 */
-.swiper-slide {
-    display: flex; /* 이미지 중앙 정렬 */
-    justify-content: center;
-    align-items: center;
-}
-
-/* 페이지네이션 스타일 */
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.pagination > li {
-    cursor: pointer;
-    padding: 10px;
-    opacity: 0.6; /* 비활성 항목의 불투명도 */
-    transition: opacity 0.3s; /* 호버시 효과 */
-}
-
-.pagination > li:hover,
-.pagination > li.swiper-pagination-bullet-active {
-    opacity: 1; /* 활성화된 항목의 불투명도 */
-}
-
+.slider_center { overflow: hidden; position: relative; margin-top: 100px; } 
+.slider_list > li { display: flex; justify-content: center; align-items: center; width: 300px; height: 400px; background: #8ab4f8; font-size: 36px; font-weight: 500; } 
+.pagination { display: flex; justify-content: center; margin-top: 20px; } 
+.swiper-button-next, .swiper-button-prev { color: #000; }
+/* 슬라이드 수가 충분함에도 불구하고 coverflow와 slidesPerView: 'auto' 기능을 사용할 때, 양쪽 슬라이드 수가 부족한 경우 아래 코드를 적용해주세요. (width: 200vw 수치 조절) */
+.slider_center .inner { position: relative; left: 50%; width: 200vw; transform: translate(-50%); } 
 </style>
 </head>
 <body>
-<div class="center_slider">
+<div class="slider_center">
     <div class="inner">
-        <ul class="center_list swiper-wrapper">
+        <ul class="slider_list swiper-wrapper">
             <li class="swiper-slide">1</li>
             <li class="swiper-slide">2</li>
             <li class="swiper-slide">3</li>
@@ -78,24 +41,26 @@ ul, li { list-style: none; }
         </ul>
     </div>
     <div class="pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
 </div>
-
-<a href="https://ctrlcccv.github.io/code/2023-03-09-swiper-col/" class="blog" target="_blank">컨트롤 + CCCV</a>
+ 
+<a href="https://ctrlcccv.github.io/code/2025-04-15-swiper-center3/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 function centerSlider() {
-    // 원본 슬라이드 리스트와 클론을 추가할 리스트 선택
-    const $originalList = $('.center_list > li');
+    // 원본 슬라이드 리스트와 복제 슬라이드 추가할 리스트 선택
+    const $originalList = $('.slider_list > li');
     const originalSlideCount = $originalList.length;
-    const $consultingList = $('.center_list');
-    const targetCount = 50; // 목표 슬라이드 수
+    const $consultingList = $('.slider_list');
+    const targetCount = 20; // 목표 슬라이드 수
 
     // 현재 슬라이드 수
     const currentSlideCount = $consultingList.find('> li[data-cloned!=true]').length;
-    // 필요한 클론 수
+    // 필요한 복제 슬라이드 수
     const neededClones = Math.max(0, Math.ceil((targetCount - currentSlideCount) / originalSlideCount));
 
-    // 필요한 만큼 원본 리스트 클론하여 추가
+    // 필요한 만큼 원본 리스트 복제하여 추가
     for (let i = 0; i < neededClones; i++) {
         $originalList.each(function () {
             const $clone = $(this).clone();
@@ -118,25 +83,29 @@ function centerSlider() {
             stretch: -50,
             depth: 200,
             modifier: 1,
-            slideShadows: false,
+            slideShadows: true,
         },
         pagination: {
-            el: '.center_slider .pagination',
+            el: '.slider_center .pagination',
             type: 'bullets',
             clickable: true,
             renderBullet: (index, className) => index < originalSlideCount ? `<span class="${className}"></span>` : '',
         },
+        navigation: {
+            nextEl: '.slider_center .swiper-button-next',
+            prevEl: '.slider_center .swiper-button-prev',
+        },
     };
 
     // Swiper 초기화
-    const swiper = new Swiper('.center_slider .inner', swiperOptions);
+    const swiper = new Swiper('.slider_center .inner', swiperOptions);
 
     // 슬라이드 전환 시작 시 페이지네이션 업데이트
     swiper.on('transitionStart', () => {
         // 현재 인덱스 계산
         let currentIndex = swiper.realIndex < originalSlideCount ? swiper.realIndex : swiper.realIndex % originalSlideCount;
         // 페이지네이션 선택
-        const $paginationItems = $('.center_slider .pagination .swiper-pagination-bullet');
+        const $paginationItems = $('.slider_center .pagination .swiper-pagination-bullet');
         $paginationItems.removeClass('swiper-pagination-bullet-active'); // 이전 활성화 상태 제거
         $paginationItems.eq(currentIndex).addClass('swiper-pagination-bullet-active'); // 현재 인덱스를 활성화
     });
@@ -159,11 +128,9 @@ function centerSlider() {
     });
 }
 
-// 함수 호출
 $(document).ready(function(){
     centerSlider()
 })
-
 </script>
 </body>
 </html>
