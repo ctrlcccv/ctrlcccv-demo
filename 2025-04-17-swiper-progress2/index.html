@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper 단계별 프로그레스바 페이지네이션 연동 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper 단계별 프로그레스바 페이지네이션 연동 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper-bundle.min.css">
+<script src="swiper-bundle.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+ul, li { list-style: none; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+.slider { --transition-duration: 0.7s; --progress-width: 0; position: relative; max-width: 640px; margin: 50px auto 0; } 
+.slider .inner { overflow: hidden; } 
+.slide_list > li { display: flex; justify-content: center; align-items: center; width: 300px; height: 200px; margin: 0 10px; background: #8ab4f8; font-size: 36px; font-weight: 500; } 
+.swiper-button-next, 
+.swiper-button-prev { color: #000; top: calc(50% - 17px); } 
+.progress { display: flex; justify-content: space-between; position: relative; bottom: auto !important; height: 15px; margin: 20px auto 0; } 
+.progress::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: #D3D3D3; z-index: 0; transform: translate(0, -50%); } 
+.progress::after { content: ''; position: absolute; top: 50%; left: 0; width: var(--progress-width); height: 2px; background: #000; z-index: 1; transform: translate(0, -50%); transition: all var(--transition-duration); } 
+.progress > li { position: relative; width: auto; height: auto; margin: 0 !important; background: none; text-align: center; opacity: 1 !important; } 
+.progress > li .dots { display: flex; justify-content: center; align-items: center; position: relative; z-index: 2; } 
+.progress > li .dots::before { content: ''; display: block; width: 15px; height: 15px; background: #D3D3D3; border-radius: 50%; z-index: 2; transition: all var(--transition-duration); } 
+.progress > li.end .dots::before { background: #000; } 
+.progress > li.swiper-pagination-bullet-active .dots::before { background: #000; } 
+.progress > li .txt { position: absolute; top: calc(100% + 16px); left: 50%; font-size: 20px; font-weight: 700; line-height: 1; color: #D3D3D3; white-space: nowrap; transform: translate(-50%, 0); transition: all var(--transition-duration); } 
+.progress > li.end .txt { color: #000; } 
+.progress > li.swiper-pagination-bullet-active .txt { color: #000; } 
+
+</style>
+</head>
+<body>
+<div class="slider">
+    <div class="inner">
+        <ul class="slide_list swiper-wrapper">
+            <li class="swiper-slide">1</li>
+            <li class="swiper-slide">2</li>
+            <li class="swiper-slide">3</li>
+            <li class="swiper-slide">4</li>
+            <li class="swiper-slide">5</li>
+        </ul>
+    </div>
+    <ul class="progress">
+        <li>STEP 1</li>
+        <li>STEP 2</li>
+        <li>STEP 3</li>
+        <li>STEP 4</li>
+        <li>STEP 5</li>
+    </ul>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+</div>
+ 
+<a href="https://ctrlcccv.github.io/code/2025-04-15-swiper-center3/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+$(document).ready(function(){
+    centerSlider()
+})
+
+function centerSlider() {
+    const titles = []; // 슬라이드 제목 배열
+    const $sliderList = $('.slide_list'); // 슬라이드 목록
+    const $slides = $('.slide_list > li'); // 슬라이드 항목
+    const $progressItems = $('.progress > li'); // 페이지네이션 항목
+    const originalSlideCount = $slides.length; // 원본 슬라이드 수
+    const targetSlideCount = 5; // 목표 슬라이드 수
+
+    // 슬라이드 제목 배열에 저장
+    $progressItems.each((_, item) => {
+        titles.push($(item).text());
+    });
+
+    // 복제 슬라이드 수 계산
+    const currentSlideCount = $sliderList.find('> li[data-cloned!=true]').length;
+    const clonesNeeded = Math.max(0, Math.ceil((targetSlideCount - currentSlideCount) / originalSlideCount));
+
+    // 슬라이드 복사
+    for (let i = 0; i < clonesNeeded; i++) {
+        $slides.each(function () {
+            $sliderList.append($(this).clone());
+        });
+    }
+
+    // 슬라이드 옵션
+    const swiperOptions = {
+        loop: true, 
+        centeredSlides: true, 
+        slidesPerView: 'auto', 
+        autoplay: {
+            delay: 3000,
+        },
+        pagination: { 
+            el: '.progress',
+            type: 'bullets',
+            clickable: true,
+            renderBullet: (index, className) => {
+                if (index >= originalSlideCount) return '';
+                return `<li class="${className}">
+                            <span class="dots"></span>
+                            <span class="txt">${titles[index]}</span>
+                        </li>`;
+            },
+        },
+        navigation: {
+            nextEl: '.slider .swiper-button-next',
+            prevEl: '.slider .swiper-button-prev',
+        },
+    };
+
+    const swiper = new Swiper('.slider .inner', swiperOptions);  // Swiper 초기화
+
+    // 슬라이드 전환 시작 시 페이지네이션 및 진행바 업데이트
+    swiper.on('transitionStart', () => {
+        const currentIndex = swiper.realIndex < originalSlideCount 
+            ? swiper.realIndex 
+            : swiper.realIndex % originalSlideCount;
+
+        // 현재 인덱스에 맞는 페이지네이션 활성화
+        $('.progress .swiper-pagination-bullet')
+            .removeClass('swiper-pagination-bullet-active')
+            .eq(currentIndex).addClass('swiper-pagination-bullet-active');
+
+        updatePreviousClasses(); // 이전 클래스 업데이트
+        updateProgressBar(); // 진행바 업데이트
+    });
+
+    // 슬라이드 전환 종료 시 인덱스 업데이트
+    let autoplayActive = false; // 자동 재생 활성화 상태
+    swiper.on('transitionEnd', () => {
+        const currentIndex = swiper.realIndex;
+        if (currentIndex >= originalSlideCount) {
+            const originalIndex = currentIndex % originalSlideCount;  
+            swiper.slideToLoop(originalIndex, 0); // 원래 인덱스로 이동
+            autoplayActive = true; // 자동 재생 활성화
+        }
+        if (autoplayActive) {
+            swiper.autoplay.start(); // 자동 재생 시작
+            setTimeout(() => {
+                autoplayActive = false; // 자동 재생 비활성화
+            }, 1000);
+        }
+    });
+
+    // 이전 항목에 클래스 업데이트
+    function updatePreviousClasses() {
+        const $activeBullet = $('.swiper-pagination-bullet-active');  
+        $activeBullet.prevAll().addClass('end'); // 이전 항목에 클래스 추가
+        $('.progress > li').not($activeBullet).removeClass('end'); // 나머지 항목에서 클래스 제거
+    }
+
+    // 진행바 업데이트
+    function updateProgressBar() {
+        const $progress = $('.progress'); // 진행바 요소
+        const $items = $progress.find('> li'); // 항목 요소
+        const totalItemsCount = $items.length - 1; // 전체 항목 수
+        let activeIndex = swiper.realIndex % originalSlideCount;
+        if (activeIndex >= originalSlideCount) {
+            activeIndex -= originalSlideCount; // 기본 슬라이드 수를 뺀 인덱스 조정
+        }
+
+        $items.removeClass('end').slice(0, activeIndex).addClass('end'); // 활성화 항목 계산
+        const percentage = (activeIndex / totalItemsCount) * 100; // 진행률 계산
+        $progress.css('--progress-width', `${percentage}%`); // 진행바 스타일 설정
+    }
+}
+</script>
+</body>
+</html>
