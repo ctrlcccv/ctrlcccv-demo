@@ -40,7 +40,7 @@ ul, li { list-style: none; }
     </div>
 </div>
 
-<a href="https://ctrlcccv.github.io/" class="blog" target="_blank">컨트롤 + CCCV</a>
+<a href="https://ctrlcccv.github.io/code/2025-04-25-image-preview/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
 
@@ -55,8 +55,7 @@ function imageFileUpload() {
 
     // 미리보기 이미지 클릭 시 파일 입력 요소 클릭 이벤트 트리거
     $('.image_file .preview_img').on('click', function() {
-        const fileInput = $(this).closest('.image_file').find('.file_input');
-        fileInput.click(); // 파일 입력 요소 클릭
+        $(this).closest('.image_file').find('.file_input').click(); // 파일 입력 요소 클릭
     });
 
     // 파일 입력 변경 시 미리보기 이미지 업데이트
