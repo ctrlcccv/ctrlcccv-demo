@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 이미지 파일 업로드 및 미리보기 기능 구현하기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 이미지 파일 업로드 및 미리보기 기능 구현하기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+ul, li { list-style: none; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+.image_file { position: relative; width: 200px; height: 200px; margin: 150px auto 0; } 
+.image_file label { display: block; height: 100%; cursor: pointer; } 
+.image_file .upload { display: flex; height: 100%; border: 1px dashed #E5E5E5; border-radius: 6px; justify-content: center; align-items: center; background: #FFFFFF; } 
+.image_file .upload img { width: 40px; height: 40px; } 
+.image_file .file_input { position: absolute; width: 1px; height: 1px; margin: -1px; font-size: initial; overflow: hidden; clip: rect(0, 0, 0, 0); } 
+.image_file .preview { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; } 
+.image_file .preview .img_box { display: block; height: 100%; border: 1px solid #E5E5E5; border-radius: 6px; background: #FFFFFF; cursor: pointer; } 
+.image_file .preview .preview_img { width: 100%; height: 100%; object-fit: cover; } 
+.image_file .preview .delect { position: absolute; top: 15px; right: 15px; width: 25px; height: 25px; padding: 0; border: none; background: none; cursor: pointer; } 
+.image_file .preview .delect img { width: 100%; }   
+</style>
+</head>
+<body>
+
+<div class="image_file">
+    <label>
+        <span class="upload"><img src="images/image_file_upload.png" alt="이미지 업로드"></span>
+        <input type="file" class="file_input" accept="image/*">
+    </label>
+    <div class="preview">
+        <span class="img_box"><img class="preview_img" src="#" alt="Selected Image"></span>
+        <button type="button" class="delect"><img src="images/image_file_delect.png" alt="삭제"></button>
+    </div>
+</div>
+
+<div class="image_file">
+    <label>
+        <span class="upload"><img src="images/image_file_upload.png" alt="이미지 업로드"></span>
+        <input type="file" class="file_input" accept="image/*">
+    </label>
+    <div class="preview">
+        <span class="img_box"><img class="preview_img" src="#" alt="Selected Image"></span>
+        <button type="button" class="delect"><img src="images/image_file_delect.png" alt="삭제"></button>
+    </div>
+</div>
+
+<a href="https://ctrlcccv.github.io/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+
+$(document).ready(function(){
+    imageFileUpload()
+})
+
+// 이미지 파일 업로드 버튼
+function imageFileUpload() {
+    $('.image_file .delect').on('click', handleDeleteClick);
+    $('.image_file .file_input').on('change', handleFileInputChange);
+
+    // 미리보기 이미지 클릭 시 파일 입력 요소 클릭 이벤트 트리거
+    $('.image_file .preview_img').on('click', function() {
+        const fileInput = $(this).closest('.image_file').find('.file_input');
+        fileInput.click(); // 파일 입력 요소 클릭
+    });
+
+    // 파일 입력 변경 시 미리보기 이미지 업데이트
+    function handleFileInputChange() {
+        const file = this.files[0]; // 선택된 파일
+        const previewContainer = $(this).closest('.image_file').find('.preview'); // 미리보기 컨테이너
+        const previewImage = previewContainer.find('.preview_img'); // 미리보기 이미지 요소
+        if (file) {
+            const reader = new FileReader(); // 파일 리더 생성
+            reader.onload = (e) => {
+                previewImage.attr('src', e.target.result); // 미리보기 이미지 설정
+                previewContainer.show(); // 미리보기 컨테이너 표시
+                previewContainer.closest('.image_file').find('.upload').hide(); // 업로드 버튼 숨김
+            };
+            reader.readAsDataURL(file); // 파일을 데이터 URL로 읽기
+        } else {
+            resetPreview(previewContainer); // 파일이 선택되지 않았거나 취소된 경우 미리보기 초기화
+        }
+        let file_cnt=0;
+        $('.file_select_pop .file_input').map(function(){
+            if($(this).val()) file_cnt++;
+        });
+        $('.file_select_pop .file_cnt').html(file_cnt);
+    }
+
+    // 삭제 버튼 클릭 시 미리보기 및 파일 입력 초기화
+    function handleDeleteClick() {
+        const previewContainer = $(this).closest('.preview'); // 미리보기 컨테이너
+        resetPreview(previewContainer);
+        let file_cnt=0;
+        $('.file_select_pop .file_input').map(function(){
+            if($(this).val()) file_cnt++;
+        });
+        $('.file_select_pop .file_cnt').html(file_cnt);
+    }
+
+    // 미리보기 및 파일 입력 초기화
+    function resetPreview(previewContainer) {
+        const imageFileContainer = previewContainer.closest('.image_file'); // 이미지 파일 컨테이너
+        imageFileContainer.find('.file_input').val(''); // 파일 입력 요소 초기화
+        previewContainer.hide(); // 미리보기 컨테이너 숨김
+        imageFileContainer.find('.upload').show(); // 업로드 버튼 다시 표시
+    }
+}   
+
+</script>
+</body>
+</html>
