@@ -18,14 +18,14 @@
 .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
 
 /* 팝업 CSS */
-.notScroll {overflow: hidden;width: 100%;height: 100%;}
+.notScroll {overflow: hidden;width: 100%;height: 100%;touch-action:none;}
 .btn { display: flex; justify-content: center; align-items: center; width: 300px; height: 300px; margin: 0 auto 30px; background: #8ab4f8; font-size: 16px; color: #000; text-decoration: none; } 
 .pop_wrap { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; } 
 .pop_wrap .bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1; } 
 .popup { position: absolute; top: 50%; left: 50%; width: 280px; height: 280px; max-width:90vw; max-height: 90vh; background: #fff; z-index: 2; transform: translate(-50%,-50%); } 
 .popup .close { position: absolute; top: 15px; right: 15px; width: 17px; height: 17px; } 
 .popup .close img { width: 100%; height: 100%; } 
-.popup .popup_con { overflow: auto; width: 100%; height: 100%; padding: 15px; font-size: 16px; line-height: 24px; color: #000; overscroll-behavior:contain; } 
+.popup .popup_con { overflow: auto; width: 100%; height: 100%; padding: 15px; font-size: 16px; line-height: 24px; color: #000; overscroll-behavior:none; } 
 </style>    
 </head>
 <body>
@@ -71,14 +71,14 @@ function popup(){
     $('.btn').on('click',function(e){
         e.preventDefault();
         $('.pop_wrap').fadeIn(300);
-        $("body").addClass('notScroll');
+        //$("body").addClass('notScroll');
     })
 
     //팝업 닫기
     $('.pop_wrap .bg, .pop_wrap .close').on('click',function(e){
         e.preventDefault();
         $('.pop_wrap').fadeOut(100);
-        $("body").removeClass('notScroll');
+        //$("body").removeClass('notScroll');
     })
 }
 </script>
