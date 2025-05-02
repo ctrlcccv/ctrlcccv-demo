@@ -2,57 +2,152 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>jQuery - 모바일 레이어 팝업 외부 스크롤 막기 | 컨트롤 + CCCV</title>
-<meta name="description" content="jQuery - 모바일 레이어 팝업 외부 스크롤 막기 | 컨트롤 + CCCV" />
+<title>overscroll-behavior로 팝업 내부 스크롤과 body 스크롤 제어하기 | 컨트롤 + CCCV</title>
+<meta name="description" content="overscroll-behavior로 팝업 내부 스크롤과 body 스크롤 제어하기 | 컨트롤 + CCCV" />
 <meta name="robots" content="noindex">
 <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
 <style>
-* {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Noto Sans KR', sans-serif;}
-.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
-.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.blog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    width: 160px;
+    height: 46px;
+    background-size: 300% 100%;
+    border-radius: 23px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    z-index: 100;
+    background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376);
+    transform: translate(-50%, 0);
+    text-decoration: none;
+    transition: all .4s ease-in-out;
+}
+
+.blog:hover {
+    background-position: 100% 0;
+    box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65);
+}
+
+.wrap {
+    min-height: 200vh;
+    padding: 30px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px;
+}
 
 /* 스크롤 막기 CSS */
-.notScroll {overflow: hidden;width: 100%;height: 100%;touch-action:none;}
+.disable_scroll {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
 /* 팝업 CSS */
-.btn {display: flex;justify-content: center;align-items: center;width: 300px;height: 300px;margin: 0 auto 30px;background: #8ab4f8;font-size: 16px;text-decoration: none;color: #000;}
-.pop_wrap {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;z-index: 3;}
-.pop_wrap .bg {position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0,0,0,0.8);z-index: 1;}
-.popup {position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);width: 280px;height: 280px;max-width:90vw;max-height: 90vh;background: #fff;z-index: 2;}
-.popup .close {position: absolute;top: 15px;right: 15px;width: 17px;height: 17px;}
-.popup .close img {width: 100%;height: 100%;}
-.popup .popup_con {overflow: auto;padding: 15px;width: 100%;height: 100%;font-size: 16px;line-height: 24px;color: #000;}
-</style>    
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 400px;
+    height: 200px;
+    background: #8ab4f8;
+    font-size: 16px;
+    color: #000;
+    text-decoration: none;
+    word-break: keep-all;
+}
+
+.pop_wrap {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
+
+.pop_wrap .bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+.popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 280px;
+    height: 280px;
+    max-width: 90vw;
+    max-height: 90vh;
+    background: #fff;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+}
+
+.popup .close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 17px;
+    height: 17px;
+}
+
+.popup .close img {
+    width: 100%;
+    height: 100%;
+}
+
+.popup .popup_con {
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    font-size: 16px;
+    line-height: 24px;
+    color: #000;
+    overscroll-behavior: none;
+}
+</style>
 </head>
 <body>
-<a href="#" class="btn">1번 버튼</a>
-<a href="#" class="btn">2번 버튼</a>
-<a href="#" class="btn">3번 버튼</a>
-<a href="#" class="btn">4번 버튼</a>
-<a href="#" class="btn">5번 버튼</a>
+<div class="wrap">
+    <a href="#" class="btn">배경(body) 스크롤 활성화<br>(overscroll-behavior:none 속성만 사용)</a>
+    <a href="#" class="btn type_disable">배경(body) 스크롤 비활성화</a>
+</div>
 
 <div class="pop_wrap">
     <div class="bg"></div>
     <div class="popup">
         <a href="#" class="close"><img src="images/close.png" alt="닫기"></a>
         <div class="popup_con">
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠<br>
-            컨텐츠
+            컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠<br>컨텐츠
         </div>
     </div>
 </div>
@@ -60,24 +155,28 @@
 <a href="https://ctrlcccv.github.io/code/2023-03-13-popup-scroll/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
-$(document).ready(function(){
+$(document).ready(function () {
     popup();
-})
+});
 
-function popup(){
-    //팝업 열기
-    $('.btn').on('click',function(e){
+function popup() {
+    // 팝업 열기
+    $('.btn').on('click', function (e) {
         e.preventDefault();
         $('.pop_wrap').fadeIn(300);
-        $("body").addClass('notScroll');
-    })
+        if ($(this).hasClass('type_disable')) {
+            // 선택사항 : 팝업이 열릴 때 배경(body) 스크롤 비활성화
+            $("body").addClass('disable_scroll');
+        }
+    });
 
-    //팝업 닫기
-    $('.pop_wrap .bg, .pop_wrap .close').on('click',function(e){
+    // 팝업 닫기
+    $('.pop_wrap .bg, .pop_wrap .close').on('click', function (e) {
         e.preventDefault();
         $('.pop_wrap').fadeOut(100);
-        $("body").removeClass('notScroll');
-    })
+        // 선택사항 : 팝업이 열릴 때 배경(body) 스크롤 비활성화
+        $("body").removeClass('disable_scroll');
+    });
 }
 </script>
 </body>
