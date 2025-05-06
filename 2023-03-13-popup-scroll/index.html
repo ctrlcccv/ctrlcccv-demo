@@ -137,9 +137,14 @@
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap ko">
     <a href="#" class="btn">배경(body) 스크롤 활성화<br>(overscroll-behavior:none 속성만 사용)</a>
     <a href="#" class="btn type_disable">배경(body) 스크롤 비활성화</a>
+</div>
+
+<div class="wrap en">
+    <a href="#" class="btn">Enable body scroll<br>(using only overscroll-behavior: none)</a>
+    <a href="#" class="btn type_disable">Disable body scroll</a>
 </div>
 
 <div class="pop_wrap">
@@ -177,6 +182,19 @@ function popup() {
         // 선택사항 : 팝업이 열릴 때 배경(body) 스크롤 비활성화
         $("body").removeClass('disable_scroll');
     });
+}
+
+// 언어 확인
+const koreanWrap = document.querySelector('.wrap.ko');
+const englishWrap = document.querySelector('.wrap.en');
+const userLang = navigator.language || navigator.userLanguage; // 언어 정보 가져오기
+
+if (userLang.includes('ko')) {
+    koreanWrap.style.display = 'flex';
+    englishWrap.style.display = 'none';
+} else {
+    koreanWrap.style.display = 'none';
+    englishWrap.style.display = 'flex';
 }
 </script>
 </body>
