@@ -184,10 +184,10 @@ function popup() {
     });
 }
 
-// 언어 확인
+// 언어 정보 가져오기
 const koreanWrap = document.querySelector('.wrap.ko');
 const englishWrap = document.querySelector('.wrap.en');
-const userLang = navigator.language || navigator.userLanguage; // 언어 정보 가져오기
+const userLang = navigator.language || navigator.userLanguage; 
 
 if (userLang.includes('ko')) {
     koreanWrap.style.display = 'flex';
