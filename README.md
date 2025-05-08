@@ -61,7 +61,7 @@
 - [스크롤 시 나타나는 텍스트](https://ctrlcccv.github.io/code/2023-11-22-scroll-text/)
 - [마우스 커서 커스텀](https://ctrlcccv.github.io/code/2023-11-23-cursor-custom/)
 - [마우스 커서 애니메이션](https://ctrlcccv.github.io/code/2023-11-27-cursor-reverse/)
-- [마우스 따라다니는 배경](https://ctrlcccv.github.io/code/2023-11-28-cursor-background/)
+- [jQuery - 마우스 따라 움직이는 패럴랙스 효과](https://ctrlcccv.github.io/code/2025-05-08-parallax-effect/)
 - [눈 내리는 효과](https://ctrlcccv.github.io/code/2023-11-29-snow/)
 - [버튼 클릭 시 input 추가/삭제](https://ctrlcccv.github.io/code/2023-11-30-input-add/)
 - [가로 스크롤에 따른 fixed 위치](https://ctrlcccv.github.io/code/2023-12-02-fixed-scroll/)
