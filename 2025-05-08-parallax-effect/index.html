@@ -26,12 +26,27 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
 
 <div id="container">
     <img src="https://unsplash.it/800/800?random=" alt="배경 이미지" class="bg">
-    <h1 class="title">타이틀</h1>
+    <h1 class="title ko">타이틀</h1>
+    <h1 class="title en">Title</h1>
 </div>
 
 <a href="https://ctrlcccv.github.io/code/2025-05-08-parallax-effect/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
-<script>
+<script> 
+// 언어 설정에 따른 제목 표시 함수
+function setLanguageContent() {
+    const userLang = navigator.language || navigator.userLanguage;
+    const isKorean = userLang.startsWith('ko');
+    
+    $('.title.ko').toggle(isKorean);
+    $('.title.en').toggle(!isKorean);
+}
+
+// 페이지 로드 시 언어 설정 적용
+$(document).ready(function() {
+    setLanguageContent();
+});
+
 // #container 요소를 선택합니다.
 const containerSelector = '#container';
 const $container = $(containerSelector);
