@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - Swiper로 구현하는 Loop Grid Slider | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - Swiper로 구현하는 Loop Grid Slider | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="swiper-bundle.min.css">
+<script src="swiper-bundle.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; } 
+ul, li { list-style: none; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+.slider { position: relative; max-width: 1180px; margin: 20px auto 0; padding: 0 50px; } 
+.slider .viewport { overflow: hidden; } 
+.slider .swiper-slide { display: grid; gap:10px; grid-template-columns: repeat(3, 2fr); } 
+.slider .item { width: 100%; height: 150px; background: #8ab4f8; font-size: 20px; line-height: 150px; text-align: center; } 
+.slider .swiper-prev, .slider .swiper-next { position: absolute; top: 50%; width: 35px; height: 35px; background:url('images/arrow.png') center center no-repeat; background-size: cover; font-size: 0; text-indent: -999em; cursor: pointer; } 
+.slider .swiper-prev { left: 0; transform: rotateY(180deg) translate(0,-50%); } 
+.slider .swiper-next { right:0; transform: translate(0,-50%); } 
+.slider .swiper-pagination { display: flex; justify-content: center; position: relative; width: 100%; margin-top: 20px; } 
+.slider .swiper-pagination-bullet { width: 10px; height: 10px; margin: 0 5px; background: #ccc; opacity: 1; } 
+.slider .swiper-pagination-bullet-active { background: #8ab4f8; } 
+
+@media (max-width: 767px){
+    .slider .swiper-slide { grid-template-columns: repeat(3, 1fr); } 
+}
+
+</style>
+</head>
+<body>
+<div class="slider">
+    <div class="viewport">
+        <div class="swiper-wrapper">
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+            <div class="item">4</div>
+            <div class="item">5</div>
+            <div class="item">6</div>
+            <div class="item">7</div>
+            <div class="item">8</div>
+            <div class="item">9</div>
+            <div class="item">10</div>
+            <div class="item">11</div>
+            <div class="item">12</div>
+            <div class="item">13</div>
+            <div class="item">14</div>
+            <div class="item">15</div>
+            <div class="item">16</div>
+            <div class="item">17</div>
+            <div class="item">18</div>
+        </div>
+    </div>
+    <div class="swiper-prev">이전</div>
+    <div class="swiper-next">다음</div>
+    <div class="swiper-pagination"></div>
+</div>
+
+<div class="slider">
+    <div class="viewport">
+        <div class="swiper-wrapper">
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+            <div class="item">4</div>
+            <div class="item">5</div>
+            <div class="item">6</div>
+            <div class="item">7</div>
+            <div class="item">8</div>
+            <div class="item">9</div>
+            <div class="item">10</div>
+            <div class="item">11</div>
+            <div class="item">12</div>
+        </div>
+    </div>
+    <div class="swiper-prev">이전</div>
+    <div class="swiper-next">다음</div>
+    <div class="swiper-pagination"></div>
+</div>
+
+<a href="https://ctrlcccv.github.io/code/2023-03-09-swiper-col/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+
+function slideAct() {
+    // 슬라이더 요소 선택
+    const $sliders = $(".slider");
+    
+    // 반응형 설정값
+    const config = {
+        breakpoints: [
+            { name: 'desktop', width: 768, itemsPerView: 6 },  // PC: 한 화면에 6개
+            { name: 'mobile', width: 0, itemsPerView: 3 }      // 모바일: 한 화면에 3개
+        ]
+    };
+    
+    // 슬라이더 상태 관리
+    const state = {
+        swipers: [],         // 스와이퍼 인스턴스
+        originalItems: [],   // 원본 아이템
+        slideIndexes: [],    // 슬라이드 위치
+        deviceMode: ''       // 현재 디바이스 모드
+    };
+    
+    // 슬라이더 초기화
+    function initSliders() {
+        $sliders.each(function(index) {
+            state.slideIndexes[index] = 0;
+            // 원본 아이템 저장
+            if (!state.originalItems[index]) {
+                state.originalItems[index] = $(this).find('.item').clone();
+            }
+        });
+    }
+    
+    // 현재 디바이스 모드 반환
+    function getDeviceMode(windowWidth) {
+        const breakpoint = config.breakpoints.find(bp => windowWidth >= bp.width);
+        return breakpoint ? breakpoint.name : config.breakpoints[config.breakpoints.length - 1].name;
+    }
+    
+    // 화면 크기 변경 시 슬라이더 재구성
+    $(window).on('resize', function() {
+        const newDeviceMode = getDeviceMode(window.innerWidth);
+        if (state.deviceMode !== newDeviceMode) {
+            state.deviceMode = newDeviceMode;
+            arrangeSlides();
+        }
+    });
+    
+    // 슬라이드 재구성
+    function arrangeSlides() {
+        // 현재 모드에 맞는 아이템 수 계산
+        const breakpoint = config.breakpoints.find(bp => bp.name === state.deviceMode);
+        const itemsPerView = breakpoint ? breakpoint.itemsPerView : config.breakpoints[0].itemsPerView;
+        
+        // 기존 슬라이드 초기화
+        $sliders.find('.item').parent('.swiper-slide').each(function() {
+            $(this).find('.item').unwrap();
+        });
+        $sliders.find('.swiper-slide-duplicate').remove();
+        
+        // 슬라이드 다시 생성
+        $sliders.each(function(index) {
+            const $currentSlider = $(this).addClass(`slider-${index}`);
+            const $wrapper = $currentSlider.find('.swiper-wrapper');
+            $wrapper.empty();
+            
+            // 원본 아이템 복사 후 슬라이드 생성
+            const $items = state.originalItems[index].clone();
+            const itemCount = $items.length;
+            for (let i = 0; i < itemCount; i += itemsPerView) {
+                const $slide = $('<div class="swiper-slide"></div>');
+                $items.slice(i, i + itemsPerView).clone().appendTo($slide);
+                $wrapper.append($slide);
+            }
+            // 마지막 슬라이더 처리 후 스와이퍼 초기화
+            if (index === $sliders.length - 1) {
+                initSwipers(itemsPerView);
+            }
+        });
+    }
+    
+    // Swiper 인스턴스 생성
+    function initSwipers(itemsPerView) {
+        $sliders.each(function(index) {
+            const $currentSlider = $(this);
+            // 기존 스와이퍼 제거
+            if (state.swipers[index]) {
+                state.swipers[index].destroy(true, true);
+                state.swipers[index] = null;
+            }
+            // 스와이퍼 설정
+            const swiperConfig = {
+                slidesPerView: 1,
+                initialSlide: Math.floor(state.slideIndexes[index] / itemsPerView),
+                loop: true,
+                navigation: {
+                    nextEl: $currentSlider.find('.swiper-next')[0],
+                    prevEl: $currentSlider.find('.swiper-prev')[0],
+                },
+                pagination: {
+                    el: $currentSlider.find('.swiper-pagination')[0],
+                    clickable: true,
+                    renderBullet: function(index, className) {
+                        return `<span class="${className}"></span>`;
+                    }
+                },
+                on: {
+                    slideChange: function() {
+                        state.slideIndexes[index] = this.realIndex * itemsPerView;
+                    }
+                }
+            };
+            // 스와이퍼 생성
+            state.swipers[index] = new Swiper($currentSlider.find('.viewport')[0], swiperConfig);
+        });
+    }
+    
+    // 초기화 및 실행
+    initSliders();
+    state.deviceMode = getDeviceMode(window.innerWidth);
+    arrangeSlides();
+}
+
+$(document).ready(function() {
+    slideAct();
+})
+</script>
+</body>
+</html>
