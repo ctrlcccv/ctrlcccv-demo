@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 전화번호/카드번호 자동 하이픈 및 커스텀 패턴 설정법 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 전화번호/카드번호 자동 하이픈 및 커스텀 패턴 설정법 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f5f5f5; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+.input_container {
+    margin: 20px auto;
+    width: 350px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.input_container h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+.input_container input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+.input_container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+}
+</style>
+</head>
+<body>
+
+<div class="input_container">
+    <h2>자동 형식 입력</h2>
+    <label for="phone">전화번호:</label>
+    <input type="text" id="phone" placeholder="000-0000-0000" data-format="xxx-xxxx-xxxx">
+    <label for="date">생년월일:</label>
+    <input type="text" id="date" placeholder="YYYY/MM/DD" data-format="xxxx/xx/xx">
+    <label for="card">카드번호:</label>
+    <input type="text" id="card" placeholder="0000-0000-0000-0000" data-format="xxxx-xxxx-xxxx-xxxx">
+</div>
+
+<a href="https://ctrlcccv.github.io/code/2025-05-21-auto-format/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+
+// 포맷이 지정된 모든 입력 필드 찾기
+function autoFormat(){
+    $('input[data-format]').each(function() {
+        // 최대 길이 설정
+        const format = $(this).data('format');
+        $(this).attr('maxlength', format.length);
+        
+        // 입력 이벤트 리스너 추가
+        $(this).on('input', function(e) {
+            const $input = $(this);
+            const format = $input.data('format');
+            
+            // 숫자만 추출
+            let numbers = $input.val().replace(/[^0-9]/g, '');
+            
+            // 형식에 맞게 변환
+            let result = '';
+            let numberIndex = 0;
+            
+            for (let i = 0; i < format.length && numberIndex < numbers.length; i++) {
+                if (format[i] === 'x') {
+                    // x 위치에 숫자 삽입
+                    result += numbers[numberIndex++];
+                } else {
+                    // 구분자는 그대로 유지
+                    result += format[i];
+                    
+                    // 다음 문자가 x이고, 아직 숫자가 남아있으면 계속 진행
+                    if (i + 1 < format.length && format[i + 1] === 'x' && numberIndex < numbers.length) {
+                        continue;
+                    }
+                }
+            }
+            
+            // 마지막 문자가 구분자인 경우 처리 (백스페이스로 삭제 시)
+            if (result.length > 0 && !/[0-9]/.test(result[result.length - 1])) {
+                if (e.originalEvent.inputType === 'deleteContentBackward') {
+                    result = result.substring(0, result.length - 1);
+                }
+            }
+ 
+            $input.val(result);
+        });
+    });
+}
+
+$(document).ready(function() {
+    autoFormat();
+});
+</script>
+</body>
+</html>
+
