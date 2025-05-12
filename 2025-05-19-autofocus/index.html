@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 전화번호 입력 폼 자동 포커스 이동 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 전화번호 입력 폼 자동 포커스 이동 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f5f5f5; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+/* 언어별 클래스 기본 숨김 처리 */
+.ko, .en {
+    display: none;
+}
+
+.phone_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.phone_form h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.input_container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.phone_input {
+    width: 100px;
+    height: 50px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 18px;
+    padding: 0 5px;
+    transition: all 0.2s ease;
+}
+
+.phone_input:focus {
+    border-color: #8ab4f8;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(78, 67, 118, 0.2);
+}
+
+.separator {
+    font-size: 20px;
+    color: #666;
+    margin: 0 2px;
+}
+
+</style>
+</head>
+<body>
+<div class="phone_form">
+    <h2 class="ko">전화번호 입력</h2>
+    <h2 class="en">Enter Phone Number</h2>
+    <div class="input_container">
+        <input type="tel" id="phone1" maxlength="3" class="phone_input" placeholder="010" inputmode="numeric" pattern="[0-9]*" aria-label="전화번호 앞자리">
+        <span class="separator" aria-hidden="true">-</span>
+        <input type="tel" id="phone2" maxlength="4" class="phone_input" placeholder="0000" inputmode="numeric" pattern="[0-9]*" aria-label="전화번호 중간자리">
+        <span class="separator" aria-hidden="true">-</span>
+        <input type="tel" id="phone3" maxlength="4" class="phone_input" placeholder="0000" inputmode="numeric" pattern="[0-9]*" aria-label="전화번호 뒷자리">
+    </div>
+</div>
+
+<a href="https://ctrlcccv.github.io/code/2025-05-08-parallax-effect/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+    function setLanguageDisplay() {
+        // 브라우저 언어 설정 가져오기
+        const userLang = navigator.language || navigator.userLanguage;
+        // 한국어 설정인지 확인
+        const isKorean = userLang.toLowerCase().includes('ko');
+        // 언어 설정에 따라 적절한 클래스 표시
+        if (isKorean) {
+            $('.ko').show();
+            $('.en').hide();
+        } else {
+            $('.ko').hide();
+            $('.en').show();
+        }
+    }
+
+    function inputFocus(){
+        // 전화번호 입력 필드 모두 선택
+        const $phoneInputs = $('.phone_input');
+                    
+        // 입력 필드 간 이동 기능 (direction: 1=다음, -1=이전)
+        function moveField($currentField, direction) {
+            const currentIndex = $phoneInputs.index($currentField);
+            const targetIndex = currentIndex + direction;
+            
+            // 유효한 인덱스 범위 내에서만 이동
+            if(targetIndex >= 0 && targetIndex < $phoneInputs.length) {
+                $phoneInputs.eq(targetIndex).focus();
+            }
+        }
+        
+        // 입력값 변경 시 처리
+        $phoneInputs.on('input', function() {
+            // 숫자만 입력 가능하도록 필터링
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // 최대 길이 입력 완료시 다음 필드로 자동 이동
+            if (this.value.length === this.maxLength) {
+                moveField($(this), 1);
+            }
+        });
+        
+        // 키보드 이벤트 처리 (선택사항)
+        $phoneInputs.on('keydown', function(e) {
+            const key = e.key || e.keyCode;
+            const $this = $(this);
+            
+            // 백스페이스 키 누르고 내용이 없으면 이전 필드로 이동
+            if ((key === 'Backspace' || key === 8) && this.value.length === 0) {
+                e.preventDefault();
+                moveField($this, -1);
+            }
+            
+            // 오른쪽 화살표 키 끝에서 누르면 다음 필드로 이동
+            else if (key === 'ArrowRight' || key === 39) {
+                if (this.selectionStart === this.value.length) {
+                    e.preventDefault();
+                    moveField($this, 1);
+                }
+            }
+            // 왼쪽 화살표 키 처음에서 누르면 이전 필드로 이동
+            else if (key === 'ArrowLeft' || key === 37) {
+                if (this.selectionStart === 0) {
+                    e.preventDefault();
+                    moveField($this, -1);
+                }
+            }
+        });
+    }
+
+    $(function(){
+        setLanguageDisplay();
+        inputFocus();
+    })
+</script>
+</body>
+</html>
+
