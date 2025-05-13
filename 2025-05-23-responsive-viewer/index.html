@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - iframe 기반 반응형 웹사이트 미리보기 툴 만들기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - iframe 기반 반응형 웹사이트 미리보기 툴 만들기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { padding: 20px; min-height: 100vh; background-color: #f5f5f5; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+.responsive_viewer {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.responsive_viewer h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.responsive_viewer .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.responsive_viewer button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #485563;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.responsive_viewer button:hover {
+    background-color: #3a4654;
+}
+
+.responsive_viewer button.active {
+    background-color: #29323c;
+}
+
+.responsive_viewer .frame_container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(45, 54, 65, 0.2);
+    padding: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.responsive_viewer .iframe_wrapper {
+    border: 1px solid #cbd2d9;
+    box-shadow: 0 2px 4px rgba(71, 84, 99, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    height: calc(100vh - 350px);
+    max-width: 100%;
+}
+
+.responsive_viewer iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+    transform-origin: 0 0;
+}
+
+@media (max-width: 768px) {
+    .responsive_viewer .mo_hidden { 
+        display: none; 
+    }
+}
+</style>
+</head>
+<body>
+<div class="responsive_viewer">
+    <h1>반응형 웹사이트 미리보기</h1>
+    <div class="buttons">
+        <button id="pcBtn" class="active" data-device="pc">PC <span class="mo_hidden">(1920px)</span></button>
+        <button id="tabletBtn" data-device="tablet">태블릿 <span class="mo_hidden">(768px)</span></button>
+        <button id="mobileBtn" data-device="mobile">모바일 <span class="mo_hidden">(375px)</span></button>
+    </div>
+    
+    <div class="frame_container">
+        <div class="iframe_wrapper">
+            <iframe class="preview_frame" src="https://example.com"></iframe>
+        </div>
+    </div>
+</div>
+
+<a href="https://ctrlcccv.github.io/code/2025-05-21-auto-format/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+// 반응형 웹사이트 미리보기 초기화 및 제어 함수
+function handleIframeLoad() {
+    // 주요 DOM 요소 캐싱
+    const $iframeWrapper = $('.responsive_viewer .iframe_wrapper');
+    const $preview = $('.responsive_viewer .preview_frame');
+    
+    // 디바이스 설정 값
+    let currentDevice = 'pc';
+    let deviceSizes = {
+        'pc': 1920,
+        'tablet': 768,
+        'mobile': 375
+    };
+    
+    // 디바이스 선택 버튼 이벤트
+    $('.responsive_viewer .buttons button').on('click', function() {
+        const $this = $(this);
+        const device = $this.data('device');
+        
+        $this.addClass('active').siblings().removeClass('active');
+        setDeviceSize(device);
+    });
+
+    // 디바이스 크기 설정 및 스케일링 적용
+    function setDeviceSize(device) {
+        currentDevice = device;
+        const deviceWidth = deviceSizes[device];
+        const containerWidth = $iframeWrapper.width();
+        
+        // 프레임 너비 설정
+        $preview.css('width', deviceWidth + 'px');
+        applyScaling(deviceWidth, containerWidth);
+        
+        // DOM 업데이트 후 다시 스케일링 적용
+        setTimeout(() => {
+            applyScaling(deviceWidth, $iframeWrapper.width());
+        }, 50);
+    }
+    
+    // 스케일링 적용
+    function applyScaling(deviceWidth, containerWidth) {
+        let scale = 1;
+        if (containerWidth < deviceWidth) {
+            scale = containerWidth / deviceWidth;
+            $preview.css('transform', `scale(${scale})`);
+        } else {
+            $preview.css('transform', 'scale(1)');
+        }
+        
+        // 스케일에 맞게 높이 조정
+        setTimeout(() => {
+            const wrapperHeight = $iframeWrapper.height();
+            $preview.css('height', (wrapperHeight / scale) + 'px');
+        }, 50);
+    }
+    
+    // 창 크기 변경 시 리사이징 처리
+    $(window).on('resize', function() {
+        setDeviceSize(currentDevice);
+    });
+    
+    // iframe 로드 완료 시 크기 재조정
+    $preview.on('load', function() {
+        setDeviceSize(currentDevice);
+    });
+}
+
+// 페이지 로드 시 초기화
+$(document).ready(function() {
+    handleIframeLoad();
+});
+</script>
+</body>
+</html>
