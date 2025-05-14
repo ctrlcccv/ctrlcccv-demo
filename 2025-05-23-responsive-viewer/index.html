@@ -92,15 +92,34 @@ body { padding: 20px; min-height: 100vh; background-color: #f5f5f5; }
         display: none; 
     }
 }
+
+/* 언어 선택 관련 스타일 */
+.ko, .en {
+    display: none;
+}
 </style>
 </head>
 <body>
 <div class="responsive_viewer">
-    <h1>반응형 웹사이트 미리보기</h1>
+    <h1>
+        <span class="ko">반응형 웹사이트 미리보기</span>
+        <span class="en">Responsive Website Preview</span>
+    </h1>
     <div class="buttons">
-        <button id="pcBtn" class="active" data-device="pc">PC <span class="mo_hidden">(1920px)</span></button>
-        <button id="tabletBtn" data-device="tablet">태블릿 <span class="mo_hidden">(768px)</span></button>
-        <button id="mobileBtn" data-device="mobile">모바일 <span class="mo_hidden">(375px)</span></button>
+        <button id="pcBtn" class="active" data-device="pc">
+            <span>PC</span>  
+            <span class="mo_hidden">(1920px)</span>
+        </button>
+        <button id="tabletBtn" data-device="tablet">
+            <span class="ko">태블릿</span> 
+            <span class="en">Tablet</span> 
+            <span class="mo_hidden">(768px)</span>
+        </button>
+        <button id="mobileBtn" data-device="mobile">
+            <span class="ko">모바일</span>
+            <span class="en">Mobile</span>
+            <span class="mo_hidden">(375px)</span>
+        </button>
     </div>
     
     <div class="frame_container">
@@ -113,6 +132,21 @@ body { padding: 20px; min-height: 100vh; background-color: #f5f5f5; }
 <a href="https://ctrlcccv.github.io/code/2025-05-21-auto-format/" class="blog" target="_blank">컨트롤 + CCCV</a>
 
 <script>
+// 브라우저 언어 감지 및 언어 표시 처리 함수
+function handleLanguageDisplay() {
+    // 브라우저 언어 설정 가져오기
+    const userLanguage = navigator.language || navigator.userLanguage;
+    
+    // 한국어 확인 (ko, ko-KR 등 포함)
+    if (userLanguage.indexOf('ko') === 0) {
+        $('.ko').show();
+        $('.en').hide();
+    } else {
+        $('.ko').hide();
+        $('.en').show();
+    }
+}
+
 // 반응형 웹사이트 미리보기 초기화 및 제어 함수
 function handleIframeLoad() {
     // 주요 DOM 요소 캐싱
@@ -182,6 +216,10 @@ function handleIframeLoad() {
 
 // 페이지 로드 시 초기화
 $(document).ready(function() {
+    // 언어 표시 초기화
+    handleLanguageDisplay();
+    
+    // iframe 관련 기능 초기화
     handleIframeLoad();
 });
 </script>
