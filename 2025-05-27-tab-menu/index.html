@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>jQuery - 클래스 하나로 탭메뉴 여러개 구현하기 | 컨트롤 + CCCV</title>
+<meta name="description" content="jQuery - 클래스 하나로 탭메뉴 여러개 구현하기 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<style>
+* { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; box-sizing: border-box; } 
+body { padding: 20px; min-height: 100vh; color: #343a40; } 
+.blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+.blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+h1, h2 { margin-bottom: 1.5rem; color: #212529; font-weight: 700; text-align: center; }
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.8rem; margin-top: 2.5rem; }
+h3 { font-size: 1.4rem; margin-bottom: 1rem; color: #343a40; }
+p { line-height: 1.6; margin-bottom: 1rem; color: #495057; }
+
+/* 탭 메뉴 스타일 */
+.tab_container {
+    overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+.tab_container .tit_list {
+    display: flex;
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.tab_container .tit_list > li {
+    flex: 1;
+    list-style: none;
+}
+.tab_container .tit_list > li a {
+    display: block;
+    position: relative;
+    padding: 16px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #495057;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.tab_container .tit_list > li a:hover {
+    color: #228be6;
+}
+.tab_container .tit_list > li.active a {
+    background: #228be6;
+    color: #fff;
+}
+
+.tab_container .tab_content {
+    display: none;
+    padding: 28px 24px;
+}
+
+/* 언어 선택 관련 스타일 */
+.ko, .en {
+    display: none;
+}
+
+</style>
+</head>
+<body>
+<h1>탭 메뉴 예시</h1>
+
+<h2>첫 번째 탭 메뉴</h2>
+<div class="tab_container">
+    <ul class="tit_list">
+        <li><a href="#tab1_1">탭 1</a></li>
+        <li><a href="#tab1_2">탭 2</a></li>
+        <li><a href="#tab1_3">탭 3</a></li>
+    </ul>
+    <div class="tab_content_list">
+        <div id="tab1_1" class="tab_content">
+            <h3>첫 번째 탭 내용</h3>
+            <p>여기에 첫 번째 탭의 내용이 들어갑니다.</p>
+        </div>
+        <div id="tab1_2" class="tab_content">
+            <h3>두 번째 탭 내용</h3>
+            <p>여기에 두 번째 탭의 내용이 들어갑니다.</p>
+        </div>
+        <div id="tab1_3" class="tab_content">
+            <h3>세 번째 탭 내용</h3>
+            <p>여기에 세 번째 탭의 내용이 들어갑니다.</p>
+        </div>
+    </div>
+</div>
+
+<h2>두 번째 탭 메뉴</h2>
+<div class="tab_container">
+    <ul class="tit_list">
+        <li><a href="#tab2_1">공지사항</a></li>
+        <li><a href="#tab2_2">FAQ</a></li>
+        <li><a href="#tab2_3">문의하기</a></li>
+    </ul>
+    <div class="tab_content_list">
+        <div id="tab2_1" class="tab_content">
+            <h3>공지사항</h3>
+            <p>최신 공지사항이 여기에 표시됩니다.</p>
+        </div>
+        <div id="tab2_2" class="tab_content">
+            <h3>자주 묻는 질문</h3>
+            <p>FAQ 내용이 여기에 표시됩니다.</p>
+        </div>
+        <div id="tab2_3" class="tab_content">
+            <h3>문의하기</h3>
+            <p>문의 양식이 여기에 표시됩니다.</p>
+        </div>
+    </div>
+</div>
+
+<a href="https://ctrlcccv.github.io/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+// 사용자 브라우저 언어 설정에 따라 한국어/영어 요소를 표시하는 함수
+function handleLanguageDisplay() {
+    const userLanguage = navigator.language || navigator.userLanguage;
+    const $koElements = $('.ko');
+    const $enElements = $('.en');
+    if (userLanguage.indexOf('ko') === 0) {
+        $koElements.show();
+        $enElements.hide();
+    } else {
+        $koElements.hide();
+        $enElements.show();
+    }
+}
+
+// 탭 메뉴 초기화 및 기능 설정 함수
+function initTab() {
+    $('.tab_container').each(function() {
+        // 필요한 요소들 선택
+        const tabWrap = $(this);
+        const tabTitItems = tabWrap.find(".tit_list > li");
+        const tabTitLinks = tabWrap.find(".tit_list > li a");
+        const tabContents = tabWrap.find(".tab_content");
+        
+        // 탭 활성화 함수: 선택된 탭을 활성화하고 해당 콘텐츠를 표시
+        function activateTab(tabId) {
+            tabTitItems.removeClass("active");  // 모든 탭 비활성화
+            tabContents.hide();                 // 모든 콘텐츠 숨기기
+            tabTitLinks.filter(`[href*="${tabId}"]`).parent().addClass("active");  // 선택된 탭 활성화
+            tabContents.filter(tabId).show();   // 선택된 콘텐츠만 표시
+        }
+        
+        // 탭 클릭 이벤트 핸들러
+        tabTitLinks.on("click", function(e) {
+            e.preventDefault();  // 기본 앵커 동작 방지
+            const tabId = $(this).attr("href");  // 클릭된 탭의 href 속성 값 가져오기
+            activateTab(tabId);  // 해당 탭 활성화
+        });
+        
+        // 첫 번째 탭을 기본으로 활성화
+        const firstTabId = tabTitLinks.eq(0).attr('href');
+        activateTab(firstTabId);
+    });
+}
+
+// 문서 로드 완료 시 실행
+$(function() {
+    handleLanguageDisplay();  // 언어 표시 설정
+    initTab();               // 탭 메뉴 초기화
+});
+</script>
+</body>
+</html>
