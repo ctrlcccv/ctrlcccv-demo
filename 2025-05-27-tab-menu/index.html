@@ -69,57 +69,132 @@ p { line-height: 1.6; margin-bottom: 1rem; color: #495057; }
 }
 
 /* 언어 선택 관련 스타일 */
-.ko, .en {
+.en {
     display: none;
 }
 
 </style>
 </head>
 <body>
-<h1>탭 메뉴 예시</h1>
+<h1>
+    <span class="ko">탭 메뉴 예시</span>
+    <span class="en">Tab Menu Example</span>
+</h1>
 
-<h2>첫 번째 탭 메뉴</h2>
+<h2>
+    <span class="ko">첫 번째 탭 메뉴</span>
+    <span class="en">First Tab Menu</span>
+</h2>
 <div class="tab_container">
     <ul class="tit_list">
-        <li><a href="#tab1_1">탭 1</a></li>
-        <li><a href="#tab1_2">탭 2</a></li>
-        <li><a href="#tab1_3">탭 3</a></li>
+        <li>
+            <a href="#tab1_1">
+                <span class="ko">탭 1</span>
+                <span class="en">Tab 1</span>
+            </a>
+        </li>
+        <li>
+            <a href="#tab1_2">
+                <span class="ko">탭 2</span>
+                <span class="en">Tab 2</span>
+            </a>
+        </li>
+        <li>
+            <a href="#tab1_3">
+                <span class="ko">탭 3</span>
+                <span class="en">Tab 3</span>
+            </a>
+        </li>
     </ul>
     <div class="tab_content_list">
         <div id="tab1_1" class="tab_content">
-            <h3>첫 번째 탭 내용</h3>
-            <p>여기에 첫 번째 탭의 내용이 들어갑니다.</p>
+            <h3>
+                <span class="ko">첫 번째 탭 내용</span>
+                <span class="en">First Tab Content</span>
+            </h3>
+            <p>
+                <span class="ko">여기에 첫 번째 탭의 내용이 들어갑니다.</span>
+                <span class="en">Content for the first tab goes here.</span>
+            </p>
         </div>
         <div id="tab1_2" class="tab_content">
-            <h3>두 번째 탭 내용</h3>
-            <p>여기에 두 번째 탭의 내용이 들어갑니다.</p>
+            <h3>
+                <span class="ko">두 번째 탭 내용</span>
+                <span class="en">Second Tab Content</span>
+            </h3>
+            <p>
+                <span class="ko">여기에 두 번째 탭의 내용이 들어갑니다.</span>
+                <span class="en">Content for the second tab goes here.</span>
+            </p>
         </div>
         <div id="tab1_3" class="tab_content">
-            <h3>세 번째 탭 내용</h3>
-            <p>여기에 세 번째 탭의 내용이 들어갑니다.</p>
+            <h3>
+                <span class="ko">세 번째 탭 내용</span>
+                <span class="en">Third Tab Content</span>
+            </h3>
+            <p>
+                <span class="ko">여기에 세 번째 탭의 내용이 들어갑니다.</span>
+                <span class="en">Content for the third tab goes here.</span>
+            </p>
         </div>
     </div>
 </div>
 
-<h2>두 번째 탭 메뉴</h2>
+<h2>
+    <span class="ko">두 번째 탭 메뉴</span>
+    <span class="en">Second Tab Menu</span>
+</h2>
 <div class="tab_container">
     <ul class="tit_list">
-        <li><a href="#tab2_1">공지사항</a></li>
-        <li><a href="#tab2_2">FAQ</a></li>
-        <li><a href="#tab2_3">문의하기</a></li>
+        <li>
+            <a href="#tab2_1">
+                <span class="ko">공지사항</span>
+                <span class="en">Announcements</span>
+            </a>
+        </li>
+        <li>
+            <a href="#tab2_2">
+                <span class="ko">FAQ</span>
+                <span class="en">FAQ</span>
+            </a>
+        </li>
+        <li>
+            <a href="#tab2_3">
+                <span class="ko">문의하기</span>
+                <span class="en">Contact</span>
+            </a>
+        </li>
     </ul>
     <div class="tab_content_list">
         <div id="tab2_1" class="tab_content">
-            <h3>공지사항</h3>
-            <p>최신 공지사항이 여기에 표시됩니다.</p>
+            <h3>
+                <span class="ko">공지사항</span>
+                <span class="en">Announcements</span>
+            </h3>
+            <p>
+                <span class="ko">최신 공지사항이 여기에 표시됩니다.</span>
+                <span class="en">Latest announcements will appear here.</span>
+            </p>
         </div>
         <div id="tab2_2" class="tab_content">
-            <h3>자주 묻는 질문</h3>
-            <p>FAQ 내용이 여기에 표시됩니다.</p>
+            <h3>
+                <span class="ko">자주 묻는 질문</span>
+                <span class="en">Frequently Asked Questions</span>
+            </h3>
+            <p>
+                <span class="ko">FAQ 내용이 여기에 표시됩니다.</span>
+                <span class="en">FAQ content will appear here.</span>
+            </p>
         </div>
         <div id="tab2_3" class="tab_content">
-            <h3>문의하기</h3>
-            <p>문의 양식이 여기에 표시됩니다.</p>
+            <h3>
+                <span class="ko">문의하기</span>
+                <span class="en">Contact Form</span>
+            </h3>
+            <p>
+                <span class="ko">문의 양식이 여기에 표시됩니다.</span>
+                <span class="en">Contact form will appear here.</span>
+            </p>
         </div>
     </div>
 </div>
@@ -132,7 +207,7 @@ function handleLanguageDisplay() {
     const userLanguage = navigator.language || navigator.userLanguage;
     const $koElements = $('.ko');
     const $enElements = $('.en');
-    if (userLanguage.indexOf('ko') === 0) {
+    if (userLanguage.indexOf('en') === 0) {
         $koElements.show();
         $enElements.hide();
     } else {
