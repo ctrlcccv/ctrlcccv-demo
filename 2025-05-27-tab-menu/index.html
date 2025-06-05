@@ -207,7 +207,7 @@ function handleLanguageDisplay() {
     const userLanguage = navigator.language || navigator.userLanguage;
     const $koElements = $('.ko');
     const $enElements = $('.en');
-    if (userLanguage.indexOf('en') === 0) {
+    if (userLanguage.indexOf('ko') === 0) {
         $koElements.show();
         $enElements.hide();
     } else {
