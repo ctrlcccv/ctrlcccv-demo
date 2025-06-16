@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>스크롤 하면 유튜브 자동재생, Intersection Observer로 구현하는 4단계 완성 가이드 | 컨트롤 + CCCV</title>
+<meta name="description" content="스크롤 하면 유튜브 자동재생, Intersection Observer로 구현하는 4단계 완성 가이드 | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+    * {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;box-sizing: border-box;}
+    .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+    .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+    .con { display: flex; justify-content: center; align-items: center; height: 100vh; background: #8ab4f8; font-size: 48px; font-weight: 700; text-align: center; } 
+    .video { 
+        position: relative; 
+        width: 100%; 
+        max-width: 854px; 
+        aspect-ratio: 16/9; 
+        margin: 50px auto;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    } 
+    .player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; } 
+    
+    /* 로딩 인디케이터 추가 */
+    .video::before {
+        content: '로딩중...';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 14px;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .video.loading::before {
+        opacity: 1;
+    }
+</style>
+</head>
+<body>
+    <div class="con">
+        스크롤을 내려서 유튜브 동영상의<br>자동재생을 확인해보세요.<br>
+    </div>
+    <div class="video" data-video-id="rJe_YsLJqUY">
+        <div class="player"></div>
+    </div>
+    <div class="video" data-video-id="rJe_YsLJqUY">
+        <div class="player"></div>
+    </div>
+
+    <a href="https://ctrlcccv.github.io/code/2025-06-16-youtube-autoplay/" class="blog" target="_blank">컨트롤 + CCCV</a>
+
+<script>
+    // YouTube API가 이미 로드되었는지 확인하고, 없으면 동적으로 로드
+    function loadYouTubeAPI() {
+        return new Promise((resolve) => {
+            if (window.YT && window.YT.Player) {
+                resolve();
+                return;
+            }
+            
+            window.onYouTubeIframeAPIReady = resolve;
+            
+            if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+                const tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            }
+        });
+    }
+
+    // 화면에 보이는 YouTube 동영상을 자동으로 재생/일시정지하는 클래스
+    class YouTubeAutoPlayer {
+        constructor() {
+            this.videos = new Map(); // 비디오 요소와 플레이어 매핑
+            this.observer = null;    // 화면 감지를 위한 Observer
+            this.init();
+        }
+
+        // 클래스 초기화 - 모든 설정을 순차적으로 실행
+        async init() {
+            try {
+                await loadYouTubeAPI(); // YouTube API 로드 대기
+                this.collectVideoElements(); // 비디오 요소들 수집
+                this.setupIntersectionObserver(); // Intersection Observer 설정
+                await this.initializePlayers(); // 플레이어들 초기화 
+                
+                console.log('🚀 YouTube Auto Player 초기화 완료! (다중 재생 모드)');
+            } catch (error) {
+                console.error('❌ 초기화 실패:', error);
+            }
+        }
+
+        // 페이지의 모든 비디오 요소를 찾아서 Map에 저장
+        collectVideoElements() {
+            const videoElements = document.querySelectorAll('.video[data-video-id]');
+            
+            videoElements.forEach(element => {
+                const videoId = element.getAttribute('data-video-id');
+                this.videos.set(element, {
+                    videoId,             // YouTube 동영상 ID
+                    player: null,        // YouTube 플레이어 인스턴스
+                    isPlaying: false,    // 현재 재생 상태
+                    isIntersecting: false // 화면에 보이는지 여부
+                });
+            });
+        }
+
+        // 화면에 동영상이 보이는지 감지하는 Observer 설정
+        setupIntersectionObserver() {
+            // Intersection Observer 옵션 설정
+            const options = {
+                root: null, // 뷰포트를 기준으로
+                rootMargin: '0px',
+                threshold: 1.0 // 100% 보일 때 자동 재생
+            };
+
+            // 화면에 들어오고 나가는 것을 감지하는 Observer 생성
+            this.observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const videoData = this.videos.get(entry.target);
+                    if (!videoData || !videoData.player) return;
+
+                    videoData.isIntersecting = entry.isIntersecting;
+
+                    // 화면에 100% 보이면 재생, 안 보이면 일시정지
+                    if (entry.isIntersecting && !videoData.isPlaying) {
+                        this.playVideo(entry.target, videoData);
+                    } else if (!entry.isIntersecting && videoData.isPlaying) {
+                        this.pauseVideo(entry.target, videoData);
+                    }
+                });
+            }, options);
+
+            // 모든 비디오 요소를 관찰 시작
+            this.videos.forEach((data, element) => {
+                this.observer.observe(element);
+            });
+        }
+
+        // 모든 비디오 플레이어를 동시에 초기화
+        async initializePlayers() {
+            const promises = Array.from(this.videos.entries()).map(([element, data]) => {
+                return this.createPlayer(element, data);
+            });
+
+            await Promise.all(promises);
+        }
+
+        // 개별 YouTube 플레이어 생성
+        createPlayer(element, data) {
+            return new Promise((resolve, reject) => {
+                const playerContainer = element.querySelector('.player');
+                
+                element.classList.add('loading'); // 로딩 표시
+
+                try {
+                    // YouTube 플레이어 생성
+                    const player = new YT.Player(playerContainer, {
+                        height: '100%',
+                        width: '100%',
+                        videoId: data.videoId,
+                        playerVars: {
+                            rel: 0,               // 관련 동영상 표시 안함
+                            modestbranding: 1,    // YouTube 로고 최소화
+                            controls: 1,          // 컨트롤 표시
+                            showinfo: 0,          // 동영상 정보 표시 안함
+                            iv_load_policy: 3     // 주석 표시 안함
+                        },
+                        events: {
+                            // 플레이어 준비 완료시
+                            onReady: (event) => {
+                                element.classList.remove('loading');
+                                data.player = event.target;
+                                
+                                // 이미 화면에 보이는 상태라면 바로 재생
+                                if (data.isIntersecting && !data.isPlaying) {
+                                    this.playVideo(element, data);
+                                }
+                                
+                                resolve();
+                            },
+                            // 플레이어 오류시
+                            onError: (error) => {
+                                element.classList.remove('loading');
+                                console.error('❌ 플레이어 오류:', error);
+                                reject(error);
+                            },
+                            // 플레이어 상태 변경시 (재생, 일시정지, 종료 등)
+                            onStateChange: (event) => {
+                                // 동영상 종료시 자동으로 다시 재생 (루프 효과)
+                                if (event.data === YT.PlayerState.ENDED && data.isIntersecting) {
+                                    setTimeout(() => {
+                                        event.target.seekTo(0);    // 처음으로 되감기
+                                        event.target.playVideo();  // 다시 재생
+                                    }, 1000);
+                                }
+                            }
+                        }
+                    });
+                } catch (error) {
+                    element.classList.remove('loading');
+                    console.error('❌ 플레이어 생성 실패:', error);
+                    reject(error);
+                }
+            });
+        }
+
+        // 동영상 재생 시작
+        playVideo(element, data) {
+            if (!data.player || data.isPlaying) return;
+
+            try {
+                // 자동재생 정책을 위해 음소거 후 재생
+                data.player.mute();
+                data.player.playVideo();
+                
+                // 재생 상태 업데이트
+                data.isPlaying = true;
+                element.setAttribute('data-playing', 'true');
+                
+                console.log('▶️ 재생 시작:', data.videoId, '| 현재 재생 중인 동영상 수:', this.getPlayingVideosCount());
+            } catch (error) {
+                console.error('❌ 재생 실패:', error);
+            }
+        }
+
+        // 동영상 일시정지
+        pauseVideo(element, data) {
+            if (!data.player || !data.isPlaying) return;
+
+            try {
+                data.player.pauseVideo();
+                
+                // 일시정지 상태 업데이트
+                data.isPlaying = false;
+                element.removeAttribute('data-playing');
+                
+                console.log('⏸️ 일시정지:', data.videoId, '| 현재 재생 중인 동영상 수:', this.getPlayingVideosCount());
+            } catch (error) {
+                console.error('❌ 일시정지 실패:', error);
+            }
+        }
+
+        // 현재 재생 중인 동영상 개수 반환
+        getPlayingVideosCount() {
+            let count = 0;
+            this.videos.forEach((data) => {
+                if (data.isPlaying) count++;
+            });
+            return count;
+        }
+
+        // 현재 재생 중인 모든 동영상 ID 반환
+        getPlayingVideoIds() {
+            const playingIds = [];
+            this.videos.forEach((data) => {
+                if (data.isPlaying) {
+                    playingIds.push(data.videoId);
+                }
+            });
+            return playingIds;
+        }
+
+        // 정리 메서드 (필요시 사용) - 메모리 누수 방지
+        destroy() {
+            // Observer 제거
+            if (this.observer) {
+                this.observer.disconnect();
+            }
+            
+            // 모든 플레이어 제거
+            this.videos.forEach((data) => {
+                if (data.player) {
+                    data.player.destroy();
+                }
+            });
+            
+            // Map 초기화
+            this.videos.clear();
+        }
+    }
+
+    // 페이지 로드 완료 후 초기화
+    document.addEventListener('DOMContentLoaded', () => {
+        // 브라우저가 Intersection Observer API를 지원하는지 확인
+        if (!window.IntersectionObserver) {
+            console.warn('⚠️ Intersection Observer API를 지원하지 않는 브라우저입니다.');
+            // 폴백: 기존 스크롤 이벤트 방식 사용 가능
+            return;
+        }
+
+        // YouTube Auto Player 인스턴스 생성 및 전역 변수에 저장
+        window.youtubeAutoPlayer = new YouTubeAutoPlayer();
+    });
+</script>
+</body>
+</html>
+
+
