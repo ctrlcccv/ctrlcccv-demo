@@ -49,11 +49,25 @@
     .video.loading::before {
         opacity: 1;
     }
+    
+    /* 언어별 텍스트 표시 제어 */
+    .ko, .en {
+        display: none;
+    }
+    
+    .ko.show, .en.show {
+        display: inline;
+    }
 </style>
 </head>
 <body>
     <div class="con">
-        스크롤을 내려서 유튜브 동영상의<br>자동재생을 확인해보세요.<br>
+        <span class="ko">
+            스크롤을 내려서 유튜브 동영상의<br>자동재생을 확인해보세요.
+        </span>
+        <span class="en">
+            Scroll down to see the automatic<br>playback of the YouTube video.
+        </span>
     </div>
     <div class="video" data-video-id="rJe_YsLJqUY">
         <div class="player"></div>
@@ -296,6 +310,31 @@
         }
     }
 
+    // 브라우저 언어 설정에 따라 적절한 텍스트 표시
+    function initLanguageDisplay() {
+        // 브라우저의 언어 설정 확인
+        const userLanguage = navigator.language || navigator.userLanguage;
+        
+        // 한국어 확인 (ko, ko-KR, ko-KP 등)
+        const isKorean = userLanguage.toLowerCase().startsWith('ko');
+        
+        // DOM 요소 선택
+        const koElement = document.querySelector('.ko');
+        const enElement = document.querySelector('.en');
+        
+        if (isKorean) {
+            // 한국어 설정인 경우
+            koElement.classList.add('show');
+            enElement.classList.remove('show');
+            console.log('🇰🇷 한국어 모드로 설정됨');
+        } else {
+            // 그 외 언어 설정인 경우 (영어로 표시)
+            koElement.classList.remove('show');
+            enElement.classList.add('show');
+            console.log('🌐 영어 모드로 설정됨 (언어:', userLanguage + ')');
+        }
+    }
+
     // 페이지 로드 완료 후 초기화
     document.addEventListener('DOMContentLoaded', () => {
         // 브라우저가 Intersection Observer API를 지원하는지 확인
@@ -307,6 +346,9 @@
 
         // YouTube Auto Player 인스턴스 생성 및 전역 변수에 저장
         window.youtubeAutoPlayer = new YouTubeAutoPlayer();
+
+        // 브라우저 언어 설정에 따라 적절한 텍스트 표시
+        initLanguageDisplay();
     });
 </script>
 </body>

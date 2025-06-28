@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .container { 
+            position: relative; 
+            min-height: 150vh; 
+            border: 2px solid #ddd; 
+            margin: 20px auto; 
+            max-width: 800px; 
+            overflow: hidden; 
+        }
+        .bottom_sticky { 
+            position: fixed; 
+            right: 0; 
+            bottom: 30px; 
+            left: 50%; 
+            width: 500px;
+            height: 60px; 
+            transform: translate(-50%,0);
+            background: #007bff; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold; 
+            z-index: 100; 
+        }
+        footer { 
+            height: 80px; 
+            background: #333; 
+        }
+    </style>
+</head>
+<body>
+    
+<div class="container">
+    <div class="bottom_sticky">
+        이 요소는 컨테이너 내에서만 하단에 고정됩니다!
+    </div>
+</div>
+<footer></footer>
+
+<script>
+function initBottomSticky() {
+    const $apply = $('.bottom_sticky');
+    const $wrap = $('.container');
+    let rafId = null;
+    
+    // 고정 요소의 위치를 업데이트하는 함수
+    function updatePosition() {
+        if ($apply.length && $wrap.length) {
+            const wrapOffset = $wrap.offset().top;
+            const wrapHeight = $wrap.outerHeight();
+            const scrollPosition = $(window).scrollTop();
+            const windowHeight = window.innerHeight;
+            const wrapBottom = wrapOffset + wrapHeight;
+            const currentBottom = scrollPosition + windowHeight;
+            
+            // 컨테이너 영역에 따라 position 속성 변경
+            const cssProperties = {
+                'position': currentBottom >= wrapBottom ? 'absolute' : 'fixed',
+            };
+            $apply.css(cssProperties);
+        }
+    }
+    
+    // 컨테이너에 패딩을 추가하는 함수
+    function updatePadding() {
+        if ($apply.length && $wrap.length) {
+            const windowWidth = $(window).width();
+            const paddingValue = windowWidth >= 768 ? 80 : 40;
+            const applyHeight = $apply.outerHeight() + paddingValue;
+            $wrap.css('padding-bottom', applyHeight + 'px');
+        }
+    }
+    
+    // 성능 최적화된 스크롤 업데이트 함수
+    function optimizedUpdate() {
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+        }
+        rafId = requestAnimationFrame(updatePosition);
+    }
+    
+    // 스크롤 이벤트 (requestAnimationFrame으로 최적화)
+    $(window).on('scroll', optimizedUpdate);
+    
+    // 리사이즈 이벤트
+    $(window).on('resize', function() {
+        updatePadding();
+        updatePosition();
+    });
+
+    // 페이지 로드 이벤트
+    $(window).on('load', function() {
+        updatePadding();
+        updatePosition();
+    });
+}
+
+// DOM 준비 완료 후 실행
+$(document).ready(function() {
+    initBottomSticky();
+});
+</script>
+</body>
+</html>
