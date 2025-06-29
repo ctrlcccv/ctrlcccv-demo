@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>jQuery 하단 플로팅 배너 코드 예제, 푸터 가림 현상 완벽 해결 | 컨트롤 + CCCV</title>
-<meta name="description" content="jQuery 하단 플로팅 배너 코드 예제, 푸터 가림 현상 완벽 해결 | 컨트롤 + CCCV" />
+<title>jQuery Bottom Floating Banner Code Example - Perfect Footer Overlap Solution | Ctrl + CCCV</title>
+<meta name="description" content="jQuery Bottom Floating Banner Code Example - Perfect Footer Overlap Solution | Ctrl + CCCV" />
 <meta name="robots" content="noindex">
 <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -19,10 +19,10 @@
 
     body { min-height: 100vh; padding: 20px 0 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); } 
 
-    /* 컨테이너 스타일 */
+    /* Container styles */
     .container { overflow: hidden; position: relative; min-height: 150vh; max-width: 1200px; margin: 20px auto; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border: none; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); } 
 
-    /* 컨테이너 내부 콘텐츠 */
+    /* Container inner content */
     .container-content { height: 100%; padding: 40px; overflow-y: auto; } 
     .container-header { margin-bottom: 40px; text-align: center; } 
     .container-title { margin-bottom: 10px; background: linear-gradient(45deg, #667eea, #764ba2); font-size: 2.5rem; font-weight: 700; color: #2c3e50; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } 
@@ -33,8 +33,8 @@
     .section-icon { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 50%; font-size: 1.2rem; color: white; } 
     .section-text { margin-bottom: 15px; font-size: 1rem; line-height: 1.6; color: #7f8c8d; } 
 
-    /* 하단 고정 요소 스타일 */
-    .bottom_sticky { display: flex; justify-content: center; align-items: center; position: absolute; right: 0; bottom: 30px; left: 50%; max-width: 500px; width: 100%; height: 80px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius:15px; font-size: 1.1rem; font-weight: 600; color: white; z-index: 100; transform: translate(-50%,0); box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1); } 
+    /* Bottom sticky element styles */
+    .bottom_sticky { display: flex; justify-content: center; align-items: center; position: absolute; right: 0; bottom: 30px; left: 50%; max-width: 700px; width: 100%; height: 80px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius:15px; font-size: 1.1rem; font-weight: 600; color: white; z-index: 100; transform: translate(-50%,0); box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1); } 
     .sticky-content { display: flex; align-items: center; gap: 15px; } 
     .sticky-icon { font-size: 1.5rem; animation: bounce 2s infinite; } 
 
@@ -44,11 +44,11 @@
         60% { transform: translateY(-5px); } 
     }
 
-    /* 푸터 스타일 */
+    /* Footer styles */
     footer { display: flex; justify-content: center; align-items: center; height: 100px; margin-top: 20px; color: white; } 
     footer a { text-decoration: none; color: white; }
     
-    /* 반응형 디자인 */
+    /* Responsive design */
     @media (max-width: 768px){
         .container-content { padding: 20px; } 
         .container-title { font-size: 2rem; } 
@@ -61,8 +61,8 @@
 <div class="container">
     <div class="container-content">
         <div class="container-header">
-            <h1 class="container-title">하단 플로팅 배너 데모</h1>
-            <p class="container-subtitle">특정 영역 내에서만 하단에 고정되는 플로팅 배너를 확인해보세요</p>
+            <h1 class="container-title">Bottom Floating Banner Demo</h1>
+            <p class="container-subtitle">Experience a floating banner that stays fixed at the bottom only within a specific area</p>
         </div>
 
         <div class="content-section">
@@ -70,10 +70,10 @@
                 <div class="section-icon">
                     <i class="fas fa-info-circle"></i>
                 </div>
-                기능 설명
+                Feature Description
             </h3>
-            <p class="section-text">이 데모는 특정 컨테이너 영역 내에서만 하단에 고정되는 요소를 보여줍니다.</p>
-            <p class="section-text">페이지를 스크롤해보시면 고정 요소의 동작을 확인할 수 있습니다.</p>
+            <p class="section-text">This demo showcases an element that stays fixed at the bottom only within a specific container area.</p>
+            <p class="section-text">Scroll through the page to see how the sticky element behaves.</p>
         </div>
 
         <div class="content-section">
@@ -81,10 +81,10 @@
                 <div class="section-icon">
                     <i class="fas fa-cogs"></i>
                 </div>
-                동작 방식
+                How It Works
             </h3>
-            <p class="section-text">컨테이너 내부에서는 하단에 고정되어 스크롤해도 항상 보입니다.</p>
-            <p class="section-text">컨테이너 밖으로 나가면 고정 요소가 사라집니다.</p>
+            <p class="section-text">Inside the container, it stays fixed at the bottom and remains visible even when scrolling.</p>
+            <p class="section-text">When you scroll outside the container, the sticky element disappears.</p>
         </div>
 
         <div class="content-section">
@@ -92,23 +92,23 @@
                 <div class="section-icon">
                     <i class="fas fa-plus-circle"></i>
                 </div>
-                추가 콘텐츠
+                Additional Content
             </h3>
-            <p class="section-text">더 많은 콘텐츠를 추가하여 스크롤 효과를 더 잘 보여드립니다.</p>
-            <p class="section-text">이 섹션을 통해 고정 요소의 동작을 더 명확하게 확인할 수 있습니다.</p>
+            <p class="section-text">We've added more content to better demonstrate the scrolling effect.</p>
+            <p class="section-text">This section helps you see the sticky element's behavior more clearly.</p>
         </div>
     </div>
     
     <div class="bottom_sticky">
         <div class="sticky-content">
             <i class="fas fa-thumbtack sticky-icon"></i>
-            <span>이 요소는 컨테이너 내에서만 하단에 고정됩니다!</span>
+            <span>This element stays fixed at the bottom only within the container!</span>
         </div>
     </div>
 </div>
 
 <footer>
-    <a href="https://ctrlcccv.github.io/code/2025-07-14-bottom-sticky/" target="_blank">© 2025 컨트롤 + CCCV</a>
+    <a href="https://ctrlcccv.github.io/code/2025-07-14-bottom-sticky/" target="_blank">© 2025 Ctrl + CCCV</a>
 </footer>
 
 <script>
@@ -117,7 +117,7 @@ function initBottomSticky() {
     const $wrap = $('.container');
     let rafId = null;
     
-    // 고정 요소의 위치를 업데이트하는 함수
+    // Function to update the position of the sticky element
     function updatePosition() {
         if ($apply.length && $wrap.length) {
             const wrapOffset = $wrap.offset().top;
@@ -127,7 +127,7 @@ function initBottomSticky() {
             const wrapBottom = wrapOffset + wrapHeight;
             const currentBottom = scrollPosition + windowHeight;
             
-            // 컨테이너 영역에 따라 position 속성 변경
+            // Change position property based on container area
             const cssProperties = {
                 'position': currentBottom >= wrapBottom ? 'absolute' : 'fixed',
             };
@@ -135,7 +135,7 @@ function initBottomSticky() {
         }
     }
     
-    // 컨테이너에 패딩을 추가하는 함수
+    // Function to add padding to the container
     function updatePadding() {
         if ($apply.length && $wrap.length) {
             const windowWidth = $(window).width();
@@ -145,7 +145,7 @@ function initBottomSticky() {
         }
     }
     
-    // 성능 최적화된 스크롤 업데이트 함수
+    // Performance-optimized scroll update function
     function optimizedUpdate() {
         if (rafId) {
             cancelAnimationFrame(rafId);
@@ -153,23 +153,23 @@ function initBottomSticky() {
         rafId = requestAnimationFrame(updatePosition);
     }
     
-    // 스크롤 이벤트 (requestAnimationFrame으로 최적화)
+    // Scroll event (optimized with requestAnimationFrame)
     $(window).on('scroll', optimizedUpdate);
     
-    // 리사이즈 이벤트
+    // Resize event
     $(window).on('resize', function() {
         updatePadding();
         updatePosition();
     });
 
-    // 페이지 로드 이벤트
+    // Page load event
     $(window).on('load', function() {
         updatePadding();
         updatePosition();
     });
 }
 
-// DOM 준비 완료 후 실행
+// Execute after DOM is ready
 $(document).ready(function() {
     initBottomSticky();
 });
