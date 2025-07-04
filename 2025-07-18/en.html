@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How to Build Sticky Bottom Banner with jQuery (No Footer Overlap) | 컨트롤 + CCCV</title>
+<meta name="description" content="How to Build Sticky Bottom Banner with jQuery (No Footer Overlap) | 컨트롤 + CCCV" />
+<meta name="robots" content="noindex">
+<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<style>
+    * {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;}
+    .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
+    .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
+
+    body { min-height: 100vh; padding: 20px 0 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); } 
+
+    /* Container styles */
+    .container { overflow: hidden; position: relative; min-height: 150vh; max-width: 1200px; margin: 20px auto; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border: none; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); } 
+
+    /* Container inner content */
+    .container-content { height: 100%; padding: 40px; overflow-y: auto; } 
+    .container-header { margin-bottom: 40px; text-align: center; } 
+    .container-title { margin-bottom: 10px; background: linear-gradient(45deg, #667eea, #764ba2); font-size: 2.5rem; font-weight: 700; color: #2c3e50; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } 
+    .container-subtitle { font-size: 1.1rem; font-weight: 400; color: #7f8c8d; } 
+    .content-section { margin: 30px 0; padding: 30px; background: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; } 
+    .content-section:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); } 
+    .section-title { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-size: 1.5rem; font-weight: 600; color: #2c3e50; } 
+    .section-icon { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 50%; font-size: 1.2rem; color: white; } 
+    .section-text { margin-bottom: 15px; font-size: 1rem; line-height: 1.6; color: #7f8c8d; } 
+
+    /* Bottom sticky element styles */
+    .bottom_sticky { display: flex; justify-content: center; align-items: center; position: absolute; right: 0; bottom: 30px; left: 50%; max-width: 700px; width: 100%; height: 80px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius:15px; font-size: 1.1rem; font-weight: 600; color: white; z-index: 100; transform: translate(-50%,0); box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1); } 
+    .sticky-content { display: flex; align-items: center; gap: 15px; } 
+    .sticky-icon { font-size: 1.5rem; animation: bounce 2s infinite; } 
+
+    @keyframes bounce { 
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 
+        40% { transform: translateY(-10px); } 
+        60% { transform: translateY(-5px); } 
+    }
+
+    /* Footer styles */
+    footer { display: flex; justify-content: center; align-items: center; height: 100px; margin-top: 20px; color: white; } 
+    footer a { text-decoration: none; color: white; }
+    
+    /* Responsive design */
+    @media (max-width: 768px){
+        .container-content { padding: 20px; } 
+        .container-title { font-size: 2rem; } 
+        .content-section { padding: 20px; } 
+    }
+</style>
+</head>
+<body>
+    
+<div class="container">
+    <div class="container-content">
+        <div class="container-header">
+            <h1 class="container-title">Bottom Floating Banner Demo</h1>
+            <p class="container-subtitle">Experience a floating banner that stays fixed at the bottom only within a specific area</p>
+        </div>
+
+        <div class="content-section">
+            <h3 class="section-title">
+                <div class="section-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                Feature Description
+            </h3>
+            <p class="section-text">This demo showcases an element that stays fixed at the bottom only within a specific container area.</p>
+            <p class="section-text">Scroll through the page to see how the sticky element behaves.</p>
+        </div>
+
+        <div class="content-section">
+            <h3 class="section-title">
+                <div class="section-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                How It Works
+            </h3>
+            <p class="section-text">Inside the container, it stays fixed at the bottom and remains visible even when scrolling.</p>
+            <p class="section-text">When you scroll outside the container, the sticky element disappears.</p>
+        </div>
+
+        <div class="content-section">
+            <h3 class="section-title">
+                <div class="section-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                Additional Content
+            </h3>
+            <p class="section-text">We've added more content to better demonstrate the scrolling effect.</p>
+            <p class="section-text">This section helps you see the sticky element's behavior more clearly.</p>
+        </div>
+    </div>
+    
+    <div class="bottom_sticky">
+        <div class="sticky-content">
+            <i class="fas fa-thumbtack sticky-icon"></i>
+            <span>This element stays fixed at the bottom only within the container!</span>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <a href="https://ctrlcccv.github.io/code-en/2025-07-15-bottom-sticky/" target="_blank">© 2025 컨트롤 + CCCV</a>
+</footer>
+
+<script>
+function initBottomSticky() {
+    const $apply = $('.bottom_sticky');
+    const $wrap = $('.container');
+    let rafId = null;
+    
+    // Function to update the position of the sticky element
+    function updatePosition() {
+        if ($apply.length && $wrap.length) {
+            const wrapOffset = $wrap.offset().top;
+            const wrapHeight = $wrap.outerHeight();
+            const scrollPosition = $(window).scrollTop();
+            const windowHeight = window.innerHeight;
+            const wrapBottom = wrapOffset + wrapHeight;
+            const currentBottom = scrollPosition + windowHeight;
+            
+            // Change position property based on container area
+            const cssProperties = {
+                'position': currentBottom >= wrapBottom ? 'absolute' : 'fixed',
+            };
+            $apply.css(cssProperties);
+        }
+    }
+    
+    // Function to add padding to the container
+    function updatePadding() {
+        if ($apply.length && $wrap.length) {
+            const windowWidth = $(window).width();
+            const paddingValue = windowWidth >= 768 ? 80 : 40;
+            const applyHeight = $apply.outerHeight() + paddingValue;
+            $wrap.css('padding-bottom', applyHeight + 'px');
+        }
+    }
+    
+    // Performance-optimized scroll update function
+    function optimizedUpdate() {
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+        }
+        rafId = requestAnimationFrame(updatePosition);
+    }
+    
+    // Scroll event (optimized with requestAnimationFrame)
+    $(window).on('scroll', optimizedUpdate);
+    
+    // Resize event
+    $(window).on('resize', function() {
+        updatePadding();
+        updatePosition();
+    });
+
+    // Page load event
+    $(window).on('load', function() {
+        updatePadding();
+        updatePosition();
+    });
+}
+
+// Execute after DOM is ready
+$(document).ready(function() {
+    initBottomSticky();
+});
+</script>
+</body>
+</html>
