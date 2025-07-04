@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>파일 업로드 컴포넌트 - 컨트롤 + CCCV</title>
-    <meta name="description" content="2025년 트렌드 파일 업로드 UI 컴포넌트 - 컨트롤 + CCCV" />
+    <title>jQuery 다중 파일 업로드, 삭제 기능까지 완벽 구현하기 | 컨트롤 + CCCV</title>
+    <meta name="description" content="jQuery 다중 파일 업로드, 삭제 기능까지 완벽 구현하기 | 컨트롤 + CCCV" />
     <meta name="robots" content="noindex">
     <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -13,7 +13,6 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     
     <style>
-        /* 2025 Modern File Upload Preview Page */
         * {
             box-sizing: border-box;
         }
@@ -438,71 +437,80 @@
     </main>
 
     <script>
-        // 기존 파일 업로드 기능
         function initFileUpload() {
-            const fileInput = document.getElementById('fileInput');
-            const fileList = document.getElementById('fileList');
-            let selectedFiles = [];
+            // 상수 정의
+            const DELETE_BTN = 'file_delete_btn';  // 삭제 버튼 클래스
+            const FILE_ITEM = 'file_item';         // 파일 아이템 클래스
+            const FILE_NAME = 'file_name';         // 파일명 클래스
 
-            // 파일 추가 버튼 클릭
-            $('.file_upload_btn').on('click', function() {
-                fileInput.click();
-            });
+            // DOM 요소 캐싱
+            const $input = $('#fileInput');         // 파일 입력 필드
+            const $list = $('#fileList');          // 파일 목록 컨테이너
+            const $button = $('.file_upload_btn'); // 업로드 버튼
+            
+            // 파일 저장 배열
+            let files = [];
 
-            // 파일 선택 이벤트
-            fileInput.addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
+            // 이벤트 바인딩
+            $button.on('click', () => $input.trigger('click'));
+            $input[0].addEventListener('change', handleChange);
+            $list.on('click', `.${DELETE_BTN}`, handleDelete);
+
+            // 파일 선택 처리
+            function handleChange(e) {
+                const selectedFiles = Array.from(e.target.files);
+                const $fragment = $(document.createDocumentFragment());
                 
-                files.forEach(file => {
-                    // 중복 파일 체크
-                    const isDuplicate = selectedFiles.some(selectedFile => 
-                        selectedFile.name === file.name && 
-                        selectedFile.size === file.size
-                    );
-                    
-                    if (!isDuplicate) {
-                        selectedFiles.push(file);
-                        addFileToList(file);
+                selectedFiles.forEach(file => {
+                    if (!isDuplicate(file)) {
+                        files.push(file);
+                        $fragment.append(createItem(file));
                     }
                 });
                 
-                // 인풋 초기화
-                fileInput.value = '';
-            });
-
-            // 파일 리스트에 추가
-            function addFileToList(file) {
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file_item';
-                fileItem.innerHTML = `
-                    <span class="file_name">
-                        <i class="fas fa-file"></i>
-                        ${file.name}
-                    </span>
-                    <button type="button" class="file_delete_btn">
-                        <i class="fas fa-times"></i>
-                        삭제
-                    </button>
-                `;
+                if ($fragment.children().length > 0) {
+                    $list.append($fragment);
+                }
                 
-                // 삭제 버튼 이벤트
-                const deleteBtn = fileItem.querySelector('.file_delete_btn');
-                deleteBtn.addEventListener('click', function() {
-                    removeFileFromList(file, fileItem);
-                });
-                
-                fileList.appendChild(fileItem);
+                $input.val('');
             }
 
-            // 파일 리스트에서 제거
-            function removeFileFromList(file, fileItem) {
-                selectedFiles = selectedFiles.filter(selectedFile => 
-                    !(selectedFile.name === file.name && selectedFile.size === file.size)
+            // 파일 삭제 처리
+            function handleDelete() {
+                const $item = $(this).closest(`.${FILE_ITEM}`);
+                const fileName = $item.find(`.${FILE_NAME}`).text().trim();
+                const index = files.findIndex(file => file.name === fileName);
+                
+                if (index !== -1) {
+                    files.splice(index, 1);
+                    $item.fadeOut(200, function() {
+                        $(this).remove();
+                    });
+                }
+            }
+
+            // 중복 파일 검사
+            function isDuplicate(file) {
+                return files.some(f => 
+                    f.name === file.name && 
+                    f.size === file.size && 
+                    f.lastModified === file.lastModified
                 );
-                fileItem.remove();
+            }
+
+            // 파일 아이템 생성
+            function createItem(file) {
+                return $('<div>', {
+                    class: FILE_ITEM,
+                    html: [
+                        $('<span>', { class: FILE_NAME, text: file.name }),
+                        $('<button>', { type: 'button', class: DELETE_BTN, text: '삭제' })
+                    ]
+                });
             }
         }
 
+        // 초기화
         $(document).ready(function() {
             initFileUpload();
         });
