@@ -1,178 +1,519 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>How to Build Sticky Bottom Banner with jQuery (No Footer Overlap) | 컨트롤 + CCCV</title>
-<meta name="description" content="How to Build Sticky Bottom Banner with jQuery (No Footer Overlap) | 컨트롤 + CCCV" />
-<meta name="robots" content="noindex">
-<link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-<style>
-    * {margin: 0;padding: 0;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;}
-    .blog { display: flex; justify-content: center; align-items: center; position: fixed; bottom:50px; left: 50%; width: 160px; height: 46px; background-size: 300% 100%; border-radius:23px; font-size: 16px; font-weight: 500; color: #fff; z-index: 100; background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376); transform: translate(-50%,0); text-decoration: none; transition: all .4s ease-in-out; } 
-    .blog:hover { background-position: 100% 0; box-shadow: 0 2px 8px 0 rgba(45, 54, 65, 0.65); } 
-
-    body { min-height: 100vh; padding: 20px 0 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); } 
-
-    /* Container styles */
-    .container { overflow: hidden; position: relative; min-height: 150vh; max-width: 1200px; margin: 20px auto; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border: none; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); } 
-
-    /* Container inner content */
-    .container-content { height: 100%; padding: 40px; overflow-y: auto; } 
-    .container-header { margin-bottom: 40px; text-align: center; } 
-    .container-title { margin-bottom: 10px; background: linear-gradient(45deg, #667eea, #764ba2); font-size: 2.5rem; font-weight: 700; color: #2c3e50; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } 
-    .container-subtitle { font-size: 1.1rem; font-weight: 400; color: #7f8c8d; } 
-    .content-section { margin: 30px 0; padding: 30px; background: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; } 
-    .content-section:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); } 
-    .section-title { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-size: 1.5rem; font-weight: 600; color: #2c3e50; } 
-    .section-icon { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 50%; font-size: 1.2rem; color: white; } 
-    .section-text { margin-bottom: 15px; font-size: 1rem; line-height: 1.6; color: #7f8c8d; } 
-
-    /* Bottom sticky element styles */
-    .bottom_sticky { display: flex; justify-content: center; align-items: center; position: absolute; right: 0; bottom: 30px; left: 50%; max-width: 700px; width: 100%; height: 80px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius:15px; font-size: 1.1rem; font-weight: 600; color: white; z-index: 100; transform: translate(-50%,0); box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1); } 
-    .sticky-content { display: flex; align-items: center; gap: 15px; } 
-    .sticky-icon { font-size: 1.5rem; animation: bounce 2s infinite; } 
-
-    @keyframes bounce { 
-        0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 
-        40% { transform: translateY(-10px); } 
-        60% { transform: translateY(-5px); } 
-    }
-
-    /* Footer styles */
-    footer { display: flex; justify-content: center; align-items: center; height: 100px; margin-top: 20px; color: white; } 
-    footer a { text-decoration: none; color: white; }
+    <title>jQuery Multiple File Upload Tutorial: Master File Upload Systems | Ctrl + CCCV</title>
+    <meta name="description" content="jQuery Multiple File Upload Tutorial: Master File Upload Systems | Ctrl + CCCV" />
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="https://ctrlcccv.github.io/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     
-    /* Responsive design */
-    @media (max-width: 768px){
-        .container-content { padding: 20px; } 
-        .container-title { font-size: 2rem; } 
-        .content-section { padding: 20px; } 
-    }
-</style>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Main container */
+        .main_container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        /* Content area */
+        .content_section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+        
+        .content_header {
+            margin-bottom: 32px;
+        }
+        
+        .content_title {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+        }
+        
+        .content_subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            margin: 0 0 20px 0;
+        }
+        
+        .demo_badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .info_card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info_title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature_list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .feature_item {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+        }
+        
+        .feature_item:last-child {
+            border-bottom: none;
+        }
+        
+        .feature_item i {
+            color: #10b981;
+            margin-right: 8px;
+            width: 16px;
+        }
+        
+        .blog_link_btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .blog_link_btn:hover {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* File upload component */
+        .file_upload_wrap {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 32px;
+            width: 100%;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            transition: all 0.3s ease;
+        }
+        
+        .file_upload_wrap:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 32px 64px -12px rgba(0, 0, 0, 0.35),
+                0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .file_upload_btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border: none;
+            border-radius: 16px;
+            padding: 18px 24px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 10px 25px -5px rgba(99, 102, 241, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+        
+        .file_upload_btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .file_upload_btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 20px 40px -8px rgba(99, 102, 241, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        }
+        
+        .file_upload_btn:hover::before {
+            left: 100%;
+        }
+        
+        .file_upload_btn:active {
+            transform: translateY(0);
+        }
+        
+        .file_list {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .file_item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            animation: slideInUp 0.3s ease;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .file_item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateX(4px);
+        }
+        
+        .file_name {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            flex: 1;
+            margin-right: 16px;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+        
+        .file_delete_btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px -2px rgba(239, 68, 68, 0.3);
+        }
+        
+        .file_delete_btn:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px -2px rgba(239, 68, 68, 0.5);
+        }
+        
+        .file_delete_btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Empty state style */
+        .file_list:empty::after {
+            content: 'No files selected.';
+            display: block;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main_container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding: 20px 16px;
+            }
+            
+            .content_title {
+                font-size: 24px;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 16px;
+            }
+            
+            .file_upload_wrap {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+            
+            .file_upload_btn {
+                font-size: 15px;
+                padding: 16px 20px;
+            }
+            
+            .file_item {
+                padding: 14px 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .file_name {
+                margin-right: 0;
+                margin-bottom: 4px;
+            }
+            
+            .file_delete_btn {
+                align-self: flex-end;
+            }
+        }
+        
+        /* Dark mode compatibility */
+        @media (prefers-color-scheme: dark) {
+            .file_upload_wrap {
+                background: rgba(0, 0, 0, 0.2);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            .file_item {
+                background: rgba(0, 0, 0, 0.1);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            .file_item:hover {
+                background: rgba(0, 0, 0, 0.2);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+        }
+    </style>
 </head>
 <body>
-    
-<div class="container">
-    <div class="container-content">
-        <div class="container-header">
-            <h1 class="container-title">Bottom Floating Banner Demo</h1>
-            <p class="container-subtitle">Experience a floating banner that stays fixed at the bottom only within a specific area</p>
-        </div>
-
-        <div class="content-section">
-            <h3 class="section-title">
-                <div class="section-icon">
-                    <i class="fas fa-info-circle"></i>
+    <!-- Main container -->
+    <main class="main_container">
+        <!-- Content area -->
+        <section class="content_section">
+            <div class="content_header">
+                <div class="demo_badge">
+                    <i class="fas fa-play"></i>
+                    Live Demo
                 </div>
-                Feature Description
-            </h3>
-            <p class="section-text">This demo showcases an element that stays fixed at the bottom only within a specific container area.</p>
-            <p class="section-text">Scroll through the page to see how the sticky element behaves.</p>
-        </div>
-
-        <div class="content-section">
-            <h3 class="section-title">
-                <div class="section-icon">
-                    <i class="fas fa-cogs"></i>
-                </div>
-                How It Works
-            </h3>
-            <p class="section-text">Inside the container, it stays fixed at the bottom and remains visible even when scrolling.</p>
-            <p class="section-text">When you scroll outside the container, the sticky element disappears.</p>
-        </div>
-
-        <div class="content-section">
-            <h3 class="section-title">
-                <div class="section-icon">
-                    <i class="fas fa-plus-circle"></i>
-                </div>
-                Additional Content
-            </h3>
-            <p class="section-text">We've added more content to better demonstrate the scrolling effect.</p>
-            <p class="section-text">This section helps you see the sticky element's behavior more clearly.</p>
-        </div>
-    </div>
-    
-    <div class="bottom_sticky">
-        <div class="sticky-content">
-            <i class="fas fa-thumbtack sticky-icon"></i>
-            <span>This element stays fixed at the bottom only within the container!</span>
-        </div>
-    </div>
-</div>
-
-<footer>
-    <a href="https://ctrlcccv.github.io/code-en/2025-07-15-bottom-sticky/" target="_blank">© 2025 컨트롤 + CCCV</a>
-</footer>
-
-<script>
-function initBottomSticky() {
-    const $apply = $('.bottom_sticky');
-    const $wrap = $('.container');
-    let rafId = null;
-    
-    // Function to update the position of the sticky element
-    function updatePosition() {
-        if ($apply.length && $wrap.length) {
-            const wrapOffset = $wrap.offset().top;
-            const wrapHeight = $wrap.outerHeight();
-            const scrollPosition = $(window).scrollTop();
-            const windowHeight = window.innerHeight;
-            const wrapBottom = wrapOffset + wrapHeight;
-            const currentBottom = scrollPosition + windowHeight;
+                <h2 class="content_title">File Upload Component</h2>
+                <p class="content_subtitle">
+                    A file upload UI that provides multiple file selection and duplicate file prevention features.
+                </p>
+            </div>
             
-            // Change position property based on container area
-            const cssProperties = {
-                'position': currentBottom >= wrapBottom ? 'absolute' : 'fixed',
-            };
-            $apply.css(cssProperties);
-        }
-    }
-    
-    // Function to add padding to the container
-    function updatePadding() {
-        if ($apply.length && $wrap.length) {
-            const windowWidth = $(window).width();
-            const paddingValue = windowWidth >= 768 ? 80 : 40;
-            const applyHeight = $apply.outerHeight() + paddingValue;
-            $wrap.css('padding-bottom', applyHeight + 'px');
-        }
-    }
-    
-    // Performance-optimized scroll update function
-    function optimizedUpdate() {
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-        }
-        rafId = requestAnimationFrame(updatePosition);
-    }
-    
-    // Scroll event (optimized with requestAnimationFrame)
-    $(window).on('scroll', optimizedUpdate);
-    
-    // Resize event
-    $(window).on('resize', function() {
-        updatePadding();
-        updatePosition();
-    });
+            <!-- File upload component -->
+            <div class="file_upload_wrap">
+                <input type="file" id="fileInput" name="attachments[]" multiple>
+                <button type="button" class="file_upload_btn">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Add Files
+                </button>
+                <div class="file_list" id="fileList"></div>
+            </div>
+        </section>
 
-    // Page load event
-    $(window).on('load', function() {
-        updatePadding();
-        updatePosition();
-    });
-}
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- File upload features -->
+            <div class="info_card">
+                <h3 class="info_title">
+                    <i class="fas fa-upload"></i>
+                    File Upload Features
+                </h3>
+                <ul class="feature_list">
+                    <li class="feature_item">
+                        <i class="fas fa-check"></i>
+                        Multiple file selection support
+                    </li>
+                    <li class="feature_item">
+                        <i class="fas fa-check"></i>
+                        Automatic duplicate file prevention
+                    </li>
+                    <li class="feature_item">
+                        <i class="fas fa-check"></i>
+                        Individual file deletion
+                    </li>
+                    <li class="feature_item">
+                        <i class="fas fa-check"></i>
+                        Real-time file list display
+                    </li>
+                </ul>
+            </div>
 
-// Execute after DOM is ready
-$(document).ready(function() {
-    initBottomSticky();
-});
-</script>
+            <!-- Blog link -->
+            <div class="info_card">
+                <a href="https://ctrlcccv.github.io/" class="blog_link_btn" target="_blank">
+                    <i class="fas fa-blog"></i>
+                    Ctrl + CCCV Blog
+                </a>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        function initFileUpload() {
+            // Constants definition
+            const DELETE_BTN = 'file_delete_btn';  // Delete button class
+            const FILE_ITEM = 'file_item';         // File item class
+            const FILE_NAME = 'file_name';         // File name class
+
+            // DOM element caching
+            const $input = $('#fileInput');         // File input field
+            const $list = $('#fileList');          // File list container
+            const $button = $('.file_upload_btn'); // Upload button
+            
+            // File storage array
+            let files = [];
+
+            // Event binding
+            $button.on('click', () => $input.trigger('click'));
+            $input[0].addEventListener('change', handleChange);
+            $list.on('click', `.${DELETE_BTN}`, handleDelete);
+
+            // Handle file selection
+            function handleChange(e) {
+                const selectedFiles = Array.from(e.target.files);
+                const $fragment = $(document.createDocumentFragment());
+                
+                selectedFiles.forEach(file => {
+                    if (!isDuplicate(file)) {
+                        files.push(file);
+                        $fragment.append(createItem(file));
+                    }
+                });
+                
+                if ($fragment.children().length > 0) {
+                    $list.append($fragment);
+                }
+                
+                $input.val('');
+            }
+
+            // Handle file deletion
+            function handleDelete() {
+                const $item = $(this).closest(`.${FILE_ITEM}`);
+                const fileName = $item.find(`.${FILE_NAME}`).text().trim();
+                const index = files.findIndex(file => file.name === fileName);
+                
+                if (index !== -1) {
+                    files.splice(index, 1);
+                    $item.fadeOut(200, function() {
+                        $(this).remove();
+                    });
+                }
+            }
+
+            // Check for duplicate files
+            function isDuplicate(file) {
+                return files.some(f => 
+                    f.name === file.name && 
+                    f.size === file.size && 
+                    f.lastModified === file.lastModified
+                );
+            }
+
+            // Create file item
+            function createItem(file) {
+                return $('<div>', {
+                    class: FILE_ITEM,
+                    html: [
+                        $('<span>', { class: FILE_NAME, text: file.name }),
+                        $('<button>', { type: 'button', class: DELETE_BTN, text: 'Delete' })
+                    ]
+                });
+            }
+        }
+
+        // Initialization
+        $(document).ready(function() {
+            initFileUpload();
+        });
+    </script>
 </body>
 </html>
